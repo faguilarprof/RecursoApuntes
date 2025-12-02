@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Introducción a los conceptos básicos de una nómina</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body{font-family:Arial,Helvetica,sans-serif;background:#f4f7fa;margin:0;padding:2rem;color:#333}
+  h1{text-align:center;color:#005a9c}
+  .step{display:none;background:#fff;border:1px solid #ddd;border-radius:8px;padding:1.5rem;margin:1rem auto;max-width:720px;box-shadow:0 2px 6px rgba(0,0,0,.1)}
+  .step.active{display:block}
+  button{background:#005a9c;color:#fff;border:none;padding:.6rem 1.2rem;border-radius:4px;cursor:pointer;margin-top:1rem}
+  button:hover{background:#004070}
+  .campo{margin:.4rem 0}
+  label{display:inline-block;width:180px;font-weight:bold}
+  input[readonly],select{background:#eef}
+  input[type=number]{width:120px;padding:.3rem}
+  .resumen{background:#e8f4fd;padding:1rem;border-left:4px solid #005a9c;margin-top:1rem}
+  .mini-test{background:#fff3cd;padding:1rem;border-radius:6px;margin-top:1rem}
+  .mini-test h4{margin-top:0}
+  .opcion{display:block;margin:.3rem 0}
+  .nav-buttons{display:flex;justify-content:space-between;margin-top:1rem}
+</style>
+</head>
+<body>
+
+<h1>Introducción a los conceptos básicos de una nómina</h1>
+
+<!-- PASO 1: ENCABEZADO -->
+<div class="step active" id="step1">
+  <h2>1. Encabezado: quién, dónde, cuándo y cómo cotiza</h2>
+  <div class="campo">
+    <label>Empresa:</label>
+    <input id="empresa" value="Talleres López S.L." readonly>
+  </div>
+  <div class="campo">
+    <label>CIF:</label>
+    <input id="cif" value="B12345678" readonly>
+  </div>
+  <div class="campo">
+    <label>Domicilio fiscal:</label>
+    <input id="domicilio" value="Zaragoza" readonly>
+  </div>
+  <div class="campo">
+    <label>CCC (Seg. Social):</label>
+    <input id="ccc" value="50123456789" readonly>
+  </div>
+  <div class="campo">
+    <label>Trabajador:</label>
+    <input id="trabajador" value="Ana García Pérez" readonly>
+  </div>
+  <div class="campo">
+    <label>NIF:</label>
+    <input id="nif" value="12345678Z" readonly>
+  </div>
+  <div class="campo">
+    <label>NAF:</label>
+    <input id="naf" value="501234567890" readonly>
+  </div>
+  <div class="campo">
+    <label>Grupo cotización:</label>
+    <select id="grupo"><option>7</option></select> (1-11)
+  </div>
+  <div class="campo">
+    <label>Periodo liquidación:</label>
+    <input type="month" id="periodo" value="2025-12">
+  </div>
+  <button onclick="nextStep(2)">Siguiente →</button>
+</div>
+
+<!-- PASO 2: DEVENGOS (EDITABLES) -->
+<div class="step" id="step2">
+  <h2>2. Devengos: lo que se «gana» (¡edita los valores!)</h2>
+  <div class="campo">
+    <label>Salario base:</label>
+    <input type="number" id="salBase" value="1000" min="0" step="50" oninput="recalcTodo()"> €
+  </div>
+  <div class="campo">
+    <label>Plus convenio:</label>
+    <input type="number" id="plus" value="200" min="0" step="50" oninput="recalcTodo()"> €
+  </div>
+  <div class="campo">
+    <label>Horas extra:</label>
+    <input type="number" id="hex" value="150" min="0" step="50" oninput="recalcTodo()"> €
+  </div>
+  <div class="campo">
+    <label>Dieta exenta <small>(justificada con factura)</small>:</label>
+    <input type="number" id="dieta" value="60" min="0" step="10" oninput="recalcTodo()"> €
+  </div>
+  <p>Total devengado: <strong id="totDev">1.410 €</strong></p>
+
+  <div class="mini-test">
+    <h4>🤔 Mini-reto</h4>
+    <p>¿Cuánto del total es <strong>salarial</strong>? (sin contar dietas)</p>
+    <div id="opcionesReto"></div>
+    <button onclick="checkDev()">Comprobar</button>
+    <span id="devOk"></span>
+  </div>
+
+  <div class="nav-buttons">
+    <button onclick="nextStep(1)">← Paso anterior</button>
+    <button onclick="nextStep(3)">Siguiente →</button>
+  </div>
+</div>
+
+<!-- PASO 3: DEDUCCIONES -->
+<div class="step" id="step3">
+  <h2>3. Deducciones: lo que se «retiene»</h2>
+  <div class="campo">
+    <label>Contingencias comunes (4,70 %):</label>
+    <input id="cc" value="63,45" readonly> €
+  </div>
+  <div class="campo">
+    <label>Desempleo (1,55 %):</label>
+    <input id="paro" value="20,93" readonly> €
+  </div>
+  <div class="campo">
+    <label>FP (0,10 %):</label>
+    <input id="fp" value="1,35" readonly> €
+  </div>
+  <div class="campo">
+    <label>MEI (0,13 %):</label>
+    <input id="mei" value="17,55" readonly> €
+  </div>
+  <div class="campo">
+    <label>IRPF (retención 11 %):</label>
+    <input id="irpf" value="148,5" readonly> €
+  </div>
+  <div class="campo">
+    <label>Anticipo <small>(previa solicitud del trabajador a cuenta de trabajo ya realizado)</small>:</label>
+    <input type="number" id="ant" value="100" min="0" step="50" oninput="recalcTodo()"> €
+  </div>
+  <p>Total a deducir: <strong id="totalDed">351,33 €</strong></p>
+
+  <div class="nav-buttons">
+    <button onclick="nextStep(2)">← Paso anterior</button>
+    <button onclick="nextStep(4)">Siguiente →</button>
+  </div>
+</div>
+
+<!-- PASO 4: LÍQUIDO Y CUOTA PATRONAL -->
+<div class="step" id="step4">
+  <h2>4. Líquido a percibir y cuota patronal</h2>
+  <div class="resumen">
+    <strong>Líquido = Devengos – Deducciones = <span id="liq">1.058,67 €</span></strong>
+  </div>
+  <ul>
+    <li>Contingencias comunes (23,60 %): <span id="ccPat">318,60</span> €</li>
+    <li>Desempleo (5,50 %): <span id="paroPat">74,25</span> €</li>
+    <li>FP (0,60 %): <span id="fpPat">8,10</span> €</li>
+    <li>FOGASA (0,20 %): <span id="fogasaPat">2,70</span> €</li>
+    <li>MEI (0,67 %): <span id="meiPat">9,05</span> €</li>
+    <li>Cuota de solidaridad: 0 €</li>
+  </ul>
+  <p><strong>Cuota patronal total ≈ <span id="patTotal">412,70 €</span></strong></p>
+
+  <div class="nav-buttons">
+    <button onclick="nextStep(3)">← Paso anterior</button>
+    <button onclick="nextStep(5)">Siguiente →</button>
+  </div>
+</div>
+
+<!-- PASO 5: BONIFICACIONES -->
+<div class="step" id="step5">
+  <h2>5. Bonificaciones: cuando la cuota patronal «baja»</h2>
+  <ul class="resumen">
+    <li>Devengos: <span id="devRes">1.410 €</span></li>
+    <li>Líquido tras deducciones: <span id="liqRes">1.058,67 €</span></li>
+    <li>Cuota patronal sin bonificar: <span id="patRes">412,70 €</span></li>
+  </ul>
+  <p>Bonificación 40 % por contratar parado de larga duración:</p>
+  <p>Ahorro mensual ≈ <span id="ahorro">165,08 €</span></p>
+  <div class="mini-test">
+    <h4>🎯 Reto final</h4>
+    <p>¿Coste total para la empresa tras la bonificación?</p>
+    <input type="number" id="reto" placeholder="Importe"> €
+    <button onclick="checkReto()">Comprobar</button>
+    <span id="retoOk"></span>
+  </div>
+  <div class="nav-buttons">
+    <button onclick="nextStep(4)">← Paso anterior</button>
+    <button onclick="alert('¡Actividad completada! 🎉')">Finalizar</button>
+  </div>
+</div>
+
+<script>
+  // ---------- NAVEGACIÓN ----------
+  function nextStep(n){
+    document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
+    document.getElementById('step'+n).classList.add('active');
+  }
+
+  // ---------- CÁLCULOS ----------
+  function recalcTodo(){
+    // Devengos
+    const sal  = parseFloat(document.getElementById('salBase').value)||0;
+    const plus = parseFloat(document.getElementById('plus').value)||0;
+    const hex  = parseFloat(document.getElementById('hex').value)||0;
+    const dieta= parseFloat(document.getElementById('dieta').value)||0;
+    const devengos = sal + plus + hex + dieta;
+    const salarial   = sal + plus + hex;
+    document.getElementById('totDev').textContent = numES(devengos);
+
+    // Actualizar opciones del mini-reto
+    generarOpciones(salarial, devengos);
+
+    // Deducciones sobre base salarial (sin dieta)
+    const baseSS = salarial;
+    const cc   = baseSS * 0.047;
+    const paro = baseSS * 0.0155;
+    const fp   = baseSS * 0.001;
+    const mei  = baseSS * 0.0013;
+    const irpf = devengos * 0.11;   // sobre total devengado
+    const ant  = parseFloat(document.getElementById('ant').value)||0;
+    const totalDed = cc+paro+fp+mei+irpf+ant;
+
+    // Mostrar deducciones
+    document.getElementById('cc').value   = numES(cc);
+    document.getElementById('paro').value = numES(paro);
+    document.getElementById('fp').value   = numES(fp);
+    document.getElementById('mei').value  = numES(mei);
+    document.getElementById('irpf').value = numES(irpf);
+    document.getElementById('totalDed').textContent = numES(totalDed);
+
+    // Líquido
+    const liquido = devengos - totalDed;
+    document.getElementById('liq').textContent = numES(liquido);
+    document.getElementById('liqRes').textContent= numES(liquido);
+
+    // Cuota patronal
+    const patCC   = baseSS * 0.236;
+    const patParo = baseSS * 0.055;
+    const patFP   = baseSS * 0.006;
+    const patFog  = baseSS * 0.002;
+    const patMEI  = baseSS * 0.0067;
+    const patTotal= patCC+patParo+patFP+patFog+patMEI;
+
+    document.getElementById('ccPat').textContent  = numES(patCC);
+    document.getElementById('paroPat').textContent= numES(patParo);
+    document.getElementById('fpPat').textContent  = numES(patFP);
+    document.getElementById('fogasaPat').textContent= numES(patFog);
+    document.getElementById('meiPat').textContent = numES(patMEI);
+    document.getElementById('patTotal').textContent = numES(patTotal);
+
+    // Resúmenes paso 5
+    document.getElementById('devRes').textContent = numES(devengos);
+    document.getElementById('patRes').textContent = numES(patTotal);
+    document.getElementById('ahorro').textContent = numES(patTotal*0.4);
+  }
+
+  // Generar opciones aleatorias para el mini-reto
+  function generarOpciones(salarial, devengos){
+    const sb = parseFloat(document.getElementById('salBase').value)||0;
+    const plus = parseFloat(document.getElementById('plus').value)||0;
+    const hex = parseFloat(document.getElementById('hex').value)||0;
+    const op1 = {txt:'', val:sb+hex};
+    const op2 = {txt:'', val:plus+sb};
+    const op3 = {txt:'', val:devengos};
+    const op4 = {txt:'', val:salarial};
+
+    // Mezclar orden
+    const ops = [op1, op2, op3, op4];
+    ops.sort(()=>Math.random()-0.5);
+
+    const container=document.getElementById('opcionesReto');
+    container.innerHTML='';
+    ops.forEach((o,i)=>{
+      const lbl=document.createElement('label');
+      lbl.className='opcion';
+      lbl.innerHTML=`<input type="radio" name="dev" value="${o.val}"> ${numES(o.val)} €`;
+      container.appendChild(lbl);
+    });
+  }
+
+  // ---------- COMPROBACIONES ----------
+  function checkDev(){
+    const ok = document.querySelector('input[name="dev"]:checked');
+    const salarial = parseFloat(document.getElementById('salDev').textContent.replace(',','.'));
+    if(!ok){
+      document.getElementById('devOk').textContent='❌ Selecciona una opción';
+      return;
+    }
+    const acierto = parseFloat(ok.value) === Math.round(salarial);
+    document.getElementById('devOk').textContent = acierto ? '✅ Correcto' : '❌ Prueba otra vez';
+  }
+
+  function checkReto(){
+    const devengos = parseFloat(document.getElementById('devRes').textContent.replace(',','.'));
+    const patTotal = parseFloat(document.getElementById('patRes').textContent.replace(',','.'));
+    const esperado = (devengos + patTotal*0.6).toFixed(2);
+    const val = parseFloat(document.getElementById('reto').value);
+    document.getElementById('retoOk').textContent = (Math.abs(val-esperado)<1) ? '✅ Muy bien' : '❌ Recuerda: devengos + cuota patronal tras bonificación';
+  }
+
+  // helper para formato numérico español
+  function numES(n){
+    return n.toLocaleString('es-ES',{minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+
+  // inicializar
+  recalcTodo();
+</script>
+</body>
+</html>
