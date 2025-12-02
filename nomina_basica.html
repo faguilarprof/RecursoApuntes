@@ -20,6 +20,28 @@
   .mini-test h4{margin-top:0}
   .opcion{display:block;margin:.3rem 0}
   .nav-buttons{display:flex;justify-content:space-between;margin-top:1rem}
+  .pagas-extras-section {background:#f0f8ff;padding:1rem;border-radius:6px;margin:1rem 0;border:1px solid #d0e3ff}
+  .concepto-pagas {margin-left:20px;margin-top:10px}
+  .concepto-pagas label {width:auto;margin-right:10px}
+  .info-box {background:#e8f4fd;padding:0.8rem;border-radius:4px;margin:0.5rem 0;font-size:0.9em}
+  .mes-paga-extra {background:#fff3cd;padding:0.3rem 0.6rem;border-radius:4px;border:1px solid #ffc107;display:inline-block;margin-left:10px}
+  .paga-extra-cobrada {background:#d4edda;color:#155724;padding:0.3rem 0.6rem;border-radius:4px;border:1px solid #c3e6cb;display:inline-block;margin-left:10px}
+  .deduccion-explicacion {font-size:0.85em;color:#666;margin-left:20px;margin-top:2px}
+  .deduccion-item {margin-bottom:8px;}
+  .base-info {background:#f8f9fa;padding:10px;border-radius:4px;margin:10px 0;border-left:3px solid #6c757d;}
+  .base-info h4 {margin-top:0;margin-bottom:5px;color:#495057;}
+
+  /* ---------- CALCULADORA ---------- */
+  .calcBtn{
+    background:#444;
+    color:white;
+    padding:6px 12px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    margin-bottom:15px;
+  }
+  .calcBtn:hover{background:#222}
 </style>
 </head>
 <body>
@@ -29,9 +51,10 @@
 <!-- PASO 1: ENCABEZADO -->
 <div class="step active" id="step1">
   <h2>1. Encabezado: quién, dónde, cuándo y cómo cotiza</h2>
+
   <div class="campo">
     <label>Empresa:</label>
-    <input id="empresa" value="Talleres López S.L." readonly>
+    <input id="empresa" value="Confecciones Rodríguez S.L." readonly>
   </div>
   <div class="campo">
     <label>CIF:</label>
@@ -46,6 +69,10 @@
     <input id="ccc" value="50123456789" readonly>
   </div>
   <div class="campo">
+    <label>CNAE:</label>
+    <input id="cnae" value="1411 - Confección de prendas de vestir de cuero" readonly>
+  </div>
+  <div class="campo">
     <label>Trabajador:</label>
     <input id="trabajador" value="Ana García Pérez" readonly>
   </div>
@@ -58,19 +85,33 @@
     <input id="naf" value="501234567890" readonly>
   </div>
   <div class="campo">
+    <label>Puesto de trabajo:</label>
+    <input id="puesto" value="Confeccionista de cuero" readonly>
+  </div>
+  <div class="campo">
     <label>Grupo cotización:</label>
-    <select id="grupo"><option>7</option></select> (1-11)
+    <select id="grupo"><option value="2">2</option></select> (1-11)
+    <small style="color:#666;">(Grupo 2: Oficiales administrativos)</small>
   </div>
   <div class="campo">
     <label>Periodo liquidación:</label>
-    <input type="month" id="periodo" value="2025-12">
+    <input type="month" id="periodo" value="2025-12" onchange="recalcTodo()">
+    <span id="indicadorMes" style="margin-left:10px;"></span>
+  </div>
+  <div class="info-box">
+    <strong>💡 Información importante:</strong>
+    <p>La empresa tiene actividad de <strong>CNAE 1411</strong> (Confección de prendas de vestir de cuero), 
+    lo que implica una cotización por AT/EP del <strong>2,6%</strong> en contingencias profesionales.</p>
   </div>
   <button onclick="nextStep(2)">Siguiente →</button>
 </div>
 
-<!-- PASO 2: DEVENGOS (EDITABLES) -->
+<!-- PASO 2: DEVENGOS (EDITABLES) CON PAGAS EXTRAS -->
 <div class="step" id="step2">
-  <h2>2. Devengos: lo que se «gana» (¡edita los valores!)</h2>
+  <h2>2. Devengos: lo que se «gana» (¡Juega con los valores!)</h2>
+
+  <button class="calcBtn" onclick="toggleCalc()">📟 Calculadora</button>
+
   <div class="campo">
     <label>Salario base:</label>
     <input type="number" id="salBase" value="1000" min="0" step="50" oninput="recalcTodo()"> €
@@ -79,19 +120,72 @@
     <label>Plus convenio:</label>
     <input type="number" id="plus" value="200" min="0" step="50" oninput="recalcTodo()"> €
   </div>
+
+  <!-- SECCIÓN DE PAGAS EXTRAS -->
+  <div class="pagas-extras-section">
+    <h3 style="margin-top:0;color:#005a9c;">💰 Pagas extras</h3>
+    <div class="campo">
+      <label>Número de pagas extras anuales:</label>
+      <select id="numPagas" onchange="actualizarMesesPagas(); recalcTodo()">
+        <option value="0">0</option>
+        <option value="2" selected>2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
+      <span id="infoPagasExtras" style="margin-left:10px;color:#666;"></span>
+    </div>
+    
+    <!-- MESES DE PAGAS EXTRAS -->
+    <div id="mesesPagasContainer" style="margin-top:10px;">
+      <p><strong>Meses en que se cobran las pagas extras:</strong></p>
+      <div id="mesesPagasSelect"></div>
+    </div>
+    
+    <div id="conceptoPagasDiv" style="display:block;">
+      <p><strong>Conceptos que integran las pagas extras:</strong></p>
+      <div class="concepto-pagas">
+        <label>
+          <input type="radio" name="conceptoPagas" value="salarioBase" checked onchange="recalcTodo()">
+          Solo salario base
+        </label><br>
+        <label>
+          <input type="radio" name="conceptoPagas" value="salarioBasePlus" onchange="recalcTodo()">
+          Salario base + plus convenio
+        </label>
+      </div>
+    </div>
+    
+    <!-- INDICADOR SI ES MES DE PAGA EXTRA -->
+    <div id="pagaExtraActualInfo" style="margin-top:10px;">
+      <div class="paga-extra-cobrada">
+        <strong>📅 Este mes se cobra paga extra:</strong> <span id="importePagaExtraActual">1.200,00</span> €
+      </div>
+    </div>
+    
+    <div id="importePagasInfo" class="info-box">
+      <strong>Prorrata mensual de pagas extras:</strong> <span id="prorrataPagas">200,00</span> €<br>
+      <small>(Se suma SIEMPRE a las bases de cotización, independientemente del mes)</small>
+    </div>
+  </div>
+
   <div class="campo">
     <label>Horas extra:</label>
     <input type="number" id="hex" value="150" min="0" step="50" oninput="recalcTodo()"> €
   </div>
   <div class="campo">
-    <label>Dieta exenta <small>(justificada con factura)</small>:</label>
+    <label>Dietas <small>(cantidad justificada con factura)</small>:</label>
     <input type="number" id="dieta" value="60" min="0" step="10" oninput="recalcTodo()"> €
   </div>
-  <p>Total devengado: <strong id="totDev">1.410 €</strong></p>
+  
+  <div id="resumenDevengosExtra" style="margin-top:15px; padding:10px; background:#f8f9fa; border-radius:4px;">
+    <p><strong>Devengos totales este mes:</strong> <span id="totDev">2.610,00 €</span></p>
+    <p><small>Incluye: Salario base + plus + horas extra + dietas + (paga extra si corresponde)</small></p>
+  </div>
 
   <div class="mini-test">
     <h4>🤔 Mini-reto</h4>
-    <p>¿Cuánto del total es <strong>salarial</strong>? (sin contar dietas)</p>
+    <p>¿Cuánto del Total Devengado es <strong>salarial</strong>? </p>
     <div id="opcionesReto"></div>
     <button onclick="checkDev()">Comprobar</button>
     <span id="devOk"></span>
@@ -103,34 +197,123 @@
   </div>
 </div>
 
-<!-- PASO 3: DEDUCCIONES -->
+<!-- PASO 3: DEDUCCIONES CON NUEVAS BASES DE COTIZACIÓN -->
 <div class="step" id="step3">
-  <h2>3. Deducciones: lo que se «retiene»</h2>
-  <div class="campo">
-    <label>Contingencias comunes (4,70 %):</label>
-    <input id="cc" value="63,45" readonly> €
+  <h2>3. Deducciones: lo que se «descuenta» de la nómina</h2>
+
+  <button class="calcBtn" onclick="toggleCalc()">📟 Calculadora</button>
+  
+  <div class="info-box">
+    <h4 style="margin-top:0;">📊 Bases de cotización</h4>
+    <div class="base-info">
+      <p><strong>Base de contingencias comunes:</strong> <span id="baseCC">1.400,00</span> €</p>
+      <p><small>Salario base + plus convenio + prorrata mensual (SIEMPRE)</small></p>
+      <p><small><strong>Se usa para:</strong> Contingencias comunes, MEI</small></p>
+    </div>
+    <div class="base-info">
+      <p><strong>Base de contingencias profesionales:</strong> <span id="baseCP">1.550,00</span> €</p>
+      <p><small>Base CC + horas extra</small></p>
+      <p><small><strong>Se usa para:</strong> Desempleo, FP, FOGASA, AT/EP</small></p>
+    </div>
+    <div class="base-info">
+      <p><strong>Base de horas extra:</strong> <span id="baseHE">150,00</span> €</p>
+      <p><small>Importe de horas extra realizadas</small></p>
+      <p><small><strong>Se usa para:</strong> Cotización horas extra</small></p>
+    </div>
+    <div class="base-info">
+      <p><strong>Base para IRPF (retención):</strong> <span id="baseIRPF">2.550,00</span> €</p>
+      <p><small>Salario base + plus + horas extra + (paga extra COMPLETA si corresponde)</small></p>
+      <p><small><strong>IMPORTANTE:</strong> NO incluye prorrata NI dietas justificadas, pero SÍ incluye paga extra completa si se cobra</small></p>
+    </div>
   </div>
-  <div class="campo">
-    <label>Desempleo (1,55 %):</label>
-    <input id="paro" value="20,93" readonly> €
+
+  <h3>Deducciones del trabajador</h3>
+  
+  <!-- SECCIÓN 1: SOBRE BASE DE CONTINGENCIAS COMUNES -->
+  <div class="info-box" style="background:#e8f4fd; margin:15px 0;">
+    <h4 style="margin-top:0;">📋 Sobre Base de Contingencias Comunes (<span id="baseCCVal">1.400,00</span> €)</h4>
+    
+    <div class="deduccion-item">
+      <div class="campo">
+        <label>Contingencias comunes (4,70 %):</label>
+        <input id="cc" value="65,80" readonly> €
+      </div>
+      <div class="deduccion-explicacion">4,70% × <span id="baseCCValCC">1.400,00</span> €</div>
+    </div>
+    
+    <div class="deduccion-item">
+      <div class="campo">
+        <label>MEI (0,13 %):</label>
+        <input id="mei" value="1,82" readonly> €
+      </div>
+      <div class="deduccion-explicacion">0,13% × <span id="baseCCValMEI">1.400,00</span> €</div>
+    </div>
   </div>
-  <div class="campo">
-    <label>FP (0,10 %):</label>
-    <input id="fp" value="1,35" readonly> €
+  
+  <!-- SECCIÓN 2: SOBRE BASE DE CONTINGENCIAS PROFESIONALES -->
+  <div class="info-box" style="background:#e8f5e8; margin:15px 0;">
+    <h4 style="margin-top:0;">📋 Sobre Base de Contingencias Profesionales (<span id="baseCPVal">1.550,00</span> €)</h4>
+    
+    <div class="deduccion-item">
+      <div class="campo">
+        <label>Desempleo (1,55 %):</label>
+        <input id="paro" value="24,03" readonly> €
+      </div>
+      <div class="deduccion-explicacion">1,55% × <span id="baseCPValParo">1.550,00</span> €</div>
+    </div>
+    
+    <div class="deduccion-item">
+      <div class="campo">
+        <label>FP (0,10 %):</label>
+        <input id="fp" value="1,55" readonly> €
+      </div>
+      <div class="deduccion-explicacion">0,10% × <span id="baseCPValFP">1.550,00</span> €</div>
+    </div>
   </div>
-  <div class="campo">
-    <label>MEI (0,13 %):</label>
-    <input id="mei" value="17,55" readonly> €
+  
+  <!-- SECCIÓN 3: SOBRE BASE DE HORAS EXTRA -->
+  <div class="info-box" style="background:#fff3cd; margin:15px 0;">
+    <h4 style="margin-top:0;">📋 Sobre Base de Horas Extra (<span id="baseHEVal">150,00</span> €)</h4>
+    
+    <div class="deduccion-item">
+      <div class="campo">
+        <label>Horas extra (4,70 %):</label>
+        <input id="hexDed" value="7,05" readonly> €
+      </div>
+      <div class="deduccion-explicacion">4,70% × <span id="baseHEValHex">150,00</span> €</div>
+    </div>
   </div>
-  <div class="campo">
-    <label>IRPF (retención 11 %):</label>
-    <input id="irpf" value="148,5" readonly> €
+  
+  <!-- SECCIÓN 4: IRPF (SOBRE BASE DE RETENCIÓN) -->
+  <div class="info-box" style="background:#f0e6fa; margin:15px 0;">
+    <h4 style="margin-top:0;">💰 Retención IRPF (sobre base de retención)</h4>
+    <p><strong>Base para IRPF:</strong> <span id="baseIRPFVal">2.550,00</span> €</p>
+    <p><small>Salario base + plus + horas extra + (paga extra COMPLETA si corresponde)</small></p>
+    <p><small><strong>NOTA:</strong> Dietas justificadas NO computan en base IRPF</small></p>
+    
+    <div class="deduccion-item">
+      <div class="campo">
+        <label>IRPF (retención 11 %):</label>
+        <input id="irpf" value="280,50" readonly> €
+      </div>
+      <div class="deduccion-explicacion">11% × <span id="baseIRPFValCalc">2.550,00</span> €</div>
+    </div>
   </div>
-  <div class="campo">
-    <label>Anticipo <small>(previa solicitud del trabajador a cuenta de trabajo ya realizado)</small>:</label>
-    <input type="number" id="ant" value="100" min="0" step="50" oninput="recalcTodo()"> €
+  
+  <!-- SECCIÓN 5: OTRAS DEDUCCIONES -->
+  <div class="info-box" style="background:#f8f9fa; margin:15px 0;">
+    <h4 style="margin-top:0;">📝 Otras deducciones</h4>
+    
+    <div class="campo">
+      <label>Anticipo:</label>
+      <input type="number" id="ant" value="100" min="0" step="50" oninput="recalcTodo()"> €
+    </div>
   </div>
-  <p>Total a deducir: <strong id="totalDed">351,33 €</strong></p>
+  
+  <div class="info-box" style="margin-top:20px; background:#d4edda; border-left-color:#28a745;">
+    <p><strong>Total a Deducir: <span id="totalDed">480,75 €</span></strong></p>
+    <p><small>Suma de todas las deducciones anteriores</small></p>
+  </div>
 
   <div class="nav-buttons">
     <button onclick="nextStep(2)">← Paso anterior</button>
@@ -140,19 +323,67 @@
 
 <!-- PASO 4: LÍQUIDO Y CUOTA PATRONAL -->
 <div class="step" id="step4">
-  <h2>4. Líquido a percibir y cuota patronal</h2>
-  <div class="resumen">
-    <strong>Líquido = Devengos – Deducciones = <span id="liq">1.058,67 €</span></strong>
+  <h2>4. Resultado final: lo que cobra el trabajador y lo que paga la empresa</h2>
+
+  <button class="calcBtn" onclick="toggleCalc()">📟 Calculadora</button>
+
+  <div class="resumen" style="border-left-color:#28a745;background:#e9f9ee;">
+    <h3 style="margin-top:0;color:#1e7e34;">💰 Líquido a percibir (trabajador)</h3>
+    <p><strong>Líquido = Devengos (<span id="txtDev">2.610,00 €</span>) – Deducciones (<span id="txtDed">480,75 €</span>) = <span id="liq">2.129,25 €</span></strong></p>
   </div>
-  <ul>
-    <li>Contingencias comunes (23,60 %): <span id="ccPat">318,60</span> €</li>
-    <li>Desempleo (5,50 %): <span id="paroPat">74,25</span> €</li>
-    <li>FP (0,60 %): <span id="fpPat">8,10</span> €</li>
-    <li>FOGASA (0,20 %): <span id="fogasaPat">2,70</span> €</li>
-    <li>MEI (0,67 %): <span id="meiPat">9,05</span> €</li>
-    <li>Cuota de solidaridad: 0 €</li>
-  </ul>
-  <p><strong>Cuota patronal total ≈ <span id="patTotal">412,70 €</span></strong></p>
+
+  <hr style="margin:2rem 0;border:0;border-top:2px dashed #bbb">
+
+  <div class="resumen" style="border-left-color:#c92a2a;background:#fdf0f0;">
+    <h3 style="margin-top:0;color:#b21818;">🏢 Cuota patronal (coste para la empresa)</h3>
+    
+    <!-- SECCIÓN 1: SOBRE BASE DE CONTINGENCIAS COMUNES -->
+    <div class="info-box" style="background:#e8f4fd; margin:15px 0;">
+      <h4 style="margin-top:0;">📋 Sobre Base de Contingencias Comunes (<span id="patBaseCC">1.400,00</span> €)</h4>
+      <ul>
+        <li>Contingencias comunes (23,60 %): <span id="ccPat">330,40</span> €</li>
+        <li>MEI (0,67 %): <span id="meiPat">9,38</span> €</li>
+      </ul>
+    </div>
+    
+    <!-- SECCIÓN 2: SOBRE BASE DE CONTINGENCIAS PROFESIONALES -->
+    <div class="info-box" style="background:#e8f5e8; margin:15px 0;">
+      <h4 style="margin-top:0;">📋 Sobre Base de Contingencias Profesionales (<span id="patBaseCP">1.550,00</span> €)</h4>
+      <ul>
+        <li>Desempleo (5,50 %): <span id="paroPat">85,25</span> €</li>
+        <li>FP (0,60 %): <span id="fpPat">9,30</span> €</li>
+        <li>FOGASA (0,20 %): <span id="fogasaPat">3,10</span> €</li>
+        <li>Contingencias profesionales (2,60 %): <span id="atPat">40,30</span> €
+          <small style="color:#666;margin-left:5px;">(Tipo específico para CNAE 1411)</small>
+        </li>
+      </ul>
+    </div>
+    
+    <!-- SECCIÓN 3: SOBRE BASE DE HORAS EXTRA -->
+    <div class="info-box" style="background:#fff3cd; margin:15px 0;">
+      <h4 style="margin-top:0;">📋 Sobre Base de Horas Extra (<span id="patBaseHE">150,00</span> €)</h4>
+      <ul>
+        <li>Horas extra (23,60 %): <span id="hexPat">35,40</span> €</li>
+      </ul>
+    </div>
+
+    <div class="info-box" style="margin-top:20px; background:#f8d7da; border-left-color:#c92a2a;">
+      <p><strong>Cuota patronal total ≈ <span id="patTotal">513,13 €</span></strong></p>
+      <p><small>Suma de todas las cotizaciones empresariales</small></p>
+    </div>
+    
+    <div class="info-box" style="margin-top:10px;">
+      <strong>💼 Resumen de bases de cotización:</strong>
+      <p>✅ <strong>Base CC:</strong> Salario base + plus + prorrata mensual (SIEMPRE)</p>
+      <p>✅ <strong>Base CP:</strong> Base CC + horas extra</p>
+      <p>✅ <strong>Base HE:</strong> Solo horas extra</p>
+      <p>💰 <strong>Base IRPF :</strong> Salario base + plus + horas extra + (paga extra completa si hay)</p>
+      <p><strong>💡 Diferencia clave:</strong> 
+        <br>• Bases de cotización SIEMPRE llevan prorrata.
+        <br>• Base IRPF NO lleva prorrata NI dietas justificadas, pero SÍ lleva paga extra completa en meses que se cobra.
+      </p>
+    </div>
+  </div>
 
   <div class="nav-buttons">
     <button onclick="nextStep(3)">← Paso anterior</button>
@@ -163,13 +394,16 @@
 <!-- PASO 5: BONIFICACIONES -->
 <div class="step" id="step5">
   <h2>5. Bonificaciones: cuando la cuota patronal «baja»</h2>
+
+  <button class="calcBtn" onclick="toggleCalc()">📟 Calculadora</button>
+
   <ul class="resumen">
-    <li>Devengos: <span id="devRes">1.410 €</span></li>
-    <li>Líquido tras deducciones: <span id="liqRes">1.058,67 €</span></li>
-    <li>Cuota patronal sin bonificar: <span id="patRes">412,70 €</span></li>
+    <li>Devengos: <span id="devRes">2.610,00 €</span></li>
+    <li>Líquido tras deducciones: <span id="liqRes">2.129,25 €</span></li>
+    <li>Cuota patronal sin bonificar: <span id="patRes">513,13 €</span></li>
   </ul>
   <p>Bonificación 40 % por contratar parado de larga duración:</p>
-  <p>Ahorro mensual ≈ <span id="ahorro">165,08 €</span></p>
+  <p>Ahorro mensual ≈ <span id="ahorro">205,25 €</span></p>
   <div class="mini-test">
     <h4>🎯 Reto final</h4>
     <p>¿Coste total para la empresa tras la bonificación?</p>
@@ -183,122 +417,452 @@
   </div>
 </div>
 
+<!-- CALCULADORA FLOTANTE -->
+<div id="calc" style="display:none; position:fixed; bottom:20px; right:20px; 
+  padding:1em; border:1px solid #ccc; width:220px; background:#f8f8f8;
+  border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.3); z-index:9999;">
+
+  <input id="calcDisplay" type="text" 
+    style="width:100%; margin-bottom:10px; padding:8px; text-align:right; font-size:1.1em;" 
+    readonly>
+
+  <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:5px;">
+    <button onclick="press('7')">7</button>
+    <button onclick="press('8')">8</button>
+    <button onclick="press('9')">9</button>
+    <button onclick="press('/')">÷</button>
+
+    <button onclick="press('4')">4</button>
+    <button onclick="press('5')">5</button>
+    <button onclick="press('6')">6</button>
+    <button onclick="press('*')">×</button>
+
+    <button onclick="press('1')">1</button>
+    <button onclick="press('2')">2</button>
+    <button onclick="press('3')">3</button>
+    <button onclick="press('-')">−</button>
+
+    <button onclick="press('0')">0</button>
+    <button onclick="press('.')">.</button>
+    <button onclick="calcClear()">C</button>
+    <button onclick="press('+')">+</button>
+
+    <button onclick="calcEqual()" 
+      style="grid-column: span 4; background:#007bff; color:white; padding:8px;">=</button>
+  </div>
+</div>
+
 <script>
-  // ---------- NAVEGACIÓN ----------
+  // Variables globales para meses de pagas extras
+  let mesesPagasExtras = [6, 12]; // Por defecto: junio y diciembre
+  
+  function toggleCalc(){
+    const c=document.getElementById('calc');
+    c.style.display=(c.style.display==='none')?'block':'none';
+  }
+  function press(v){
+    document.getElementById('calcDisplay').value+=v;
+  }
+  function calcClear(){
+    document.getElementById('calcDisplay').value='';
+  }
+  function calcEqual(){
+    try{
+      const res=eval(document.getElementById('calcDisplay').value);
+      document.getElementById('calcDisplay').value=res;
+    }catch{
+      document.getElementById('calcDisplay').value='Error';
+    }
+  }
+
   function nextStep(n){
     document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
     document.getElementById('step'+n).classList.add('active');
   }
 
-  // ---------- CÁLCULOS ----------
-  function recalcTodo(){
-    // Devengos
-    const sal  = parseFloat(document.getElementById('salBase').value)||0;
-    const plus = parseFloat(document.getElementById('plus').value)||0;
-    const hex  = parseFloat(document.getElementById('hex').value)||0;
-    const dieta= parseFloat(document.getElementById('dieta').value)||0;
-    const devengos = sal + plus + hex + dieta;
-    const salarial   = sal + plus + hex;
-    document.getElementById('totDev').textContent = numES(devengos);
-
-    // Actualizar opciones del mini-reto
-    generarOpciones(salarial, devengos);
-
-    // Deducciones sobre base salarial (sin dieta)
-    const baseSS = salarial;
-    const cc   = baseSS * 0.047;
-    const paro = baseSS * 0.0155;
-    const fp   = baseSS * 0.001;
-    const mei  = baseSS * 0.0013;
-    const irpf = devengos * 0.11;   // sobre total devengado
-    const ant  = parseFloat(document.getElementById('ant').value)||0;
-    const totalDed = cc+paro+fp+mei+irpf+ant;
-
-    // Mostrar deducciones
-    document.getElementById('cc').value   = numES(cc);
-    document.getElementById('paro').value = numES(paro);
-    document.getElementById('fp').value   = numES(fp);
-    document.getElementById('mei').value  = numES(mei);
-    document.getElementById('irpf').value = numES(irpf);
-    document.getElementById('totalDed').textContent = numES(totalDed);
-
-    // Líquido
-    const liquido = devengos - totalDed;
-    document.getElementById('liq').textContent = numES(liquido);
-    document.getElementById('liqRes').textContent= numES(liquido);
-
-    // Cuota patronal
-    const patCC   = baseSS * 0.236;
-    const patParo = baseSS * 0.055;
-    const patFP   = baseSS * 0.006;
-    const patFog  = baseSS * 0.002;
-    const patMEI  = baseSS * 0.0067;
-    const patTotal= patCC+patParo+patFP+patFog+patMEI;
-
-    document.getElementById('ccPat').textContent  = numES(patCC);
-    document.getElementById('paroPat').textContent= numES(patParo);
-    document.getElementById('fpPat').textContent  = numES(patFP);
-    document.getElementById('fogasaPat').textContent= numES(patFog);
-    document.getElementById('meiPat').textContent = numES(patMEI);
-    document.getElementById('patTotal').textContent = numES(patTotal);
-
-    // Resúmenes paso 5
-    document.getElementById('devRes').textContent = numES(devengos);
-    document.getElementById('patRes').textContent = numES(patTotal);
-    document.getElementById('ahorro').textContent = numES(patTotal*0.4);
+  // Función para actualizar la selección de meses de pagas extras
+  function actualizarMesesPagas() {
+    const numPagas = parseInt(document.getElementById('numPagas').value) || 0;
+    const container = document.getElementById('mesesPagasContainer');
+    const selectDiv = document.getElementById('mesesPagasSelect');
+    const infoSpan = document.getElementById('infoPagasExtras');
+    
+    if (numPagas > 0) {
+      container.style.display = 'block';
+      
+      // Texto informativo
+      if (numPagas === 2) {
+        infoSpan.textContent = '(normalmente junio y diciembre)';
+      } else {
+        infoSpan.textContent = `(${numPagas} pagas al año)`;
+      }
+      
+      // Generar selects para cada paga extra
+      selectDiv.innerHTML = '';
+      mesesPagasExtras = [];
+      
+      for (let i = 1; i <= numPagas; i++) {
+        const select = document.createElement('select');
+        select.id = `mesPaga${i}`;
+        select.onchange = recalcTodo;
+        
+        // Opciones de meses
+        const meses = [
+          {num: 1, nombre: 'Enero'},
+          {num: 2, nombre: 'Febrero'},
+          {num: 3, nombre: 'Marzo'},
+          {num: 4, nombre: 'Abril'},
+          {num: 5, nombre: 'Mayo'},
+          {num: 6, nombre: 'Junio'},
+          {num: 7, nombre: 'Julio'},
+          {num: 8, nombre: 'Agosto'},
+          {num: 9, nombre: 'Septiembre'},
+          {num: 10, nombre: 'Octubre'},
+          {num: 11, nombre: 'Noviembre'},
+          {num: 12, nombre: 'Diciembre'}
+        ];
+        
+        meses.forEach(mes => {
+          const option = document.createElement('option');
+          option.value = mes.num;
+          option.textContent = mes.nombre;
+          // Por defecto: primera paga en junio, segunda en diciembre
+          if (numPagas === 2) {
+            if (i === 1 && mes.num === 6) option.selected = true;
+            if (i === 2 && mes.num === 12) option.selected = true;
+          } else {
+            // Para otras configuraciones, distribuir los meses
+            if (i === 1 && mes.num === 6) option.selected = true;
+            if (i === 2 && mes.num === 12) option.selected = true;
+            if (i === 3 && mes.num === 3) option.selected = true;
+            if (i === 4 && mes.num === 9) option.selected = true;
+            if (i === 5 && mes.num === 1) option.selected = true;
+          }
+          select.appendChild(option);
+        });
+        
+        const label = document.createElement('label');
+        label.innerHTML = `Paga extra ${i}: `;
+        label.style.display = 'block';
+        label.style.margin = '5px 0';
+        label.appendChild(select);
+        selectDiv.appendChild(label);
+      }
+    } else {
+      container.style.display = 'none';
+      infoSpan.textContent = '';
+    }
+    
+    // Guardar los meses seleccionados
+    guardarMesesPagas();
   }
 
-  // Generar opciones aleatorias para el mini-reto
+  function guardarMesesPagas() {
+    const numPagas = parseInt(document.getElementById('numPagas').value) || 0;
+    mesesPagasExtras = [];
+    
+    for (let i = 1; i <= numPagas; i++) {
+      const select = document.getElementById(`mesPaga${i}`);
+      if (select) {
+        mesesPagasExtras.push(parseInt(select.value));
+      }
+    }
+    
+    // Si no hay selects (página recién cargada), usar valores por defecto
+    if (mesesPagasExtras.length === 0 && numPagas > 0) {
+      if (numPagas === 2) {
+        mesesPagasExtras = [6, 12];
+      } else if (numPagas === 3) {
+        mesesPagasExtras = [3, 6, 12];
+      } else if (numPagas === 4) {
+        mesesPagasExtras = [3, 6, 9, 12];
+      } else if (numPagas === 5) {
+        mesesPagasExtras = [1, 3, 6, 9, 12];
+      }
+    }
+    
+    // Ordenar meses
+    mesesPagasExtras.sort((a, b) => a - b);
+  }
+
+  // Función para formatear números con separadores de miles y 2 decimales
+  function numES(num) {
+    return new Intl.NumberFormat('es-ES', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(num);
+  }
+
+  function recalcTodo(){
+    // Obtener el mes seleccionado
+    const periodo = document.getElementById('periodo').value;
+    const mesActual = periodo ? parseInt(periodo.split('-')[1]) : 12;
+    const anioActual = periodo ? parseInt(periodo.split('-')[0]) : 2025;
+    
+    // Actualizar indicador del mes
+    const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
+                   'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    const indicadorMes = document.getElementById('indicadorMes');
+    
+    // Asegurarnos de que tenemos los meses actualizados
+    guardarMesesPagas();
+    
+    const esMesPagaExtra = mesesPagasExtras.includes(mesActual);
+    
+    if (esMesPagaExtra) {
+      indicadorMes.innerHTML = `<span class="mes-paga-extra">📅 ${meses[mesActual-1]} - Mes de paga extra</span>`;
+    } else {
+      indicadorMes.innerHTML = `<span>${meses[mesActual-1]}</span>`;
+    }
+    
+    // Obtener valores de devengos
+    const sal = parseFloat(document.getElementById('salBase').value) || 0;
+    const plus = parseFloat(document.getElementById('plus').value) || 0;
+    const hex = parseFloat(document.getElementById('hex').value) || 0;
+    const dieta = parseFloat(document.getElementById('dieta').value) || 0;
+    
+    // Calcular prorrata de pagas extras
+    const numPagas = parseInt(document.getElementById('numPagas').value) || 0;
+    const conceptoPagas = document.querySelector('input[name="conceptoPagas"]:checked').value;
+    
+    let basePagasExtra = 0;
+    if (numPagas > 0) {
+      if (conceptoPagas === 'salarioBase') {
+        basePagasExtra = sal;
+      } else if (conceptoPagas === 'salarioBasePlus') {
+        basePagasExtra = sal + plus;
+      }
+    }
+    
+    const prorrataMensualPagas = (basePagasExtra * numPagas) / 12;
+    document.getElementById('prorrataPagas').textContent = numES(prorrataMensualPagas);
+    
+    // Verificar si es mes de paga extra
+    const pagaExtraActualInfo = document.getElementById('pagaExtraActualInfo');
+    
+    let pagaExtraEsteMes = 0;
+    if (esMesPagaExtra && numPagas > 0) {
+      pagaExtraEsteMes = basePagasExtra;
+      pagaExtraActualInfo.style.display = 'block';
+      document.getElementById('importePagaExtraActual').textContent = numES(pagaExtraEsteMes);
+    } else {
+      pagaExtraActualInfo.style.display = 'none';
+    }
+    
+    // ¡¡¡CORRECCIÓN DEFINITIVA!!!
+    // 1. Bases de cotización: SIEMPRE incluyen prorrata mensual
+    const baseCC = sal + plus + prorrataMensualPagas; // SIEMPRE con prorrata
+    
+    // 2. Base de Contingencias Profesionales: Base CC + horas extra
+    const baseCP = baseCC + hex; // También SIEMPRE con prorrata (a través de Base CC)
+    
+    // 3. Base de Horas Extra: solo horas extra
+    const baseHE = hex;
+    
+    // 4. Base para IRPF: NO incluye prorrata NI dietas justificadas, pero SÍ incluye paga extra completa si se cobra
+    const baseIRPF = sal + plus + hex + pagaExtraEsteMes; // ¡NO dietas justificadas!
+    
+    // Mostrar bases de cotización
+    document.getElementById('baseCC').textContent = numES(baseCC);
+    document.getElementById('baseCP').textContent = numES(baseCP);
+    document.getElementById('baseHE').textContent = numES(baseHE);
+    document.getElementById('baseIRPF').textContent = numES(baseIRPF);
+    
+    // Actualizar valores en las explicaciones de deducciones
+    document.getElementById('baseCCVal').textContent = numES(baseCC);
+    document.getElementById('baseCCValCC').textContent = numES(baseCC);
+    document.getElementById('baseCCValMEI').textContent = numES(baseCC);
+    document.getElementById('baseCPVal').textContent = numES(baseCP);
+    document.getElementById('baseCPValParo').textContent = numES(baseCP);
+    document.getElementById('baseCPValFP').textContent = numES(baseCP);
+    document.getElementById('baseHEVal').textContent = numES(baseHE);
+    document.getElementById('baseHEValHex').textContent = numES(baseHE);
+    document.getElementById('baseIRPFVal').textContent = numES(baseIRPF);
+    document.getElementById('baseIRPFValCalc').textContent = numES(baseIRPF);
+    
+    // Calcular devengos totales (incluyendo paga extra si corresponde)
+    const devengos = sal + plus + hex + dieta + pagaExtraEsteMes;
+    const salarial = sal + plus + hex + pagaExtraEsteMes;
+    document.getElementById('totDev').textContent = numES(devengos);
+    
+    // Actualizar mini-reto
+    generarOpciones(salarial, devengos);
+    
+    // CALCULAR DEDUCCIONES DEL TRABAJADOR - SEGÚN BASE CORRECTA
+    // Sobre Base de Contingencias Comunes:
+    const cc = baseCC * 0.047; // 4.70% sobre base CC
+    const mei = baseCC * 0.0013; // 0.13% sobre base CC
+    
+    // Sobre Base de Contingencias Profesionales:
+    const paro = baseCP * 0.0155; // 1.55% sobre base CP
+    const fp = baseCP * 0.001; // 0.10% sobre base CP
+    
+    // Sobre Base de Horas Extra:
+    const hexDed = baseHE * 0.047; // 4.70% sobre base horas extra
+    
+    // IRPF sobre Base IRPF (¡NO incluye prorrata NI dietas, pero SÍ paga extra si corresponde!)
+    const irpf = baseIRPF * 0.11; // 11% sobre base IRPF
+    
+    const ant = parseFloat(document.getElementById('ant').value) || 0;
+    
+    const totalDed = cc + mei + paro + fp + hexDed + irpf + ant;
+    
+    // Actualizar deducciones
+    document.getElementById('cc').value = numES(cc);
+    document.getElementById('mei').value = numES(mei);
+    document.getElementById('paro').value = numES(paro);
+    document.getElementById('fp').value = numES(fp);
+    document.getElementById('hexDed').value = numES(hexDed);
+    document.getElementById('irpf').value = numES(irpf);
+    document.getElementById('totalDed').textContent = numES(totalDed);
+    
+    // Calcular líquido
+    const liquido = devengos - totalDed;
+    document.getElementById('liq').textContent = numES(liquido);
+    document.getElementById('liqRes').textContent = numES(liquido);
+    
+    // Actualizar texto con paréntesis
+    document.getElementById('txtDev').textContent = numES(devengos);
+    document.getElementById('txtDed').textContent = numES(totalDed);
+    
+    // CALCULAR CUOTA PATRONAL - SEGÚN BASE CORRECTA
+    // Sobre Base de Contingencias Comunes:
+    const patCC = baseCC * 0.236; // 23.60% sobre base CC
+    const patMEI = baseCC * 0.0067; // 0.67% sobre base CC
+    
+    // Sobre Base de Contingencias Profesionales:
+    const patParo = baseCP * 0.055; // 5.50% sobre base CP
+    const patFP = baseCP * 0.006; // 0.60% sobre base CP
+    const patFog = baseCP * 0.002; // 0.20% sobre base CP
+    const patAT = baseCP * 0.026; // 2.60% sobre base CP (CNAE 1411)
+    
+    // Sobre Base de Horas Extra:
+    const patHE = baseHE * 0.236; // 23.60% sobre base horas extra
+    
+    const patTotal = patCC + patMEI + patParo + patFP + patFog + patAT + patHE;
+    
+    // Actualizar cuota patronal
+    document.getElementById('patBaseCC').textContent = numES(baseCC);
+    document.getElementById('patBaseCP').textContent = numES(baseCP);
+    document.getElementById('patBaseHE').textContent = numES(baseHE);
+    
+    document.getElementById('ccPat').textContent = numES(patCC);
+    document.getElementById('meiPat').textContent = numES(patMEI);
+    document.getElementById('paroPat').textContent = numES(patParo);
+    document.getElementById('fpPat').textContent = numES(patFP);
+    document.getElementById('fogasaPat').textContent = numES(patFog);
+    document.getElementById('atPat').textContent = numES(patAT);
+    document.getElementById('hexPat').textContent = numES(patHE);
+    document.getElementById('patTotal').textContent = numES(patTotal);
+    
+    // Actualizar resumen paso 5
+    document.getElementById('devRes').textContent = numES(devengos);
+    document.getElementById('patRes').textContent = numES(patTotal);
+    document.getElementById('ahorro').textContent = numES(patTotal * 0.4);
+  }
+
   function generarOpciones(salarial, devengos){
-    const sb = parseFloat(document.getElementById('salBase').value)||0;
-    const plus = parseFloat(document.getElementById('plus').value)||0;
-    const hex = parseFloat(document.getElementById('hex').value)||0;
-    const op1 = {txt:'', val:sb+hex};
-    const op2 = {txt:'', val:plus+sb};
-    const op3 = {txt:'', val:devengos};
-    const op4 = {txt:'', val:salarial};
-
-    // Mezclar orden
-    const ops = [op1, op2, op3, op4];
-    ops.sort(()=>Math.random()-0.5);
-
-    const container=document.getElementById('opcionesReto');
-    container.innerHTML='';
-    ops.forEach((o,i)=>{
-      const lbl=document.createElement('label');
-      lbl.className='opcion';
-      lbl.innerHTML=`<input type="radio" name="dev" value="${o.val}"> ${numES(o.val)} €`;
-      container.appendChild(lbl);
+    const sb = parseFloat(document.getElementById('salBase').value) || 0;
+    const plus = parseFloat(document.getElementById('plus').value) || 0;
+    const hex = parseFloat(document.getElementById('hex').value) || 0;
+    const dieta = parseFloat(document.getElementById('dieta').value) || 0;
+    
+    const ops = [
+      {val: sb + hex, text: numES(sb + hex) + ' €'},
+      {val: plus + sb, text: numES(plus + sb) + ' €'},
+      {val: devengos, text: numES(devengos) + ' €'},
+      {val: salarial, text: numES(salarial) + ' €'}
+    ];
+    
+    // Mezclar las opciones
+    for (let i = ops.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [ops[i], ops[j]] = [ops[j], ops[i]];
+    }
+    
+    // Mostrar las opciones
+    const opcionesDiv = document.getElementById('opcionesReto');
+    opcionesDiv.innerHTML = '';
+    
+    ops.forEach((op, index) => {
+      const label = document.createElement('label');
+      label.className = 'opcion';
+      
+      const radio = document.createElement('input');
+      radio.type = 'radio';
+      radio.name = 'opcionDev';
+      radio.value = op.val;
+      radio.id = 'op' + index;
+      
+      label.appendChild(radio);
+      label.appendChild(document.createTextNode(' ' + op.text));
+      opcionesDiv.appendChild(label);
     });
   }
 
-  // ---------- COMPROBACIONES ----------
-  function checkDev(){
-    const ok = document.querySelector('input[name="dev"]:checked');
-    const salarial = parseFloat(document.getElementById('salDev').textContent.replace(',','.'));
-    if(!ok){
-      document.getElementById('devOk').textContent='❌ Selecciona una opción';
+  function checkDev() {
+    const sb = parseFloat(document.getElementById('salBase').value) || 0;
+    const plus = parseFloat(document.getElementById('plus').value) || 0;
+    const hex = parseFloat(document.getElementById('hex').value) || 0;
+    const dieta = parseFloat(document.getElementById('dieta').value) || 0;
+    
+    // Obtener el mes seleccionado
+    const periodo = document.getElementById('periodo').value;
+    const mesActual = periodo ? parseInt(periodo.split('-')[1]) : 12;
+    const esMesPagaExtra = mesesPagasExtras.includes(mesActual);
+    
+    // Calcular paga extra si corresponde
+    const numPagas = parseInt(document.getElementById('numPagas').value) || 0;
+    const conceptoPagas = document.querySelector('input[name="conceptoPagas"]:checked').value;
+    
+    let pagaExtraEsteMes = 0;
+    if (esMesPagaExtra && numPagas > 0) {
+      if (conceptoPagas === 'salarioBase') {
+        pagaExtraEsteMes = sb;
+      } else if (conceptoPagas === 'salarioBasePlus') {
+        pagaExtraEsteMes = sb + plus;
+      }
+    }
+    
+    const salarial = sb + plus + hex + pagaExtraEsteMes;
+    
+    const selected = document.querySelector('input[name="opcionDev"]:checked');
+    const resultSpan = document.getElementById('devOk');
+    
+    if (!selected) {
+      resultSpan.innerHTML = '<span style="color:red;">Selecciona una opción</span>';
       return;
     }
-    const acierto = parseFloat(ok.value) === Math.round(salarial);
-    document.getElementById('devOk').textContent = acierto ? '✅ Correcto' : '❌ Prueba otra vez';
+    
+    const selectedValue = parseFloat(selected.value);
+    
+    if (Math.abs(selectedValue - salarial) < 0.01) {
+      resultSpan.innerHTML = '<span style="color:green;">✅ ¡Correcto! El salario es ' + numES(salarial) + ' € (excluye dietas justificadas)</span>';
+    } else {
+      resultSpan.innerHTML = '<span style="color:red;">❌ Incorrecto. El salario es ' + numES(salarial) + ' € (salario base + plus + horas extra + paga extra si corresponde)</span>';
+    }
   }
 
-  function checkReto(){
-    const devengos = parseFloat(document.getElementById('devRes').textContent.replace(',','.'));
-    const patTotal = parseFloat(document.getElementById('patRes').textContent.replace(',','.'));
-    const esperado = (devengos + patTotal*0.6).toFixed(2);
-    const val = parseFloat(document.getElementById('reto').value);
-    document.getElementById('retoOk').textContent = (Math.abs(val-esperado)<1) ? '✅ Muy bien' : '❌ Recuerda: devengos + cuota patronal tras bonificación';
+  function checkReto() {
+    const patTotal = parseFloat(document.getElementById('patTotal').textContent.replace('.', '').replace(',', '.')) || 0;
+    const ahorro = patTotal * 0.4;
+    const costeConBonificacion = patTotal - ahorro;
+    
+    const inputVal = parseFloat(document.getElementById('reto').value) || 0;
+    const resultSpan = document.getElementById('retoOk');
+    
+    if (Math.abs(inputVal - costeConBonificacion) < 0.01) {
+      resultSpan.innerHTML = '<span style="color:green;">✅ ¡Correcto! Coste con bonificación: ' + numES(costeConBonificacion) + ' €</span>';
+    } else {
+      resultSpan.innerHTML = '<span style="color:red;">❌ Incorrecto. Coste con bonificación: ' + numES(costeConBonificacion) + ' €</span>';
+    }
   }
 
-  // helper para formato numérico español
-  function numES(n){
-    return n.toLocaleString('es-ES',{minimumFractionDigits:2, maximumFractionDigits:2});
-  }
-
-  // inicializar
-  recalcTodo();
+  // Inicializar la página
+  window.onload = function() {
+    actualizarMesesPagas();
+    recalcTodo();
+  };
 </script>
 </body>
 </html>
