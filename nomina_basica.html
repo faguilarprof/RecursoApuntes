@@ -843,20 +843,23 @@
     }
   }
 
-  function checkReto() {
-    const patTotal = parseFloat(document.getElementById('patTotal').textContent.replace('.', '').replace(',', '.')) || 0;
-    const ahorro = patTotal * 0.4;
-    const costeConBonificacion = patTotal - ahorro;
-    
-    const inputVal = parseFloat(document.getElementById('reto').value) || 0;
-    const resultSpan = document.getElementById('retoOk');
-    
-    if (Math.abs(inputVal - costeConBonificacion) < 0.01) {
-      resultSpan.innerHTML = '<span style="color:green;">✅ ¡Correcto! Coste con bonificación: ' + numES(costeConBonificacion) + ' €</span>';
-    } else {
-      resultSpan.innerHTML = '<span style="color:red;">❌ Incorrecto. Coste con bonificación: ' + numES(costeConBonificacion) + ' €</span>';
-    }
+function checkReto() {
+  const dev = parseFloat(document.getElementById("devRes").textContent.replace(" €","").replace(".","").replace(",","."));
+  const pat = parseFloat(document.getElementById("patRes").textContent.replace(" €","").replace(".","").replace(",","."));
+  const ahorro = parseFloat(document.getElementById("ahorro").textContent.replace(" €","").replace(".","").replace(",","."));
+
+  const correcto = dev + pat - ahorro;
+
+  const valorUsuario = parseFloat(document.getElementById("reto").value);
+
+  if (Math.abs(valorUsuario - correcto) < 0.5) {
+    document.getElementById("retoOk").textContent = "✔️ Correcto";
+    document.getElementById("retoOk").style.color = "green";
+  } else {
+    document.getElementById("retoOk").textContent = "❌ Incorrecto. Intenta de nuevo.";
+    document.getElementById("retoOk").style.color = "red";
   }
+}
 
   // Inicializar la página
   window.onload = function() {
