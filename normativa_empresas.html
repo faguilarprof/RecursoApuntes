@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Filtro de Normativa - Empresas</title>
+  <style>
+    :root {
+      --bg: #f5f7fa;
+      --card: #ffffff;
+      --primary: #005f73;
+      --accent: #0a9396;
+      --text: #222;
+      --subtle: #6c757d;
+      --shadow: 0 10px 25px rgba(0,0,0,.1);
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .main-container {
+      display: flex;
+      max-width: 1200px;
+      width: 100%;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    .container {
+      max-width: 700px;
+      width: 100%;
+      background: var(--card);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 40px;
+      animation: fadeIn .6s ease forwards;
+    }
+
+    .image-container {
+      flex: 1;
+      min-width: 300px;
+      max-width: 450px;
+      background: var(--card);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn .8s ease forwards;
+    }
+
+    .image-placeholder {
+      width: 100%;
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      border-radius: 12px;
+      margin-bottom: 25px;
+      overflow: hidden;
+      border: 1px solid #eaeaea;
+      position: relative;
+    }
+
+    .image-placeholder img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .image-placeholder img:hover {
+      transform: scale(1.03);
+    }
+
+    .image-credits {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      font-size: 0.7rem;
+      padding: 4px 8px;
+      border-radius: 4px;
+      opacity: 0.8;
+    }
+
+    .image-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--primary);
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .image-description {
+      font-size: 0.95rem;
+      color: var(--subtle);
+      text-align: center;
+      line-height: 1.5;
+      padding: 0 10px;
+      margin-bottom: 15px;
+    }
+
+    .image-license {
+      font-size: 0.8rem;
+      color: #888;
+      text-align: center;
+      font-style: italic;
+      margin-top: 10px;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    label {
+      display: block;
+      margin: 20px 0 6px;
+      font-weight: 600;
+      color: var(--subtle);
+    }
+
+    select {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      background: #fff;
+      transition: border .3s, box-shadow .3s;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(10, 147, 150, 0.1);
+    }
+
+    #resultado {
+      margin-top: 30px;
+      padding: 20px;
+      border-left: 5px solid var(--accent);
+      background: #f0fdff;
+      border-radius: 8px;
+      font-size: 1rem;
+      line-height: 1.5;
+      display: none;
+      animation: slideUp .5s ease;
+    }
+
+    .criteria-icon {
+      font-size: 1.2rem;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .image-pulse {
+      animation: pulse 2s infinite;
+    }
+
+    @media (max-width: 768px) {
+      .main-container {
+        flex-direction: column;
+      }
+      
+      .image-container {
+        max-width: 100%;
+      }
+      
+      .image-placeholder {
+        height: 250px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="main-container">
+    <div class="container">
+      <h2>Explora la normativa que afecta a tu empresa</h2>
+
+      <label for="criterio">Criterio:</label>
+      <select id="criterio" onchange="actualizarNormas()">
+        <option value="">-- Selecciona --</option>
+        <option value="general"><span class="criteria-icon">📋</span> General</option>
+        <option value="contabilidad"><span class="criteria-icon">💰</span> Contabilidad</option>
+        <option value="mercantil"><span class="criteria-icon">⚖️</span> Mercantil</option>
+        <option value="laboral"><span class="criteria-icon">👷</span> Laboral y Seguridad Social</option>
+        <option value="cese"><span class="criteria-icon">🚪</span> Cese de empresas</option>
+        <option value="fiscal"><span class="criteria-icon">📊</span> Fiscal</option>
+        <option value="contratacion"><span class="criteria-icon">📝</span> Contratación pública</option>
+        <option value="financiacion"><span class="criteria-icon">💳</span> Financiación</option>
+        <option value="datos"><span class="criteria-icon">🔒</span> Protección de datos</option>
+        <option value="igualdad"><span class="criteria-icon">⚖️</span> Igualdad</option>
+      </select>
+
+      <label for="norma">Norma:</label>
+      <select id="norma" onchange="mostrarImpacto()">
+        <option value="">-- Selecciona --</option>
+      </select>
+
+      <div id="resultado"></div>
+    </div>
+
+    <div class="image-container">
+      <div class="image-placeholder">
+        <img id="criteria-image" src="https://images.pexels.com/photos/256381/pexels-photo-256381.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Imagen representativa del criterio seleccionado">
+        <div class="image-credits" id="image-credits">Pexels</div>
+      </div>
+      <div class="image-title" id="image-title">Normativa Empresarial</div>
+      <div class="image-description" id="image-description">Selecciona un criterio para explorar la normativa específica que afecta a diferentes áreas de tu empresa. Cada área tiene regulaciones específicas que es importante conocer.</div>
+      <div class="image-license" id="image-license">Imágenes bajo licencia Creative Commons - Fuente: Pexels</div>
+    </div>
+  </div>
+
+  <script>
+    const normas = {
+      general: [
+        ["Real Decreto de 24 de julio de 1889, por el que se publica el Código Civil", "Base general de obligaciones y contratos que rigen muchas relaciones jurídicas de la empresa (contratos con clientes, proveedores, etc.)."],
+        ["Ley 1/2000, de 7 de enero, de Enjuiciamiento Civil", "Regula cómo se desarrollan los procedimientos judiciales civiles y mercantiles cuando la empresa tiene conflictos ante los tribunales."],
+        ["Ley Orgánica 6/1985, de 1 de julio, del Poder Judicial", "Organiza los órganos judiciales con los que la empresa puede relacionarse en litigios, recursos y otros procedimientos."],
+        ["Ley 2/2011, de 4 de marzo, de Economía Sostenible", "Impulsa prácticas empresariales competitivas y sostenibles, influyendo en políticas de innovación, eficiencia y responsabilidad social."]
+      ],
+      contabilidad: [
+        ["Real Decreto 1514/2007, de 16 de noviembre, por el que se aprueba el Plan General de Contabilidad", "Fija las normas de registro y valoración contable que la empresa debe seguir para elaborar sus cuentas anuales."],
+        ["Real Decreto 1/2021, de 12 de enero, por el que se modifica el Plan General de Contabilidad, el PGC de PYMES y otras normas contables", "Actualiza criterios contables, especialmente para PYMES, afectando a cómo la empresa presenta su información financiera."]
+      ],
+      mercantil: [
+        ["Real Decreto de 22 de agosto de 1885, por el que se publica el Código de Comercio", "Regula los actos de comercio, la contabilidad mercantil y aspectos básicos del empresario."],
+        ["Ley 34/2002, de 11 de julio, de servicios de la sociedad de la información y de comercio electrónico", "Establece obligaciones para empresas que prestan servicios por Internet o realizan comercio electrónico (información web, comunicaciones comerciales, etc.)."],
+        ["Ley 7/1996, de 15 de enero, de Ordenación del Comercio Minorista", "Regula la actividad comercial al por menor, horarios, rebajas, ventas promocionales y relaciones con los consumidores."],
+        ["Real Decreto Legislativo 1/2010, de 2 de julio, por el que se aprueba el texto refundido de la Ley de Sociedades de Capital", "Regula constitución, funcionamiento, órganos sociales, responsabilidad y disolución de sociedades anónimas y limitadas."],
+        ["Ley 27/1999, de 16 de julio, de Cooperativas", "Establece el régimen jurídico de las cooperativas, su constitución, órganos y reparto de resultados."],
+        ["Real Decreto 1784/1996, de 19 de julio, por el que se aprueba el Reglamento del Registro Mercantil", "Regula inscripciones obligatorias (constitución, cargos, cuentas anuales) que dan publicidad legal a la vida de la empresa."],
+        ["Ley 18/2022, de 28 de septiembre, de creación y crecimiento de empresas", "Facilita la constitución rápida y telemática, impulsa la factura electrónica y medidas para reducir la morosidad."],
+        ["Ley 44/2015, de 14 de octubre, de Sociedades Laborales y Participadas", "Regula sociedades donde la mayoría del capital está en manos de las personas trabajadoras, afectando a su organización y beneficios específicos."]
+      ],
+      laboral: [
+        ["Real Decreto Legislativo 8/2015, de 30 de octubre, por el que se aprueba el texto refundido de la Ley General de la Seguridad Social", "Fija la obligación de alta, cotización y protección social de las personas trabajadoras de la empresa."],
+        ["Real Decreto Legislativo 3/2015, de 23 de octubre, por el que se aprueba el texto refundido de la Ley de Empleo", "Regula políticas de empleo y programas que pueden influir en incentivos a la contratación."],
+        ["Real Decreto Legislativo 2/2015, de 23 de octubre, por el que se aprueba el texto refundido de la Ley del Estatuto de los Trabajadores", "Norma básica sobre contratos, jornada, salarios, despidos y derechos laborales en la empresa."],
+        ["Ley 20/2007, de 11 de julio, del Estatuto del trabajo autónomo", "Regula el régimen profesional de autónomos, incluidos los económicamente dependientes que colaboran con la empresa."],
+        ["Ley 14/1994, de 1 de junio, por la que se regulan las empresas de trabajo temporal", "Establece condiciones para contratar personal a través de ETT y la responsabilidad de la empresa usuaria."],
+        ["Real Decreto 197/2009, de 23 de febrero, por el que se desarrolla el Estatuto del Trabajo Autónomo en materia de contrato del trabajador autónomo económicamente dependiente y su registro, y se crea el Registro Estatal de asociaciones profesionales de trabajadores autónomos", "Regula forma y registro de los contratos con autónomos económicamente dependientes vinculados a la empresa."]
+      ],
+      cese: [
+        ["Real Decreto 867/2015, de 2 de octubre, por el que se regulan las especificaciones y condiciones para el empleo del Documento Único Electrónico para el cese de actividad y extinción de las sociedades de responsabilidad limitada y el cese de actividad de las empresas individuales", "Simplifica y estandariza los trámites electrónicos para cerrar sociedades limitadas y empresas individuales."]
+      ],
+      fiscal: [
+        ["Ley 27/2014, de 27 de noviembre, del Impuesto sobre Sociedades", "Regula la tributación de los beneficios de las sociedades y otras entidades jurídicas."],
+        ["Real Decreto 439/2007, de 30 de marzo, por el que se aprueba el Reglamento del Impuesto sobre la Renta de las Personas Físicas", "Detalla la aplicación práctica del IRPF, relevante para socios, administradores y determinados pagos de la empresa."],
+        ["Ley 35/2006, de 28 de noviembre, del Impuesto sobre la Renta de las Personas Físicas y de modificación parcial de las leyes de los Impuestos sobre Sociedades, sobre la Renta de no Residentes y sobre el Patrimonio", "Establece la tributación de la renta de personas físicas, afectando a empresarios individuales y socios."],
+        ["Real Decreto 1624/1992, de 29 de diciembre, por el que se aprueba el Reglamento del Impuesto sobre el Valor Añadido", "Regula gestión, liquidación y obligaciones formales del IVA."],
+        ["Ley 37/1992, de 28 de diciembre, del Impuesto sobre el Valor Añadido", "Establece la obligación de repercutir, declarar y pagar el IVA en las operaciones de la empresa."],
+        ["Real Decreto Legislativo 1175/1990, de 28 de septiembre, por el que se aprueban las tarifas y la instrucción del Impuesto sobre Actividades Económicas", "Determina las tarifas y clasificación de actividades económicas a efectos del IAE."],
+        ["Ley 58/2003, de 17 de diciembre, General Tributaria", "Marco general de los derechos, obligaciones y procedimientos tributarios de la empresa frente a la Administración."],
+        ["Real Decreto 1619/2012, de 30 de noviembre, por el que se aprueba el Reglamento por el que se regulan las obligaciones de facturación", "Establece cómo deben emitirse, conservarse y rectificarse las facturas de la empresa."]
+      ],
+      contratacion: [
+        ["Ley 9/2017, de 8 de noviembre, de Contratos del Sector Público, por la que se transponen al ordenamiento jurídico español las Directivas 2014/23/UE y 2014/24/UE del Parlamento Europeo y del Consejo, de 26 de febrero de 2014", "Regula cómo puede la empresa contratar con administraciones públicas, licitar y ejecutar contratos públicos."]
+      ],
+      financiacion: [
+        ["Ley 5/2015, de 27 de abril, de fomento de la financiación empresarial", "Fomenta vías alternativas de financiación (p. ej. capital riesgo, titulizaciones), mejorando el acceso al crédito."],
+        ["Ley 14/2013, de 27 de septiembre, de apoyo a los emprendedores y su internacionalización", "Introduce medidas fiscales, mercantiles y de simplificación para la creación y expansión internacional de empresas."],
+        ["Ley 28/2022, de 21 de diciembre, de fomento del ecosistema de las empresas emergentes", "Regula el régimen especial para startups, con incentivos fiscales y facilidades administrativas."],
+        ["Ley 18/2022, de 28 de septiembre, de creación y crecimiento de empresas", "Refuerza la constitución ágil y digital y medidas contra la morosidad comercial, favoreciendo el crecimiento empresarial."]
+      ],
+      datos: [
+        ["Reglamento (UE) 2016/679, de 27 de abril de 2016, relativo a la protección de las personas físicas en lo que respecta al tratamiento de datos personales y a la libre circulación de estos datos (Reglamento General de Protección de Datos)", "Obliga a la empresa a tratar datos personales de clientes, empleados y terceros con garantías de seguridad, transparencia y derechos."],
+        ["Ley Orgánica 3/2018, de 5 de diciembre, de Protección de Datos Personales y garantía de los derechos digitales", "Adapta el RGPD al ordenamiento español y añade obligaciones y derechos específicos en el entorno digital."]
+      ],
+      igualdad: [
+        ["Ley 15/2022, de 12 de julio, integral para la igualdad de trato y la no discriminación", "Prohíbe la discriminación en el ámbito empresarial y exige medidas para garantizar igualdad de trato."],
+        ["Real Decreto 902/2020, de 13 de octubre, de igualdad retributiva entre mujeres y hombres", "Establece obligaciones de transparencia retributiva y herramientas (registros, auditorías) para evitar brecha salarial."],
+        ["Real Decreto 901/2020, de 13 de octubre, por el que se regulan los planes de igualdad y su registro", "Obliga a determinadas empresas a negociar, implantar y registrar planes de igualdad."]
+      ]
+    };
+
+    // Imágenes de Creative Commons para cada criterio
+    const criterioImagenes = {
+      general: {
+        url: 'https://images.pexels.com/photos/256381/pexels-photo-256381.jpeg?auto=compress&cs=tinysrgb&w=600',
+        titulo: "Normativa General Empresarial",
+        descripcion: "Leyes y reglamentos generales que establecen las bases del ordenamiento jurídico aplicable a las empresas, regulando aspectos fundamentales como obligaciones, contratos y procedimientos judiciales.",
+        creditos: "Pexels / fauxels"
+      },
+      contabilidad: {
+        url: 'https://images.pexels.com/photos/669615/pexels-photo-669615.jpeg?auto=compress&cs=tinysrgb&w=600',
+        titulo: "Normativa Contable",
+        descripcion: "Normas contables y financieras que regulan la presentación de estados financieros, criterios de valoración y registro de operaciones económicas de la empresa.",
+        creditos: "Pexels / Pixabay"
+      },
+      mercantil: {
+        url: 'https://images.pexels.com/photos/5668473/pexels-photo-5668473.jpeg?auto=compress&cs=tinysrgb&w=600',
+        titulo: "Derecho Mercantil",
+        descripcion: "Legislación que regula la actividad comercial, sociedades mercantiles, comercio electrónico y relaciones entre empresarios y con consumidores.",
+        creditos: "Pexels / Mikhail Nilov"
+      },
+      laboral: {
+        url: 'https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=600',
+        titulo: "Derecho Laboral y Seguridad Social",
+        descripcion: "Normativa que regula las relaciones laborales, contratos de trabajo, seguridad social, condiciones laborales y derechos de los trabajadores.",
+        creditos: "Pexels / fauxels"
+      },
+      cese: {
+        url: 'https://images.pexels.com/photos/259966/pexels-photo-259966.jpeg?auto=compress&cs=tinysrgb&w=600',
+        titulo: "Cese de Actividad Empresarial",
+        descripcion: "Regulación de los procedimientos y requisitos para el cese de actividad empresarial, disolución de sociedades y cierre de empresas individuales.",
+        creditos: "Pexels / Pixabay"
+      },
+      fiscal: {
+        url: 'https://images.pexels.com/photos/6694540/pexels-photo-6694540.jpeg?auto=compress&cs=tinysrgb&w=600',
+        titulo: "Derecho Fiscal Empresarial",
+        descripcion: "Normativa tributaria que regula los impuestos que afectan a la empresa (Impuesto de Sociedades, IVA, IRPF) y las obligaciones formales asociadas.",
+        creditos: "Pexels / Karolina Grabowska"
+      },
+      contratacion: {
+        url: 'https://images.pexels.com/photos/5668479/pexels-photo-5668479.jpeg?auto=compress&cs=tinysrgb&w=600',
+        titulo: "Contratación Pública",
+        descripcion: "Legislación que regula la participación de empresas en licitaciones y contratos con administraciones públicas y entidades del sector público.",
+        creditos: "Pexels / Mikhail Nilov"
+      },
+      financiacion: {
+        url: 'https://images.pexels.com/photos/4386478/pexels-photo-4386478.jpeg?auto=compress&cs=tinysrgb&w=600',
+        titulo: "Financiación Empresarial",
+        descripcion: "Normativa que regula las fuentes de financiación, ayudas públicas, incentivos a emprendedores y medidas de fomento empresarial.",
+        creditos: "Pexels / Karolina Grabowska"
+      },
+      datos: {
+        url: 'https://images.pexels.com/photos/60504/security-protection-anti-virus-software-60504.jpeg?auto=compress&cs=tinysrgb&w=600',
+        titulo: "Protección de Datos Personales",
+        descripcion: "Regulación del tratamiento de datos personales, derechos digitales y obligaciones de las empresas en materia de privacidad y seguridad de la información.",
+        creditos: "Pexels / Pixabay"
+      },
+      igualdad: {
+        url: 'https://images.pexels.com/photos/1181435/pexels-photo-1181435.jpeg?auto=compress&cs=tinysrgb&w=600',
+        titulo: "Igualdad y No Discriminación",
+        descripcion: "Normativa que promueve la igualdad de trato, no discriminación, planes de igualdad y medidas contra la brecha salarial en las empresas.",
+        creditos: "Pexels / mentatdgt"
+      }
+    };
+
+    function actualizarNormas() {
+      const criterio = document.getElementById("criterio").value;
+      const normaSelect = document.getElementById("norma");
+      normaSelect.innerHTML = '<option value="">-- Selecciona --</option>';
+      document.getElementById("resultado").style.display = "none";
+
+      // Actualizar la imagen y descripción del criterio seleccionado
+      const imageElement = document.getElementById("criteria-image");
+      const titleElement = document.getElementById("image-title");
+      const descriptionElement = document.getElementById("image-description");
+      const creditsElement = document.getElementById("image-credits");
+      
+      if (criterio && normas[criterio]) {
+        normas[criterio].forEach(([titulo, impacto]) => {
+          const option = document.createElement("option");
+          option.value = impacto;
+          option.textContent = titulo;
+          normaSelect.appendChild(option);
+        });
+        
+        // Mostrar imagen y datos del criterio
+        if (criterioImagenes[criterio]) {
+          // Añadir un parámetro aleatorio para evitar caché si la imagen no carga
+          const randomParam = new Date().getTime();
+          imageElement.src = `${criterioImagenes[criterio].url}?t=${randomParam}`;
+          imageElement.alt = criterioImagenes[criterio].titulo;
+          imageElement.classList.add("image-pulse");
+          titleElement.textContent = criterioImagenes[criterio].titulo;
+          descriptionElement.textContent = criterioImagenes[criterio].descripcion;
+          creditsElement.textContent = criterioImagenes[criterio].creditos;
+          
+          // Remover la animación después de un tiempo
+          setTimeout(() => {
+            imageElement.classList.remove("image-pulse");
+          }, 2000);
+        }
+      } else {
+        // Restaurar valores por defecto si no hay criterio seleccionado
+        imageElement.src = 'https://images.pexels.com/photos/256381/pexels-photo-256381.jpeg?auto=compress&cs=tinysrgb&w=600';
+        imageElement.alt = "Normativa Empresarial";
+        titleElement.textContent = "Normativa Empresarial";
+        descriptionElement.textContent = "Selecciona un criterio para explorar la normativa específica que afecta a diferentes áreas de tu empresa. Cada área tiene regulaciones específicas que es importante conocer.";
+        creditsElement.textContent = "Pexels";
+      }
+    }
+
+    function mostrarImpacto() {
+      const select = document.getElementById("norma");
+      const resultado = document.getElementById("resultado");
+      if (select.value) {
+        resultado.textContent = select.value;
+        resultado.style.display = "block";
+      } else {
+        resultado.style.display = "none";
+      }
+    }
+
+    // Precargar imágenes para mejor experiencia
+    window.addEventListener('load', function() {
+      Object.values(criterioImagenes).forEach(imagen => {
+        const img = new Image();
+        img.src = imagen.url;
+      });
+    });
+  </script>
+
+</body>
+</html>
