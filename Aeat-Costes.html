@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Educación Cívico-Tributaria - Juegos Completos 2025-26</title>
+    <style>
+        :root {
+            --primary: #004790;
+            --secondary: #E30613;
+            --accent: #f0f4f8;
+            --text: #2c3e50;
+            --success: #28a745;
+            --warning: #ffc107;
+            --error: #dc3545;
+            --card-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --radius: 12px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        
+        body { background-color: #f8f9fa; color: var(--text); line-height: 1.6; padding-bottom: 60px; }
+
+        /* HEADER */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, #002a55 100%);
+            color: white;
+            padding: 2.5rem 1rem;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        header h1 { font-size: 2rem; margin-bottom: 0.5rem; font-weight: 700; }
+        header p { font-size: 1rem; opacity: 0.9; max-width: 700px; margin: 0 auto; }
+        .header-badge {
+            background-color: var(--secondary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            vertical-align: middle;
+            margin-left: 8px;
+        }
+
+        /* NAVIGATION */
+        nav {
+            display: flex;
+            justify-content: center;
+            background: white;
+            padding: 0.8rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            flex-wrap: wrap;
+            gap: 5px;
+            border-bottom: 1px solid #eee;
+        }
+        .nav-btn {
+            background: none;
+            border: none;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #6c757d;
+            border-radius: 20px;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+        .nav-btn:hover { background-color: var(--accent); color: var(--primary); }
+        .nav-btn.active { background-color: var(--primary); color: white; box-shadow: 0 2px 5px rgba(0,71,144,0.3); }
+
+        /* MAIN */
+        main { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
+        
+        .section { display: none; animation: slideUp 0.4s ease-out; }
+        .section.active { display: block; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        h2 { color: var(--primary); margin-bottom: 1.5rem; font-size: 1.8rem; border-bottom: 2px solid #eee; padding-bottom: 0.5rem; display: inline-block; }
+        .lead { font-size: 1.1rem; color: #555; margin-bottom: 2rem; }
+
+        /* Info Box */
+        .info-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-left: 4px solid var(--primary);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+        .info-box strong { color: var(--primary); }
+
+        /* --- GAME 1: PRICES (Expanded) --- */
+        .price-filters { display: flex; gap: 10px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .filter-btn { padding: 6px 12px; border: 1px solid #ccc; background: white; border-radius: 15px; cursor: pointer; font-size: 0.9rem; }
+        .filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+        .price-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+        .price-card {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            border: 1px solid #eee;
+            display: flex; flex-direction: column;
+        }
+        .pc-header { padding: 1rem; background: #fafafa; border-bottom: 1px solid #eee; }
+        .pc-category { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: #888; font-weight: bold; }
+        .pc-title { font-size: 1.1rem; font-weight: 600; margin-top: 5px; line-height: 1.3; }
+        .pc-body { padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;}
+        .pc-icon { font-size: 3rem; margin-bottom: 1rem; color: #ddd; }
+        .pc-input { width: 100%; padding: 10px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 1.1rem; text-align: center; transition: 0.3s; margin-bottom: 10px;}
+        .pc-input:focus { border-color: var(--primary); outline: none; }
+        .pc-btn { width: 100%; padding: 10px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s;}
+        .pc-btn:hover { background: #003366; }
+        .pc-result { margin-top: 15px; font-size: 0.9rem; padding: 10px; border-radius: 6px; display: none; text-align: left;}
+        .pc-result.success { background-color: #d4edda; color: #155724; border-left: 4px solid #28a745; }
+        .pc-result.warning { background-color: #fff3cd; color: #856404; border-left: 4px solid #ffc107; }
+        .pc-result.error { background-color: #f8d7da; color: #721c24; border-left: 4px solid #dc3545; }
+
+        /* --- GAME 2 & 3: SLIDERS (Budget & Income) --- */
+        .slider-container {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--card-shadow);
+        }
+        .status-bar { 
+            background: #eef; padding: 1rem; border-radius: 8px; text-align: center; margin-bottom: 2rem; font-weight: bold; font-size: 1.2rem;
+        }
+        .control-row { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .control-row label { width: 40%; font-weight: 600; font-size: 0.95rem; }
+        .control-row input[type="range"] { flex-grow: 1; cursor: pointer; height: 6px; accent-color: var(--primary); }
+        .control-row span { width: 50px; text-align: right; font-weight: bold; color: var(--primary); }
+        
+        /* Feedback Charts Styles */
+        .feedback-chart-container {
+            margin-top: 20px;
+            padding: 20px;
+            background: #fdfdfd;
+            border: 1px solid #eee;
+            border-radius: var(--radius);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .pie-chart-wrapper {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .pie-chart-real {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: #eee;
+            position: relative;
+        }
+        .chart-legend { font-size: 0.85rem; }
+        .legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+        .legend-color { width: 12px; height: 12px; border-radius: 2px; }
+
+        /* --- GAME 4: DATA QUIZ --- */
+        .quiz-container { max-width: 700px; margin: 0 auto; }
+        .quiz-card { background: white; padding: 2rem; border-radius: var(--radius); box-shadow: var(--card-shadow); margin-bottom: 1.5rem; }
+        .quiz-question { font-size: 1.2rem; font-weight: 600; margin-bottom: 1.5rem; }
+        .quiz-options { display: grid; gap: 10px; }
+        .quiz-opt { 
+            padding: 12px; border: 2px solid #eee; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 1rem; 
+        }
+        .quiz-opt:hover { background-color: #f8f9fa; border-color: #ccc; }
+        .quiz-opt.correct { background-color: #d4edda; border-color: #28a745; color: #155724; }
+        .quiz-opt.wrong { background-color: #f8d7da; border-color: #dc3545; color: #721c24; }
+        .quiz-feedback { margin-top: 15px; font-style: italic; color: #666; display: none; }
+
+        /* --- GAME 5: MYTHS (Redesigned) --- */
+        .myths-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+        .myth-card {
+            background-color: transparent; height: 280px; perspective: 1000px; cursor: pointer;
+        }
+        .myth-inner {
+            position: relative; width: 100%; height: 100%; text-align: center;
+            transition: transform 0.6s; transform-style: preserve-3d;
+            box-shadow: var(--card-shadow); border-radius: var(--radius);
+        }
+        .myth-card.flipped .myth-inner { transform: rotateY(180deg); }
+        .myth-front, .myth-back {
+            position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden;
+            backface-visibility: hidden; border-radius: var(--radius); display: flex; flex-direction: column;
+            justify-content: center; align-items: center; padding: 1.5rem; border: 1px solid #eee;
+        }
+        .myth-front { background-color: white; color: #333; }
+        .myth-icon { font-size: 3rem; margin-bottom: 1rem; color: var(--secondary); }
+        .myth-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 10px; }
+        .myth-back { background-color: #2c3e50; color: white; transform: rotateY(180deg); }
+        .myth-badge { 
+            background: var(--secondary); color: white; padding: 4px 10px; 
+            border-radius: 4px; font-size: 0.8rem; font-weight: bold; margin-bottom: 10px; text-transform: uppercase;
+        }
+
+        /* FOOTER */
+        footer { 
+            text-align: center; 
+            margin-top: 4rem; 
+            color: #666; 
+            font-size: 0.9rem; 
+            padding: 2.5rem 1rem; 
+            border-top: 2px solid #eee;
+            background: #f8f9fa;
+        }
+        footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
+        footer a:hover { text-decoration: underline; }
+        .license-section {
+            max-width: 800px;
+            margin: 0 auto 2rem auto;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .cc-badge {
+            display: inline-block;
+            margin: 1.5rem 0;
+        }
+        .license-details-btn {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 8px 16px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        .license-details-btn:hover {
+            background: #003366;
+        }
+        .sources-section {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #eee;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s;
+        }
+        .modal.active {
+            display: block;
+        }
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2.5rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 700px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            animation: slideDown 0.3s;
+            position: relative;
+        }
+        .modal-close {
+            color: #aaa;
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .modal-close:hover {
+            color: #000;
+        }
+        .modal h3 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+        .modal p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Programa de Educación Cívico-Tributaria <span class="header-badge">2025-26</span></h1>
+        <p>El Estado del Bienestar: A dónde van nuestros impuestos. Te interesa porque es tuyo, es de todos.</p>
+    </header>
+
+    <nav>
+        <button class="nav-btn active" onclick="showTab('prices')">¿Cuánto cuesta?</button>
+        <button class="nav-btn" onclick="showTab('budget')">Gastos (100€)</button>
+        <button class="nav-btn" onclick="showTab('income')">Ingresos</button>
+        <button class="nav-btn" onclick="showTab('quiz')">DataQuiz</button>
+        <button class="nav-btn" onclick="showTab('myths')">Mitos</button>
+    </nav>
+
+    <main>
+        <!-- GAME 1: PRICES (Expanded) -->
+        <section id="prices" class="section active">
+            <h2>¿Cuánto cuesta realmente?</h2>
+            <p class="lead">Selecciona una categoría y adivina el coste público estimado de estos servicios. Ajusta tu estimación lo mejor posible.</p>
+            
+            <div class="info-box">
+                <strong>💡 ¿Cuánto se cobra en España? Tres formas de medirlo (INE 2024):</strong>
+                
+                <div style="margin-top: 15px; display: grid; gap: 12px;">
+                    <!-- MEDIA -->
+                    <div style="background: white; padding: 12px; border-radius: 6px; border-left: 4px solid #FFD700;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <strong style="font-size: 1.1rem;">📊 Salario MEDIO</strong>
+                            <span style="font-size: 1.2rem; font-weight: bold; color: #FFD700;">31.698€/año</span>
+                        </div>
+                        <p style="margin: 5px 0 0 0; font-size: 0.9rem; color: #666;">
+                            Es el <strong>promedio</strong>: suma de todos los salarios ÷ número de trabajadores. 
+                            <strong>Problema:</strong> Los salarios muy altos (directivos, deportistas...) suben mucho esta cifra.<br>
+                            <strong style="color: #FFD700;">💼 Equivale a ~145 días laborables</strong> (considerando 220 días/año).
+                        </p>
+                    </div>
+
+                    <!-- MEDIANA -->
+                    <div style="background: white; padding: 12px; border-radius: 6px; border-left: 4px solid #4169E1;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <strong style="font-size: 1.1rem;">📍 Salario MEDIANO</strong>
+                            <span style="font-size: 1.2rem; font-weight: bold; color: #4169E1;">24.000€/año</span>
+                        </div>
+                        <p style="margin: 5px 0 0 0; font-size: 0.9rem; color: #666;">
+                            Es el salario del <strong>trabajador que está justo en la mitad</strong>: el 50% cobra más y el 50% cobra menos. 
+                            <strong>Ventaja:</strong> No se ve afectado por salarios extremos.<br>
+                            <strong style="color: #4169E1;">💼 Equivale a ~110 días laborables</strong> (considerando 220 días/año).
+                        </p>
+                    </div>
+
+                    <!-- MODA -->
+                    <div style="background: white; padding: 12px; border-radius: 6px; border-left: 4px solid #28a745;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <strong style="font-size: 1.1rem;">🎯 Salario MODAL</strong>
+                            <span style="font-size: 1.2rem; font-weight: bold; color: #28a745;">18.000€/año</span>
+                        </div>
+                        <p style="margin: 5px 0 0 0; font-size: 0.9rem; color: #666;">
+                            Es el <strong>salario más frecuente</strong>, el que más personas cobran exactamente. 
+                            <strong>Realidad:</strong> Representa mejor los salarios más comunes en la población activa.<br>
+                            <strong style="color: #28a745;">💼 Equivale a ~82 días laborables</strong> (considerando 220 días/año).
+                        </p>
+                    </div>
+                </div>
+
+                <p style="margin-top: 15px; font-size: 0.9rem; border-top: 1px solid #ddd; padding-top: 10px;">
+                    <strong>🧐 ¿Cuál es el mejor indicador?</strong> La <strong style="color: #4169E1;">MEDIANA</strong> es la medida más representativa 
+                    porque no se distorsiona por salarios muy altos ni muy bajos. La <strong style="color: #28a745;">MODA</strong> te indica el salario más común, 
+                    mientras que la <strong style="color: #FFD700;">MEDIA</strong> sube mucho debido a las grandes fortunas. 
+                    <br><em>Fuente: INE 2024</em>
+                </p>
+            </div>
+
+            <div class="price-filters">
+                <button class="filter-btn active" onclick="filterPrices('all', this)">Todas</button>
+                <button class="filter-btn" onclick="filterPrices('Sanidad', this)">Sanidad 🏥</button>
+                <button class="filter-btn" onclick="filterPrices('Educación', this)">Educación 📚</button>
+                <button class="filter-btn" onclick="filterPrices('Pensiones', this)">Pensiones 👴</button>
+                <button class="filter-btn" onclick="filterPrices('Infraestructura', this)">Infraestructura 🛣️</button>
+                <button class="filter-btn" onclick="filterPrices('Municipio', this)">Municipio 🏙️</button>
+                <button class="filter-btn" onclick="filterPrices('General', this)">General 💰</button>
+            </div>
+
+            <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 0.8rem 1.2rem; border-radius: 8px; margin-bottom: 1.5rem; font-size: 0.9rem;">
+                ℹ️ <strong>Nota:</strong> Los "días de trabajo" que verás en cada resultado representan días trabajando y destinando el 100% de tu salario SOLO a ese coste, sin gastar en nada más (ni alquiler, ni comida, ni transporte...).
+            </div>
+
+            <div class="price-grid" id="price-grid-container"></div>
+        </section>
+
+        <!-- GAME 2: BUDGET -->
+        <section id="budget" class="section">
+            <h2>Distribuye los 100€ del Presupuesto</h2>
+            <p class="lead">El Presupuesto General del Estado (PGE) 2024 fue de <strong>480.626 millones de euros</strong>. Imagina que tienes 100€ y debes repartirlos igual que el Estado. ¿A dónde crees que van?</p>
+            
+            <div class="info-box">
+                <strong>💡 Objetivo:</strong> Ajusta los controles para que sumen exactamente <strong>100€</strong>. Intenta aproximar la distribución real del gasto público español antes de comprobar tu respuesta.
+            </div>
+
+            <div class="slider-container">
+                <div class="status-bar">Total asignado: <span id="budget-total">0</span>€ de 100€</div>
+                <div id="budget-controls"></div>
+                <button class="pc-btn" style="margin-top: 20px;" onclick="checkBudget()">📊 Comparar con el PGE Real</button>
+                <div class="pc-result" id="budget-feedback"></div>
+            </div>
+        </section>
+
+        <!-- GAME 3: INCOME -->
+        <section id="income" class="section">
+            <h2>¿De dónde viene el dinero?</h2>
+            <p class="lead">El Estado no saca los euros de debajo de las piedras. El dinero público proviene de los impuestos, tasas y cotizaciones. ¿Sabes cuáles son las principales fuentes?</p>
+            
+            <div class="info-box">
+                <strong>💡 Objetivo:</strong> Distribuye los ingresos del Estado en porcentajes (deben sumar 100%). ¿Cuánto aportan las cotizaciones sociales vs. el IRPF vs. el IVA?
+            </div>
+
+            <div class="slider-container">
+                <div class="status-bar">Total asignado: <span id="income-total">0</span>% de 100%</div>
+                <div id="income-controls"></div>
+                <button class="pc-btn" style="margin-top: 20px;" onclick="checkIncome()">📊 Ver Datos Reales</button>
+                <div class="pc-result" id="income-feedback"></div>
+            </div>
+        </section>
+
+        <!-- GAME 4: DATA QUIZ -->
+        <section id="quiz" class="section">
+            <h2>DataQuiz: Pon a prueba tu conocimiento</h2>
+            <p class="lead">Responde a estas preguntas basadas en datos oficiales. ¿Cuánto sabes sobre el gasto público y la educación cívico-tributaria?</p>
+            
+            <div class="quiz-container" id="quiz-container"></div>
+        </section>
+
+        <!-- GAME 5: MYTHS -->
+        <section id="myths" class="section">
+            <h2>Mitos y Realidades Fiscales</h2>
+            <p class="lead">Haz clic en cada tarjeta para descubrir la verdad detrás de estos mitos fiscales comunes.</p>
+            
+            <div class="myths-grid" id="myths-container"></div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="license-section">
+            <h3 style="color: var(--primary); margin-bottom: 1rem;">📜 Licencia y Atribución</h3>
+            
+            <p style="margin-bottom: 0.5rem; font-size: 1rem;">
+                <strong>Creado por: Florencio Aguilar Rodríguez</strong>
+            </p>
+            
+            <p style="margin-bottom: 1rem;">
+                Esta obra está bajo una licencia <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.es" target="_blank" rel="license noopener noreferrer"><strong>Creative Commons Atribución-CompartirIgual 4.0 Internacional</strong></a>.
+            </p>
+
+            <a class="cc-badge" href="https://creativecommons.org/licenses/by-sa/4.0/deed.es" target="_blank" rel="license noopener noreferrer">
+                <img src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" alt="Licencia Creative Commons BY-SA 4.0" style="border: 0; width: 150px; height: auto;">
+            </a>
+
+            <div>
+                <button class="license-details-btn" onclick="openModal()">ℹ️ Ver detalles de la licencia</button>
+            </div>
+
+            <div class="sources-section">
+                <p style="margin-bottom: 0.5rem;"><strong>📊 Fuentes de datos (dominio público):</strong></p>
+                <p style="line-height: 1.8;">
+                    <strong>Programa PECT 2025-26</strong> (Agencia Tributaria) • 
+                    <strong>Ministerio de Hacienda</strong> (PGE 2024) • 
+                    <strong>Ministerio de Sanidad</strong> (2023) • 
+                    <strong>Ministerio de Educación</strong> (MEFD 2024) • 
+                    <strong>Instituto Nacional de Estadística</strong> (INE) • 
+                    <strong>Instituto Nacional de la Seguridad Social</strong> (INSS julio 2025) • 
+                    <strong>Aena</strong> (2024) • 
+                    <strong>Ministerio de Transportes</strong> (2024) • 
+                    <strong>Ayuntamiento de Zaragoza</strong> • 
+                    <strong>Eurostat</strong> (2023) • 
+                    <strong>Datosmacro</strong>
+                </p>
+                <p style="margin-top: 1rem; font-style: italic; font-size: 0.85rem;">
+                    Los datos estadísticos utilizados son de dominio público según la <strong>Ley 37/2007 de Reutilización de Información del Sector Público</strong>. 
+                    Esta obra transforma dichos datos en una experiencia educativa interactiva original.
+                </p>
+            </div>
+
+            <p style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #eee; font-size: 0.85rem; color: #888;">
+                Desarrollo del código y diseño pedagógico: Material educativo para Bachillerato/FP<br>
+                Febrero 2026 • Versión 5.0
+            </p>
+        </div>
+    </footer>
+
+    <!-- MODAL -->
+    <div id="licenseModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <h3>📜 Detalles de la Licencia Creative Commons BY-SA 4.0</h3>
+            
+            <p style="margin-top: 1rem; font-size: 0.95rem; line-height: 1.6;">
+                <strong>Esto significa que eres libre de:</strong><br>
+                ✅ <strong>Compartir</strong> — copiar y redistribuir el material en cualquier medio o formato<br>
+                ✅ <strong>Adaptar</strong> — remezclar, transformar y construir a partir del material para cualquier propósito, incluso comercialmente
+            </p>
+
+            <p style="margin-top: 1rem; font-size: 0.95rem; line-height: 1.6;">
+                <strong>Bajo las siguientes condiciones:</strong><br>
+                📝 <strong>Atribución</strong> — Debes dar crédito de manera adecuada, brindar un enlace a la licencia e indicar si se han realizado cambios. Puedes hacerlo en cualquier forma razonable, pero no de forma tal que sugiera que tú o tu uso tienen el apoyo del licenciante.<br><br>
+                🔄 <strong>CompartirIgual</strong> — Si remezclas, transformas o creas a partir del material, debes distribuir tus contribuciones bajo la misma licencia que el original.
+            </p>
+
+            <p style="margin-top: 1rem; font-size: 0.95rem; line-height: 1.6;">
+                <strong>⚖️ No hay restricciones adicionales</strong> — No puedes aplicar términos legales ni medidas tecnológicas que restrinjan legalmente a otros hacer cualquier uso permitido por la licencia.
+            </p>
+
+            <p style="margin-top: 1.5rem; font-size: 0.85rem; color: #666; font-style: italic;">
+                Para más información sobre esta licencia, visita: 
+                <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.es" target="_blank" rel="noopener noreferrer">https://creativecommons.org/licenses/by-sa/4.0/deed.es</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // --- SALARY CONSTANTS (for work days calculations) ---
+        const WORK_DAYS_PER_YEAR = 220; // Días laborables típicos en España
+        const SALARY_MEDIO = 31698;
+        const SALARY_MEDIANO = 24000;
+        const SALARY_MODAL = 18000;
+        
+        // Calculate daily salaries
+        const DAILY_MEDIO = SALARY_MEDIO / WORK_DAYS_PER_YEAR;    // ~144€/día
+        const DAILY_MEDIANO = SALARY_MEDIANO / WORK_DAYS_PER_YEAR; // ~109€/día
+        const DAILY_MODAL = SALARY_MODAL / WORK_DAYS_PER_YEAR;     // ~82€/día
+
+        // Helper function to calculate work days
+        function calculateWorkDays(cost) {
+            return {
+                medio: Math.round(cost / DAILY_MEDIO),
+                mediano: Math.round(cost / DAILY_MEDIANO),
+                modal: Math.round(cost / DAILY_MODAL)
+            };
+        }
+
+        // --- DATA BASE (Extracted from PDF PECT 2025-26) ---
+        
+        // Prices Data: Expanded with precise data
+        const pricesData = [
+            // SANIDAD (Datos 2023 - Ministerio de Sanidad)
+            { id: 's1', cat: 'Sanidad', title: 'Día de estancia en UCI (€)', cost: 3979, unit: '€', icon: '🏥', hint: 'Coste diario 3.979€. Incluye monitorización 24h, equipos especializados y personal sanitario de alta cualificación. Datos: Ministerio de Sanidad 2023.' },
+            { id: 's2', cat: 'Sanidad', title: 'Día de ingreso hospitalario - planta (€)', cost: 916, unit: '€', icon: '🛏️', hint: 'Coste medio 916€/día. Incluye cama, manutención, medicación y atención médica. Datos: Ministerio de Sanidad 2023.' },
+            { id: 's3', cat: 'Sanidad', title: 'Día en Urgencias (€)', cost: 343, unit: '€', icon: '🚑', hint: 'Coste medio 343€/día. Atención inmediata, triaje, pruebas diagnósticas y personal de guardia. Datos: Ministerio de Sanidad 2023.' },
+            { id: 's4', cat: 'Sanidad', title: 'Trasplante de Corazón (€)', cost: 77598, unit: '€', icon: '❤️', hint: 'Coste medio 77.598€. Cirugía compleja, terapia inmunosupresora y largas estancias hospitalarias. Equivale a ~2,4 salarios anuales medios. Datos: Ministerio de Sanidad 2023.' },
+            { id: 's5', cat: 'Sanidad', title: 'Trasplante de Riñón (€)', cost: 23667, unit: '€', icon: '🫘', hint: 'Coste medio 23.667€. Intervención quirúrgica y tratamientos post-operatorios. Equivale a ~75% de un salario anual medio. Datos: Ministerio de Sanidad 2023.' },
+            { id: 's6', cat: 'Sanidad', title: 'Trasplante de Páncreas (€)', cost: 48439, unit: '€', icon: '🧬', hint: 'Coste medio 48.439€. Procedimiento altamente especializado. Equivale a ~1,5 salarios anuales medios. Datos: Ministerio de Sanidad 2023.' },
+            { id: 's7', cat: 'Sanidad', title: 'Parto normal (€)', cost: 3510, unit: '€', icon: '👶', hint: 'Coste medio 3.510€. Incluye control del embarazo, parto y cuidados iniciales. Equivale a ~1,5 salarios mensuales medios. Datos: Ministerio de Sanidad 2023.' },
+            { id: 's8', cat: 'Sanidad', title: 'Parto con cesárea (€)', cost: 3772, unit: '€', icon: '🏥', hint: 'Coste medio 3.772€. Requiere quirófano, anestesia y mayor tiempo de recuperación. Datos: Ministerio de Sanidad 2023.' },
+            { id: 's9', cat: 'Sanidad', title: 'Tratamiento de Leucemia Aguda (€)', cost: 16846, unit: '€', icon: '💉', hint: 'Coste medio 16.846€. Quimioterapia, hospitalizaciones prolongadas y fármacos oncológicos. Equivale a ~53% de un salario anual medio. Datos: Ministerio de Sanidad 2023.' },
+            { id: 's10', cat: 'Sanidad', title: 'Atención reacción alérgica grave (€)', cost: 2528, unit: '€', icon: '🤧', hint: 'Coste medio 2.528€. Urgencias, medicación y periodo de observación. Más de un salario mensual medio. Datos: Ministerio de Sanidad 2023.' },
+            { id: 's11', cat: 'Sanidad', title: 'Operación quirúrgica media (€)', cost: 9593, unit: '€', icon: '⚕️', hint: 'Coste medio general 9.593€. Incluye quirófano, anestesia, personal sanitario y recuperación. Datos: Ministerio de Sanidad 2023.' },
+            { id: 's12', cat: 'Sanidad', title: 'Gasto sanitario por habitante/año (€)', cost: 2021, unit: '€', icon: '🏥', hint: 'El Estado gasta 2.021€ por persona al año en sanidad pública (similar al salario mensual medio). Datos: Ministerio de Sanidad 2023.' },
+
+            // EDUCACIÓN (Datos 2022 - MEFD)
+            { id: 'e1', cat: 'Educación', title: 'Alumno/a Educación Infantil - año (€)', cost: 6115, unit: '€', icon: '🧸', hint: 'Coste 6.115€/año (0-6 años). Ratio alta de profesorado por aula. Datos: Ministerio de Educación 2022.' },
+            { id: 'e2', cat: 'Educación', title: 'Alumno/a Educación Primaria - año (€)', cost: 6225, unit: '€', icon: '✏️', hint: 'Coste 6.225€/año (6-12 años). Incluye profesorado, material y comedor. Datos: Ministerio de Educación 2022.' },
+            { id: 'e3', cat: 'Educación', title: 'Alumno/a Educación Secundaria - año (€)', cost: 7603, unit: '€', icon: '📚', hint: 'Coste 7.603€/año (12-16 años). Mayor coste por laboratorios, talleres y especialidades. Datos: Ministerio de Educación 2022.' },
+            { id: 'e4', cat: 'Educación', title: 'Alumno/a Bachillerato/FP - año (€)', cost: 7298, unit: '€', icon: '🎓', hint: 'Coste 7.298€/año. Educación no universitaria post-obligatoria. Datos: Ministerio de Educación 2022.' },
+            { id: 'e5', cat: 'Educación', title: 'Alumno/a Universidad - año (€)', cost: 10434, unit: '€', icon: '🏛️', hint: 'Coste 10.434€/año. Educación superior pública. Equivale a ~33% de un salario anual medio. Datos: Ministerio de Educación 2022.' },
+            { id: 'e6', cat: 'Educación', title: 'Vida educativa completa (€)', cost: 100000, unit: '€', icon: '🎓', hint: '¡Aproximadamente 100.000€! Inversión total desde Infantil hasta Universidad. Equivale a ~3,15 salarios anuales medios. Datos: Ministerio de Educación 2022.' },
+
+            // PENSIONES (Datos julio 2025 - Seguridad Social) - NÚMEROS DE PERSONAS
+            { id: 'p1', cat: 'Pensiones', title: 'Total Pensionistas en España (personas)', cost: 10357872, unit: 'personas', icon: '👴', hint: 'Son 10.357.872 personas las que reciben pensiones en España (contributivas + no contributivas). Dato: INSS julio 2025.' },
+            { id: 'p2', cat: 'Pensiones', title: 'Pensionistas de Jubilación (personas)', cost: 6592504, unit: 'personas', icon: '🏖️', hint: 'Hay 6.592.504 pensionistas de jubilación, el 63,6% del total. Dato: INSS julio 2025.' },
+            { id: 'p3', cat: 'Pensiones', title: 'Pensionistas de Viudedad (personas)', cost: 2348425, unit: 'personas', icon: '🖤', hint: 'Hay 2.348.425 pensionistas de viudedad, el 22,7% del total. Dato: INSS julio 2025.' },
+            { id: 'p4', cat: 'Pensiones', title: 'Pensionistas Incapacidad Permanente (personas)', cost: 1030424, unit: 'personas', icon: '♿', hint: 'Hay 1.030.424 pensionistas por incapacidad permanente. Dato: INSS julio 2025.' },
+
+            // INFRAESTRUCTURAS (Datos 2024) - NÚMEROS ESTADÍSTICOS
+            { id: 'i1', cat: 'Infraestructura', title: 'Red de carreteras en España (km)', cost: 165705, unit: 'km', icon: '🛣️', hint: 'España tiene 165.705 km de carreteras, de los cuales 26.525 km son del Estado. Fuente: Ministerio de Transportes 2024.' },
+            { id: 'i2', cat: 'Infraestructura', title: 'Viajeros transporte público 2024 (millones)', cost: 5539, unit: 'millones', icon: '🚌', hint: '5.539 millones de viajeros en transporte público (autobús, tren, metro...), un 7,1% más que en 2023. Fuente: INE 2024.' },
+            { id: 'i3', cat: 'Infraestructura', title: 'Pasajeros aeropuertos Aena 2024 (millones)', cost: 309, unit: 'millones', icon: '✈️', hint: '¡Récord histórico! 309 millones de pasajeros (309.332.069 exactamente), un 9,2% más que en 2023. Fuente: Aena 2024.' },
+
+            // MUNICIPIO ZARAGOZA - VANDALISMO (Datos Ayto. Zaragoza) - Convertido a millones para facilitar
+            { id: 'm1', cat: 'Municipio', title: 'Limpieza de grafitis Zaragoza/año (millones €)', cost: 1.7, unit: 'millones €', icon: '🎨', hint: 'Casi 1,7 millones de euros al año para limpiar más de 20.000 pintadas. Equivale a ~53 salarios anuales medios. Fuente: Ayto. Zaragoza.' },
+            { id: 'm2', cat: 'Municipio', title: 'Limpieza de botellones Zaragoza/año (miles €)', cost: 200, unit: 'miles €', icon: '🍾', hint: 'Más de 200.000€ (200 mil) anuales en limpieza tras el ocio nocturno. Equivale a ~6,3 salarios anuales medios. Fuente: Ayto. Zaragoza.' },
+            { id: 'm3', cat: 'Municipio', title: 'Limpieza de chicles Zaragoza/año (miles €)', cost: 145.2, unit: 'miles €', icon: '😬', hint: '145.200€ (145,2 mil) anuales para retirar chicles pegados en aceras. Equivale a ~4,6 salarios anuales medios. Fuente: Ayto. Zaragoza.' },
+            { id: 'm4', cat: 'Municipio', title: 'Limpieza excrementos caninos Zaragoza/año (miles €)', cost: 500, unit: 'miles €', icon: '💩', hint: 'Más de medio millón de euros (500 mil) al año. Equivale a ~15,8 salarios anuales medios. Fuente: Ayto. Zaragoza.' },
+            { id: 'm5', cat: 'Municipio', title: 'Total vandalismo Zaragoza/año (millones €)', cost: 3, unit: 'millones €', icon: '🏙️', hint: '¡3 millones de euros anuales! Total destinado a reparar destrozos por vandalismo. Equivale a ~94,7 salarios anuales medios. Fuente: Ayto. Zaragoza.' },
+
+            // DATOS GENERALES (contexto adicional)
+            { id: 'g1', cat: 'General', title: 'Gasto Público en Educación 2024 (millones €)', cost: 70138.9, unit: 'millones €', icon: '📚', hint: '70.138,9 millones de euros. Presupuesto total para educación en España (2024). Fuente: Ministerio de Educación.' },
+            { id: 'g2', cat: 'General', title: 'Presupuesto General del Estado 2024 (millones €)', cost: 480626, unit: 'millones €', icon: '💰', hint: '480.626 millones de euros. PGE 2024 (prorrogados). Fuente: Ministerio de Hacienda.' }
+        ];
+
+        // Budget Data (Gastos PGE 2024 - en cada 1€)
+        const budgetData = [
+            { id: 'b1', name: 'Protección Social', real: 40, color: '#004790', info: 'Pensiones, desempleo, prestaciones de la Seguridad Social' }, 
+            { id: 'b2', name: 'Salud', real: 15, color: '#E30613', info: 'Sistema sanitario público' }, 
+            { id: 'b3', name: 'Servicios Generales', real: 12, color: '#6c757d', info: 'Deuda pública, administraciones' }, 
+            { id: 'b4', name: 'Asuntos Económicos', real: 12, color: '#17a2b8', info: 'Infraestructuras, I+D, agricultura, industria' }, 
+            { id: 'b5', name: 'Educación', real: 9, color: '#28a745', info: 'Sistema educativo público' }, 
+            { id: 'b6', name: 'Orden Público/Seguridad', real: 4, color: '#343a40', info: 'Justicia, defensa, seguridad' }, 
+            { id: 'b7', name: 'Otros', real: 5, color: '#ffc107', info: 'Cultura, medio ambiente, vivienda' },
+            { id: 'b8', name: 'Defensa', real: 2, color: '#dc3545', info: 'Fuerzas Armadas' },
+            { id: 'b9', name: 'Protección Medio Ambiente', real: 2, color: '#20c997', info: 'Políticas ambientales' }
+        ];
+
+        // Income Data (Ingresos Públicos - Ministerio de Hacienda)
+        const incomeData = [
+            { id: 'i1', name: 'Cotizaciones Sociales', real: 50.6, color: '#FFD700', info: '¡La mayor fuente! Aportaciones de trabajadores y empresas a la Seguridad Social' },
+            { id: 'i2', name: 'Impuestos Directos (IRPF, Sociedades)', real: 27.63, color: '#4169E1', info: 'Impuestos sobre la renta y beneficios empresariales' },
+            { id: 'i3', name: 'Impuestos Indirectos (IVA, Especiales)', real: 18.18, color: '#32CD32', info: 'IVA, impuestos sobre alcohol, tabaco, carburantes' },
+            { id: 'i4', name: 'Tasas, Precios Públicos y Otros', real: 3.59, color: '#FF6347', info: 'Tasas administrativas, precios públicos, aranceles' }
+        ];
+
+        // Quiz Data (Expanded with more data)
+        const quizData = [
+            {
+                q: "¿Cuántos pensionistas hay actualmente en España (julio 2025)?",
+                options: ["2,30 millones", "7,80 millones", "10,36 millones", "16,50 millones"],
+                correct: 2,
+                info: "10.357.872 pensionistas reciben algún tipo de pensión (contributiva o no contributiva). De ellos, 6,6 millones reciben pensión de jubilación. (Fuente: INSS julio 2025)"
+            },
+            {
+                q: "¿Cuál es el salario MEDIANO (el que está justo en la mitad de todos los trabajadores) en España?",
+                options: ["18.500€/año", "24.000€/año", "31.700€/año", "35.000€/año"],
+                correct: 1,
+                info: "El salario MEDIANO (más representativo) es 24.000€. El MODAL (más frecuente) es 18.000€. La MEDIA es 31.698€, inflada por salarios muy altos. (Fuente: INE 2024)"
+            },
+            {
+                q: "¿Qué porcentaje del Presupuesto General del Estado va a Protección Social (pensiones, desempleo...)?",
+                options: ["15%", "25%", "40%", "60%"],
+                correct: 2,
+                info: "El 40% del gasto va a Protección Social, siendo la mayor partida, con diferencia. De cada euro presupuestado, 40 céntimos se destinan a pensiones y prestaciones sociales. (Fuente: PGE 2024)"
+            },
+            {
+                q: "¿Cuál es la MAYOR fuente de ingresos del Estado español?",
+                options: ["IRPF", "IVA", "Cotizaciones Sociales", "Impuesto de Sociedades"],
+                correct: 2,
+                info: "Las Cotizaciones Sociales (aportaciones de trabajadores y empresas) representan más de la mitad de los ingresos, superando al IRPF (27,6%) y al IVA. (Fuente: Ministerio de Hacienda 2024)"
+            },
+            {
+                q: "¿Cuánto cuesta aproximadamente formar a una persona desde infantil hasta finalizar la universidad pública?",
+                options: ["10.000€", "30.000€", "100.000€", "700.000€"],
+                correct: 2,
+                info: "Aproximadamente 100.000€ por persona durante toda su vida educativa. Esto equivale a unos 3,15 años del salario medio español. (Fuente: Ministerio de Educación 2022)"
+            },
+            {
+                q: "¿Cuánto le cuesta al Ayuntamiento de Zaragoza limpiar el vandalismo urbano al año (grafitis, botellones, chicles, excrementos...)?",
+                options: ["30.000€", "150.000 €", "3 millones €", "15 millones €"],
+                correct: 2,
+                info: "Unos 3 millones de euros anuales: limpieza de grafitis (1,7M), excrementos caninos (500.000), botellones (200.000), chicles (145.000)... Dinero que podría destinarse a otros servicios. (Fuente: Ayto. Zaragoza)"
+            },
+            {
+                q: "¿Cuánto costó el presupuesto total destinado a Educación en España en 2024?",
+                options: ["10.120 millones €", "30.212 millones €", "70.139 millones €", "90.541 millones €"],
+                correct: 2,
+                info: "70.138,9 millones de euros. Esto representa aproximadamente el 14,6% del Presupuesto General del Estado. (Fuente: Ministerio de Educación 2024)"
+            }
+        ];
+
+        // Myths Data (Ampliado con datos del PDF)
+        const mythsData = [
+            {
+                title: "Día sin IVA",
+                myth: "Los comercios no cobran IVA en los 'días sin IVA'.",
+                truth: "FALSO. Siempre se paga IVA. Lo que hace el comercio es rebajar el precio final y calcular el IVA sobre ese precio rebajado. Ejemplo: Precio 121€ → Rebaja a 100€ → IVA 21% sobre 100€ = 82,64€ + 17,36€ IVA.",
+                icon: "🏷️",
+                type: "Mito"
+            },
+            {
+                title: "Dos Pagadores",
+                myth: "Si tienes dos pagadores, pagas más IRPF que con uno solo.",
+                truth: "FALSO. Pagas lo mismo independientemente del número de pagadores. Lo que ocurre es que las retenciones que hace cada empresa suelen estar mal ajustadas (retienen menos de lo debido), lo que puede dar lugar a tener que ajustar esa diferencia en la declaración de la renta.",
+                icon: "📄",
+                type: "Mito"
+            },
+            {
+                title: "Sin Factura = Más barato",
+                myth: "Trabajar sin factura es bueno porque evitas impuestos y sale más barato.",
+                truth: "PERJUDICIAL Y DELICTIVO. Es economía sumergida. Pierdes la garantía y el derecho a  reclamación. Perjudicas tus derechos  y contribuyes a que los demás tengamos que pagar más. Lo que unos no pagan, lo pagamos el resto. Además, los que se benefician, acceden a ayudas y subvenciones injustas por declarar, formalmente, 'menos ingresos'.",
+                icon: "🚰",
+                type: "Fraude"
+            },
+            {
+                title: "Declaración de la Renta obligatoria siempre",
+                myth: "Una vez que presentas la declaración de la renta, estás obligado a presentarla toda la vida.",
+                truth: "FALSO. Solo declaras si cumples los requisitos ese año concreto (ej: ganar más de 22.000€ con un pagador, o 15.876€ con dos pagadores si el segundo supera 1.500€). Las cantidades se actualizan regularmente.",
+                icon: "📝",
+                type: "Mito"
+            },
+            {
+                title: "Presión Fiscal en España",
+                myth: "España es el país de la UE que más impuestos cobra a sus ciudadanos.",
+                truth: "FALSO. España tiene una presión fiscal del 37%, por debajo de la media de la UE (40%). Francia tiene 45,6%, Bélgica 44,8% y Dinamarca 44,7%. Irlanda tiene la más baja con 22,7%.",
+                icon: "📉",
+                type: "Dato"
+            },
+            {
+                title: "El IVA español",
+                myth: "España tiene el IVA más alto de Europa.",
+                truth: "FALSO. El IVA general español es del 21%, en la media europea. Hungría tiene el más alto con 27%, seguida de varios países nórdicos con 25%. Luxemburgo tiene el más bajo con 17%.",
+                icon: "🧾",
+                type: "Dato"
+            },
+            {
+                title: "Gasto Público = Despilfarro",
+                myth: "Todo el gasto público es despilfarro e ineficiencia.",
+                truth: "FALSO. El gasto público financia servicios esenciales: sanidad (2.021€ por persona/año), educación (vida educativa ~100.000€), pensiones (10,3M de pensionistas), infraestructuras, seguridad... Son inversiones en el Estado del Bienestar. Piensa en los días que te costaría llegar a financiar cada una de estas cosas que das por hecho.",
+                icon: "💶",
+                type: "Mito"
+            },
+            {
+                title: "Los impuestos no sirven para nada",
+                myth: "Pagar impuestos no tiene ningún beneficio directo para mí.",
+                truth: "FALSO. Los impuestos financian tu sanidad pública, tu educación, las carreteras que usas, los servicios de tu ciudad, las pensiones de tus mayores, la seguridad... De cada euro recaudado: 40 céntimos van a Protección Social, 15 a Sanidad, 9 a Educación...",
+                icon: "🏥",
+                type: "Mito"
+            }
+        ];
+
+        // --- MODAL FUNCTIONS ---
+        function openModal() {
+            document.getElementById('licenseModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('licenseModal').classList.remove('active');
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById('licenseModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        // --- FUNCTIONS ---
+
+        function showTab(id) {
+            document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            const btns = document.querySelectorAll('.nav-btn');
+            if(id === 'prices') btns[0].classList.add('active');
+            if(id === 'budget') btns[1].classList.add('active');
+            if(id === 'income') btns[2].classList.add('active');
+            if(id === 'quiz') btns[3].classList.add('active');
+            if(id === 'myths') btns[4].classList.add('active');
+        }
+
+        // --- PRICES GAME ---
+        function filterPrices(cat, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderPrices(cat);
+        }
+
+        function renderPrices(filter) {
+            const container = document.getElementById('price-grid-container');
+            container.innerHTML = '';
+            
+            const filtered = filter === 'all' ? pricesData : pricesData.filter(p => p.cat === filter);
+            
+            filtered.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'price-card';
+                
+                // Dynamic placeholder based on unit
+                let placeholder = 'Escribe tu estimación';
+                if (item.unit === '€') placeholder = 'Ej: 1500';
+                else if (item.unit === 'personas') placeholder = 'Ej: 6500000';
+                else if (item.unit === 'km') placeholder = 'Ej: 160000';
+                else if (item.unit === 'millones') placeholder = 'Ej: 300';
+                else if (item.unit === 'millones €') placeholder = 'Ej: 1.5';
+                else if (item.unit === 'miles €') placeholder = 'Ej: 150';
+                
+                card.innerHTML = `
+                    <div class="pc-header">
+                        <div class="pc-category">${item.cat}</div>
+                        <div class="pc-title">${item.title}</div>
+                    </div>
+                    <div class="pc-body">
+                        <div class="pc-icon">${item.icon}</div>
+                        <input type="number" step="any" class="pc-input" id="inp-${item.id}" placeholder="${placeholder}">
+                        <button class="pc-btn" onclick="checkPrice('${item.id}')">Comprobar</button>
+                        <div class="pc-result" id="res-${item.id}"></div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function checkPrice(id) {
+            const item = pricesData.find(p => p.id === id);
+            const guess = parseFloat(document.getElementById(`inp-${item.id}`).value);
+            const result = document.getElementById(`res-${item.id}`);
+
+            if(isNaN(guess) || guess <= 0) {
+                result.className = 'pc-result error';
+                result.innerHTML = '❌ Por favor, introduce un número válido mayor que cero.';
+                result.style.display = 'block';
+                return;
+            }
+
+            const diff = Math.abs(guess - item.cost);
+            const percentDiff = (diff / item.cost) * 100;
+            
+            // Calculate work days needed to pay for this (only for monetary items)
+            const workDays = item.unit === '€' || item.unit === 'millones €' || item.unit === 'miles €' ? calculateWorkDays(item.cost) : null;
+
+            // Build response with correct unit
+            let html = `<strong>Respuesta correcta: ${item.cost.toLocaleString('es-ES')} ${item.unit}</strong><br>`;
+            html += `Tu respuesta: ${guess.toLocaleString('es-ES')} ${item.unit}<br><br>`;
+            
+            if(percentDiff < 5) {
+                result.className = 'pc-result success';
+                html += `🎯 <strong>¡Excelente!</strong> Estás muy cerca (diferencia del ${percentDiff.toFixed(1)}%).<br><br>`;
+            } else if(percentDiff < 20) {
+                result.className = 'pc-result warning';
+                html += `✅ <strong>Bastante bien</strong>. Diferencia del ${percentDiff.toFixed(1)}%.<br><br>`;
+            } else {
+                result.className = 'pc-result error';
+                html += `⚠️ Hay bastante diferencia (${percentDiff.toFixed(1)}%). Observa el dato real.<br><br>`;
+            }
+
+            html += `${item.hint}<br>`;
+            
+            // Add work days context only for items in euros (convert to euros if needed)
+            if(workDays && item.unit === '€') {
+                html += `<div style="margin-top: 12px; padding: 10px; background: #f0f4f8; border-radius: 6px; font-size: 0.85rem;">`;
+                html += `<strong>💼 Días de trabajo necesarios para pagarlo:</strong><br>`;
+                html += `• Con salario <strong style="color: #FFD700;">MEDIO</strong> (31.698€): ~${workDays.medio} días de trabajo<br>`;
+                html += `• Con salario <strong style="color: #4169E1;">MEDIANO</strong> (24.000€): ~${workDays.mediano} días de trabajo<br>`;
+                html += `• Con salario <strong style="color: #28a745;">MODAL</strong> (18.000€): ~${workDays.modal} días de trabajo`;
+                html += `</div>`;
+            } else if(workDays && (item.unit === 'millones €' || item.unit === 'miles €')) {
+                // Convert to actual euros for work days calculation
+                const actualCost = item.unit === 'millones €' ? item.cost * 1000000 : item.cost * 1000;
+                const actualWorkDays = calculateWorkDays(actualCost);
+                html += `<div style="margin-top: 12px; padding: 10px; background: #f0f4f8; border-radius: 6px; font-size: 0.85rem;">`;
+                html += `<strong>💼 Días de trabajo necesarios para pagarlo:</strong><br>`;
+                html += `<em>(Coste real: ${actualCost.toLocaleString('es-ES')}€)</em><br>`;
+                html += `• Con salario <strong style="color: #FFD700;">MEDIO</strong> (31.698€): ~${actualWorkDays.medio} días de trabajo<br>`;
+                html += `• Con salario <strong style="color: #4169E1;">MEDIANO</strong> (24.000€): ~${actualWorkDays.mediano} días de trabajo<br>`;
+                html += `• Con salario <strong style="color: #28a745;">MODAL</strong> (18.000€): ~${actualWorkDays.modal} días de trabajo`;
+                html += `</div>`;
+            }
+            
+            result.innerHTML = html;
+            result.style.display = 'block';
+        }
+
+        // --- BUDGET GAME ---
+        let budgetValues = {};
+
+        function initBudget() {
+            const container = document.getElementById('budget-controls');
+            container.innerHTML = '';
+            budgetValues = {};
+            
+            budgetData.forEach(cat => {
+                budgetValues[cat.id] = 0;
+                const row = document.createElement('div');
+                row.className = 'control-row';
+                row.innerHTML = `
+                    <label title="${cat.info}">${cat.name} ℹ️</label>
+                    <input type="range" min="0" max="100" value="0" id="bud-${cat.id}" oninput="updateBudget('${cat.id}', this.value)">
+                    <span id="bval-${cat.id}">0€</span>
+                `;
+                container.appendChild(row);
+            });
+            checkBudgetTotal();
+        }
+
+        function updateBudget(id, val) {
+            budgetValues[id] = parseInt(val);
+            document.getElementById(`bval-${id}`).textContent = val + '€';
+            checkBudgetTotal();
+        }
+
+        function checkBudgetTotal() {
+            const total = Object.values(budgetValues).reduce((a,b) => a+b, 0);
+            document.getElementById('budget-total').textContent = total;
+        }
+
+        // Helper function to generate Pie Chart HTML
+        function generatePieChartHTML(data, title) {
+            let gradientStops = '';
+            let cumulativePercent = 0;
+            
+            data.forEach(cat => {
+                const percent = cat.real;
+                gradientStops += `${cat.color} ${cumulativePercent}% ${cumulativePercent + percent}%, `;
+                cumulativePercent += percent;
+            });
+            
+            gradientStops = gradientStops.slice(0, -2); // Remove trailing comma
+
+            let legendHTML = '<div class="chart-legend">';
+            data.forEach(cat => {
+                legendHTML += `
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: ${cat.color};"></div>
+                        <span><strong>${cat.name}:</strong> ${cat.real}%</span>
+                    </div>
+                `;
+            });
+            legendHTML += '</div>';
+
+            return `
+                <div class="feedback-chart-container">
+                    <h4 style="margin-bottom: 15px; color: var(--primary);">${title}</h4>
+                    <div class="pie-chart-wrapper">
+                        <div class="pie-chart-real" style="background: conic-gradient(${gradientStops});"></div>
+                        ${legendHTML}
+                    </div>
+                </div>
+            `;
+        }
+
+        function checkBudget() {
+            const fb = document.getElementById('budget-feedback');
+            const total = Object.values(budgetValues).reduce((a,b) => a+b, 0);
+            
+            if(total !== 100) {
+                fb.className = 'pc-result warning';
+                fb.innerHTML = `⚠️ <strong>¡Atención!</strong> Has asignado <strong>${total}€</strong>, pero debían sumar exactamente <strong>100€</strong>. Ajusta los controles antes de comparar.`;
+                fb.style.display = 'block';
+                return;
+            }
+
+            let html = "<h3>📊 Comparación con el PGE 2024 Real:</h3><ul style='margin: 15px 0;'>";
+            let totalDiff = 0;
+
+            budgetData.forEach(cat => {
+                const diff = budgetValues[cat.id] - cat.real;
+                totalDiff += Math.abs(diff);
+                if(diff !== 0) {
+                    const color = diff > 0 ? '#dc3545' : '#28a745'; 
+                    const sign = diff > 0 ? '+' : '';
+                    html += `<li style="color:${color}; font-weight:bold; margin: 5px 0;">${cat.name}: Tú ${budgetValues[cat.id]}€ (Real: ${cat.real}€) → ${sign}${diff}€ de diferencia</li>`;
+                } else {
+                    html += `<li style="color:#28a745; font-weight:bold; margin: 5px 0;">✅ ${cat.name}: ¡Coincides exactamente! (${cat.real}€)</li>`;
+                }
+            });
+            html += "</ul>";
+            
+            if(totalDiff === 0) {
+                html += "<p style='color:var(--success); font-weight: bold; font-size: 1.1rem; margin-top: 15px;'>🎉 ¡PERFECTO! Has replicado exactamente el presupuesto real del Estado.</p>";
+            } else {
+                html += `<p style='margin-top: 15px;'><strong>💡 Reflexión:</strong> La <strong>Protección Social</strong> (pensiones, desempleo, prestaciones) consume el 40% del presupuesto, siendo la mayor partida. El Gasto Social total (que incluye Sanidad + Educación + Protección Social) representa el <strong>56,3%</strong> del PGE 2024.</p>`;
+                html += `<p style='margin-top: 10px;'><em>Diferencia total acumulada: ${totalDiff}€</em></p>`;
+            }
+
+            html += generatePieChartHTML(budgetData, "Distribución Real del Gasto Público (por cada €)");
+
+            fb.className = 'pc-result success';
+            fb.innerHTML = html;
+            fb.style.display = 'block';
+        }
+
+        // --- INCOME GAME ---
+        let incomeValues = {};
+
+        function initIncome() {
+            const container = document.getElementById('income-controls');
+            container.innerHTML = '';
+            incomeValues = {};
+            
+            incomeData.forEach(cat => {
+                incomeValues[cat.id] = 0;
+                const row = document.createElement('div');
+                row.className = 'control-row';
+                row.innerHTML = `
+                    <label title="${cat.info}">${cat.name} ℹ️</label>
+                    <input type="range" min="0" max="100" value="0" id="inc-${cat.id}" oninput="updateIncome('${cat.id}', this.value)">
+                    <span id="ival-${cat.id}">0%</span>
+                `;
+                container.appendChild(row);
+            });
+            checkIncomeTotal();
+        }
+
+        function updateIncome(id, val) {
+            incomeValues[id] = parseInt(val);
+            document.getElementById(`ival-${id}`).textContent = val + '%';
+            checkIncomeTotal();
+        }
+
+        function checkIncomeTotal() {
+            const total = Object.values(incomeValues).reduce((a,b) => a+b, 0);
+            document.getElementById('income-total').textContent = total;
+        }
+
+        function checkIncome() {
+            const fb = document.getElementById('income-feedback');
+            let html = "<h3>📊 Datos Reales del Ministerio de Hacienda:</h3><ul style='margin: 15px 0;'>";
+            
+            incomeData.forEach(cat => {
+                const userVal = incomeValues[cat.id];
+                const diff = Math.abs(userVal - cat.real);
+                const color = diff < 5 ? '#28a745' : (diff < 15 ? '#ffc107' : '#dc3545');
+                html += `<li style="margin: 5px 0;"><strong>${cat.name}:</strong> Real <span style="color:${color}; font-weight:bold;">${cat.real}%</span> (Tú pusiste ${userVal}%)</li>`;
+            });
+            html += "</ul>";
+            
+            html += "<div style='background: #e3f2fd; padding: 15px; border-radius: 8px; border-left: 4px solid var(--primary); margin: 20px 0;'>";
+            html += "<p><strong>💡 Dato sorprendente:</strong> Las <strong>Cotizaciones Sociales</strong> (aportaciones de trabajadores y empresas a la Seguridad Social) son la principal fuente de ingresos del Estado con el <strong>50,6%</strong>, superando incluso al IRPF (27,6%).</p>";
+            html += "<p style='margin-top: 10px;'>Esto refleja la importancia del sistema de Seguridad Social en España y explica por qué las pensiones son la mayor partida de gasto.</p>";
+            html += "</div>";
+
+            html += generatePieChartHTML(incomeData, "Origen Real de los Ingresos Públicos");
+
+            fb.className = 'pc-result success';
+            fb.innerHTML = html;
+            fb.style.display = 'block';
+        }
+
+        // --- QUIZ ---
+        function initQuiz() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+
+            quizData.forEach((q, idx) => {
+                const card = document.createElement('div');
+                card.className = 'quiz-card';
+                
+                let optionsHtml = '';
+                q.options.forEach((opt, optIdx) => {
+                    optionsHtml += `<div class="quiz-opt" onclick="checkQuiz(${idx}, ${optIdx}, this)">${opt}</div>`;
+                });
+
+                card.innerHTML = `
+                    <div class="quiz-question">${idx+1}. ${q.q}</div>
+                    <div class="quiz-options" id="q-opts-${idx}">${optionsHtml}</div>
+                    <div class="quiz-feedback" id="q-feed-${idx}">${q.info}</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function checkQuiz(qIdx, optIdx, btn) {
+            const q = quizData[qIdx];
+            const parent = document.getElementById(`q-opts-${qIdx}`);
+            const feedback = document.getElementById(`q-feed-${qIdx}`);
+            
+            Array.from(parent.children).forEach(child => child.style.pointerEvents = 'none');
+
+            if(optIdx === q.correct) {
+                btn.classList.add('correct');
+                feedback.style.color = 'var(--success)';
+                feedback.innerHTML = '✅ ' + q.info;
+            } else {
+                btn.classList.add('wrong');
+                parent.children[q.correct].classList.add('correct');
+                feedback.style.color = 'var(--error)';
+                feedback.innerHTML = '❌ ' + q.info;
+            }
+            feedback.style.display = 'block';
+        }
+
+        // --- MYTHS ---
+        function initMyths() {
+            const container = document.getElementById('myths-container');
+            container.innerHTML = '';
+
+            mythsData.forEach(m => {
+                const card = document.createElement('div');
+                card.className = 'myth-card';
+                card.onclick = function() { this.classList.toggle('flipped'); };
+                
+                card.innerHTML = `
+                    <div class="myth-inner">
+                        <div class="myth-front">
+                            <div class="myth-icon">${m.icon}</div>
+                            <div class="myth-badge">${m.type}</div>
+                            <div class="myth-title">${m.title}</div>
+                            <p style="font-size:0.9rem; color:#666; margin: 10px 0;">${m.myth}</p>
+                            <div style="margin-top:auto; font-size:0.8rem; color:#999;">🔄 Clic para ver la verdad</div>
+                        </div>
+                        <div class="myth-back">
+                            <div class="myth-badge" style="background:white; color:#333">✅ REALIDAD</div>
+                            <div style="font-size:1rem; line-height:1.5; padding: 10px;">${m.truth}</div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // INIT ALL
+        document.addEventListener('DOMContentLoaded', () => {
+            renderPrices('all');
+            initBudget();
+            initIncome();
+            initQuiz();
+            initMyths();
+        });
+
+    </script>
+</body>
+</html>
