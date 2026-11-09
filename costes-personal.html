@@ -1,0 +1,2984 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 3 · Costes empresariales — FP Superior</title>
+<style>
+/* =========================================================
+   MÓDULO 3: COSTES REALES DE PERSONAL + PUNTO EQUILIBRIO
+   Suite Empresarial FP Superior
+   Paleta: ERP + didáctico | WCAG 2.2 | Responsive | Print
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; }
+
+:root {
+  --primary:       #1e40af;
+  --primary-l:     #3b82f6;
+  --primary-xl:    #dbeafe;
+  --success:       #16a34a;
+  --success-l:     #dcfce7;
+  --danger:        #dc2626;
+  --danger-l:      #fee2e2;
+  --warning:       #d97706;
+  --warning-l:     #fef3c7;
+  --purple:        #7c3aed;
+  --purple-l:      #ede9fe;
+  --teal:          #0d9488;
+  --teal-l:        #ccfbf1;
+  --sim-red:       #ef4444;
+
+  --gray-50:  #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-500: #6b7280;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+
+  --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Consolas', monospace;
+
+  --r-sm:  0.375rem;
+  --r-md:  0.5rem;
+  --r-lg:  0.75rem;
+  --r-xl:  1rem;
+
+  --sh-sm: 0 1px 3px 0 rgb(0 0 0/.1), 0 1px 2px -1px rgb(0 0 0/.1);
+  --sh-md: 0 4px 6px -1px rgb(0 0 0/.1), 0 2px 4px -2px rgb(0 0 0/.1);
+  --sh-lg: 0 10px 15px -3px rgb(0 0 0/.1), 0 4px 6px -4px rgb(0 0 0/.1);
+  --sh-xl: 0 20px 25px -5px rgb(0 0 0/.1), 0 8px 10px -6px rgb(0 0 0/.1);
+}
+
+* { margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--gray-900);
+  background: #f0f4f8;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(30,64,175,.04) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(16,163,74,.04) 0%, transparent 50%);
+  min-height: 100vh;
+}
+
+/* ── HEADER SIMULACIÓN ── */
+.header-sim {
+  position: fixed; top: 0; left: 0; right: 0;
+  background: linear-gradient(90deg, var(--sim-red), #b91c1c);
+  color: #fff; padding: 0.32rem 1rem;
+  font-weight: 700; font-size: 10.5px; text-align: center;
+  z-index: 10000; letter-spacing: .4px; text-transform: uppercase;
+  display: flex; align-items: center; justify-content: center; gap: 1.5rem;
+  animation: sim-pulse 4s infinite;
+}
+@keyframes sim-pulse { 0%,100%{opacity:1;} 50%{opacity:.88;} }
+
+/* ── NAV MÓDULOS ── */
+.mod-nav {
+  position: fixed; top: 1.55rem; left: 0; right: 0; z-index: 9999;
+  background: #fff; border-bottom: 2px solid var(--gray-200);
+  box-shadow: var(--sh-md);
+  display: flex; align-items: stretch;
+}
+.mod-nav .brand {
+  padding: .5rem 1.25rem; font-weight: 800; font-size: .88rem;
+  color: var(--primary); border-right: 2px solid var(--gray-200);
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
+  display: flex; align-items: center; gap: .4rem; white-space: nowrap;
+}
+.mod-nav .nav-tabs { display: flex; flex: 1; }
+.nav-tab {
+  flex: 1; padding: .55rem .75rem;
+  background: none; border: none; border-bottom: 3px solid transparent;
+  font-family: var(--font-sans); font-weight: 600; font-size: .78rem;
+  color: var(--gray-500); cursor: pointer; transition: all .2s;
+}
+.nav-tab:hover { color: var(--primary); background: #eff6ff; }
+.nav-tab.active { color: var(--primary); border-bottom-color: var(--primary); background: #f0f6ff; }
+
+/* ── LAYOUT ── */
+.app-body { padding-top: 5.4rem; }
+.modulo { display: none; }
+.modulo.active { display: block; }
+
+.main-wrap {
+  display: flex; gap: 1.25rem;
+  padding: 1.5rem; max-width: 1680px; margin: 0 auto;
+}
+
+.panel-work {
+  flex: 2.2; background: #fff;
+  border-radius: var(--r-xl); padding: 1.5rem;
+  box-shadow: var(--sh-lg); overflow-y: auto; max-height: 83vh;
+}
+.panel-side {
+  flex: 1; min-width: 280px;
+  background: var(--gray-50);
+  border-radius: var(--r-xl); padding: 1.25rem;
+  box-shadow: var(--sh-md);
+  position: sticky; top: 5.8rem;
+  height: fit-content; max-height: 83vh; overflow-y: auto;
+}
+.panel-side h3 {
+  color: var(--gray-900); font-size: .95rem; font-weight: 800;
+  margin-bottom: 1rem; padding-bottom: .5rem;
+  border-bottom: 3px solid var(--primary);
+  display: flex; align-items: center; gap: .4rem;
+}
+
+/* ── TABS INTERNOS ── */
+.tabs {
+  display: flex; background: #f8fafc;
+  border-radius: var(--r-lg) var(--r-lg) 0 0;
+  margin: -1.5rem -1.5rem 1.5rem;
+  overflow: hidden; box-shadow: 0 -2px 10px rgb(0 0 0/.05);
+}
+.tab-btn {
+  flex: 1; padding: .7rem .75rem;
+  background: none; border: none; border-bottom: 3px solid transparent;
+  font-family: var(--font-sans); font-weight: 600; font-size: .78rem;
+  color: var(--gray-500); cursor: pointer; transition: all .25s;
+}
+.tab-btn:hover { background: rgba(59,130,246,.08); color: var(--primary); }
+.tab-btn.active { background: var(--primary); color: #fff; border-bottom-color: #60a5fa; }
+.tab-content { display: none; animation: fadeUp .28s ease; }
+.tab-content.active { display: block; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+
+/* ── SECCIÓN TÍTULOS ── */
+.sec-title {
+  display: flex; align-items: center; gap: .5rem;
+  font-size: .95rem; font-weight: 800; color: var(--gray-800);
+  margin-bottom: 1rem; padding-bottom: .4rem;
+  border-bottom: 2px solid var(--gray-200);
+}
+.sec-badge {
+  padding: .12rem .5rem; border-radius: 9999px;
+  font-size: .65rem; font-weight: 800; letter-spacing: .03em;
+  text-transform: uppercase;
+}
+.badge-blue { background: var(--primary); color: #fff; }
+.badge-green { background: var(--success); color: #fff; }
+.badge-purple { background: var(--purple); color: #fff; }
+.badge-teal { background: var(--teal); color: #fff; }
+.badge-amber { background: var(--warning); color: #fff; }
+.badge-red { background: var(--danger); color: #fff; }
+
+/* ── FORMULARIOS ── */
+.fg { margin-bottom: .9rem; }
+.fg label {
+  display: block; font-weight: 600; font-size: .8rem;
+  color: var(--gray-700); margin-bottom: .3rem;
+}
+.fg .hint { font-size: .7rem; color: var(--gray-500); font-weight: 400; margin-left: .3rem; }
+
+.inp, .sel {
+  width: 100%; padding: .5rem .7rem;
+  border: 2px solid var(--gray-200); border-radius: var(--r-md);
+  font-family: var(--font-sans); font-size: .88rem;
+  transition: border-color .2s, box-shadow .2s; background: #fff; color: var(--gray-900);
+}
+.inp:focus, .sel:focus {
+  outline: none; border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(59,130,246,.15);
+}
+.inp-mono { font-family: var(--font-mono); }
+.inp-sm { padding: .35rem .5rem; font-size: .8rem; }
+.inp-read {
+  background: var(--gray-100); color: var(--gray-700);
+  font-family: var(--font-mono); font-weight: 700; cursor: default;
+}
+
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: .85rem; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: .85rem; }
+.grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: .85rem; }
+
+/* ── SWITCH ── */
+.sw-wrap { display: flex; align-items: center; gap: .5rem; margin-bottom: .5rem; }
+.sw { position: relative; width: 2.75rem; height: 1.45rem; flex-shrink: 0; }
+.sw input { opacity: 0; width: 0; height: 0; }
+.sw-track {
+  position: absolute; inset: 0; cursor: pointer;
+  background: var(--gray-300); border-radius: 9999px; transition: .25s;
+}
+.sw-track::before {
+  content: ''; position: absolute;
+  width: 1.1rem; height: 1.1rem; border-radius: 50%;
+  left: .18rem; bottom: .175rem;
+  background: #fff; transition: .25s;
+  box-shadow: 0 1px 3px rgba(0,0,0,.2);
+}
+input:checked + .sw-track { background: var(--success); }
+input:checked + .sw-track::before { transform: translateX(1.3rem); }
+.sw-label { font-size: .8rem; font-weight: 500; color: var(--gray-700); }
+
+/* ── RANGE ── */
+input[type="range"] {
+  -webkit-appearance: none; width: 100%; height: 6px;
+  border-radius: 3px; background: var(--gray-200); outline: none; cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 17px; height: 17px;
+  border-radius: 50%; background: var(--primary); cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,.25);
+}
+
+/* ── BOTONES ── */
+.btn {
+  display: inline-flex; align-items: center; gap: .35rem;
+  padding: .55rem 1.1rem; border: none; border-radius: var(--r-md);
+  font-family: var(--font-sans); font-weight: 700; font-size: .82rem;
+  cursor: pointer; transition: all .2s; position: relative; overflow: hidden;
+}
+.btn::before {
+  content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.25), transparent);
+  transition: left .45s;
+}
+.btn:hover::before { left: 100%; }
+.btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-l)); color: #fff; }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: var(--sh-lg); }
+.btn-success { background: linear-gradient(135deg, var(--success), #059669); color: #fff; }
+.btn-success:hover { transform: translateY(-1px); }
+.btn-danger { background: linear-gradient(135deg, var(--danger), #b91c1c); color: #fff; }
+.btn-warning { background: linear-gradient(135deg, var(--warning), #b45309); color: #fff; }
+.btn-purple { background: linear-gradient(135deg, var(--purple), #6d28d9); color: #fff; }
+.btn-teal { background: linear-gradient(135deg, var(--teal), #0f766e); color: #fff; }
+.btn-outline {
+  background: #fff; color: var(--primary);
+  border: 2px solid var(--primary);
+}
+.btn-outline:hover { background: var(--primary); color: #fff; }
+.btn-ghost { background: var(--gray-100); color: var(--gray-700); }
+.btn-ghost:hover { background: var(--gray-200); }
+.btn-sm { padding: .3rem .65rem; font-size: .75rem; }
+.btn-xs { padding: .2rem .45rem; font-size: .7rem; }
+.btn-group { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: 1rem; }
+.btn:disabled { background: var(--gray-300); color: var(--gray-500); cursor: not-allowed; transform: none; }
+
+/* ── KPI CARDS ── */
+.kpi-grid { display: grid; gap: .85rem; margin-bottom: 1rem; }
+.kpi-grid-4 { grid-template-columns: repeat(4, 1fr); }
+.kpi-grid-3 { grid-template-columns: repeat(3, 1fr); }
+.kpi-grid-2 { grid-template-columns: repeat(2, 1fr); }
+
+.kpi {
+  background: #fff; padding: .9rem 1rem;
+  border-radius: var(--r-lg); box-shadow: var(--sh-sm);
+  text-align: center; border-top: 4px solid transparent;
+  transition: all .3s; position: relative; overflow: hidden;
+}
+.kpi::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,.0) 60%, rgba(255,255,255,.6));
+  pointer-events: none;
+}
+.kpi.k-blue   { border-top-color: var(--primary); }
+.kpi.k-green  { border-top-color: var(--success); }
+.kpi.k-red    { border-top-color: var(--danger); }
+.kpi.k-amber  { border-top-color: var(--warning); }
+.kpi.k-purple { border-top-color: var(--purple); }
+.kpi.k-teal   { border-top-color: var(--teal); }
+
+.kpi-label { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--gray-500); margin-bottom: .3rem; }
+.kpi-val { font-family: var(--font-mono); font-size: 1.55rem; font-weight: 800; line-height: 1.1; }
+.kpi-sub { font-size: .7rem; color: var(--gray-500); font-weight: 500; margin-top: .15rem; }
+.kpi-delta { font-size: .72rem; font-weight: 700; margin-top: .2rem; }
+.kpi-delta.pos { color: var(--success); }
+.kpi-delta.neg { color: var(--danger); }
+
+/* ── TABLA EDITABLE ── */
+.t-edit {
+  width: 100%; border-collapse: collapse;
+  font-family: var(--font-mono); font-size: 12px;
+  box-shadow: var(--sh-sm); border-radius: var(--r-lg);
+  overflow: hidden; margin-bottom: 1rem;
+}
+.t-edit th {
+  background: linear-gradient(135deg, var(--gray-800), var(--gray-700));
+  color: #fff; padding: .6rem .55rem;
+  text-align: left; font-size: .7rem;
+  text-transform: uppercase; letter-spacing: .05em; font-weight: 700;
+}
+.t-edit td {
+  padding: .5rem .5rem; border-bottom: 1px solid var(--gray-200);
+  vertical-align: middle;
+}
+.t-edit tr:hover td { background: #f0f9ff; }
+.t-edit .td-calc {
+  background: #f0fdf4; color: #15803d;
+  font-weight: 700; text-align: right;
+}
+.t-edit .td-warn { background: #fef2f2; color: var(--danger); font-weight: 700; text-align: right; }
+.t-edit .td-info { background: #eff6ff; color: var(--primary); font-weight: 700; text-align: right; }
+.t-edit input, .t-edit select {
+  width: 100%; border: 1.5px solid var(--gray-200);
+  padding: .28rem .35rem; border-radius: .25rem;
+  font-family: inherit; font-size: inherit; background: #fff;
+  transition: border-color .2s;
+}
+.t-edit input:focus, .t-edit select:focus {
+  outline: none; border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(59,130,246,.15);
+}
+
+/* ── ALERTAS ── */
+.alert {
+  padding: .55rem .8rem; border-radius: var(--r-md);
+  font-size: .78rem; line-height: 1.5; margin-bottom: .65rem;
+  display: flex; align-items: flex-start; gap: .4rem;
+}
+.alert-info    { background: #eff6ff; border-left: 3px solid var(--primary); color: #1e40af; }
+.alert-warning { background: #fffbeb; border-left: 3px solid var(--warning); color: #92400e; }
+.alert-danger  { background: #fef2f2; border-left: 3px solid var(--danger); color: #991b1b; }
+.alert-success { background: #f0fdf4; border-left: 3px solid var(--success); color: #14532d; }
+.alert-purple  { background: #f5f3ff; border-left: 3px solid var(--purple); color: #4c1d95; }
+.alert-teal    { background: #f0fdfa; border-left: 3px solid var(--teal); color: #134e4a; }
+
+/* ── TOOLTIP ── */
+.tt {
+  position: relative; display: inline-block;
+  background: var(--primary); color: #fff;
+  padding: .12rem .42rem; border-radius: 9999px;
+  font-size: .67rem; font-weight: 600; cursor: help;
+  margin-left: .25rem; transition: all .2s;
+}
+.tt:hover { background: #1d4ed8; transform: scale(1.05); }
+.tt::after {
+  content: attr(data-tip);
+  position: absolute; bottom: 130%; left: 50%; transform: translateX(-50%);
+  background: var(--gray-900); color: #fff;
+  padding: .4rem .65rem; border-radius: .35rem;
+  font-size: .78rem; white-space: nowrap;
+  opacity: 0; visibility: hidden; transition: all .2s;
+  z-index: 9000; box-shadow: var(--sh-lg); max-width: 300px;
+  white-space: normal; text-align: center; min-width: 180px;
+}
+.tt:hover::after { opacity: 1; visibility: visible; bottom: 120%; }
+
+/* ── CHECKLIST ── */
+.ck-list { list-style: none; }
+.ck-item {
+  display: flex; align-items: flex-start; gap: .45rem;
+  padding: .35rem 0; border-bottom: 1px solid var(--gray-100);
+  font-size: .78rem; line-height: 1.45;
+}
+.ck-item:last-child { border: none; }
+.ck-mark {
+  width: 1.15rem; height: 1.15rem; border: 2px solid var(--gray-300);
+  border-radius: .25rem; display: flex; align-items: center; justify-content: center;
+  font-size: .6rem; font-weight: 800; flex-shrink: 0; margin-top: 1px;
+}
+.ck-verde  { background: var(--success); color: #fff; border-color: var(--success); }
+.ck-ambar  { background: var(--warning); color: #fff; border-color: var(--warning); }
+.ck-rojo   { background: var(--danger); color: #fff; border-color: var(--danger); }
+.ck-purple { background: var(--purple); color: #fff; border-color: var(--purple); }
+
+/* ── DIVIDER ── */
+.divider { border: none; border-top: 2px solid var(--gray-200); margin: 1rem 0; }
+
+/* ── PROGRESS BAR ── */
+.prog-wrap { height: 10px; background: var(--gray-200); border-radius: 5px; overflow: hidden; margin-top: .3rem; }
+.prog-fill { height: 100%; border-radius: 5px; transition: width .6s ease; }
+.prog-blue   { background: linear-gradient(90deg, var(--primary), var(--primary-l)); }
+.prog-green  { background: linear-gradient(90deg, var(--success), #34d399); }
+.prog-red    { background: linear-gradient(90deg, var(--danger), #f87171); }
+.prog-amber  { background: linear-gradient(90deg, var(--warning), #fbbf24); }
+.prog-purple { background: linear-gradient(90deg, var(--purple), #a78bfa); }
+
+/* ── CHART CANVAS ── */
+.chart-box { position: relative; margin: .75rem 0; border-radius: var(--r-md); overflow: hidden; background: #fafafa; border: 1px solid var(--gray-200); }
+
+/* ── SEGMENTO VISUAL SS ── */
+.ss-visual {
+  display: flex; border-radius: var(--r-md); overflow: hidden;
+  height: 32px; margin: .5rem 0; box-shadow: var(--sh-sm);
+}
+.ss-seg {
+  display: flex; align-items: center; justify-content: center;
+  font-size: .65rem; font-weight: 700; color: #fff; overflow: hidden;
+  transition: width .5s ease; white-space: nowrap; cursor: help;
+}
+
+/* ── EMPLEADO CARD ── */
+.emp-card {
+  background: #fff; border-radius: var(--r-lg);
+  border: 2px solid var(--gray-200); margin-bottom: .75rem;
+  overflow: hidden; transition: border-color .2s;
+  box-shadow: var(--sh-sm);
+}
+.emp-card:hover { border-color: var(--primary-l); box-shadow: var(--sh-md); }
+.emp-card-head {
+  background: linear-gradient(135deg, var(--gray-800), var(--gray-700));
+  padding: .6rem .9rem; color: #fff;
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer;
+}
+.emp-card-body { padding: .9rem; }
+
+/* ── PRODUCTO CARD (umbral) ── */
+.prod-card {
+  background: #fff; border-radius: var(--r-lg);
+  border: 2px solid var(--gray-200); margin-bottom: .65rem;
+  overflow: hidden; box-shadow: var(--sh-sm);
+}
+.prod-card-head {
+  background: linear-gradient(135deg, var(--teal), #0f766e);
+  padding: .55rem .85rem; color: #fff;
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+/* ── ESCALA GRÁFICA GAUGE ── */
+.gauge-wrap { display: flex; flex-direction: column; align-items: center; padding: .75rem; }
+.gauge-svg { width: 130px; height: 70px; }
+
+/* ── TABLA SS ── */
+.ss-table { width: 100%; border-collapse: collapse; font-size: .77rem; margin-bottom: .75rem; }
+.ss-table th { background: var(--gray-100); padding: .4rem .55rem; text-align: left; font-weight: 700; font-size: .7rem; text-transform: uppercase; letter-spacing: .04em; color: var(--gray-700); }
+.ss-table td { padding: .38rem .55rem; border-bottom: 1px solid var(--gray-100); }
+.ss-table tr:last-child td { font-weight: 800; background: var(--gray-50); }
+.ss-table .td-r { text-align: right; font-family: var(--font-mono); }
+.ss-table .td-emp { color: var(--danger); }
+.ss-table .td-trab { color: var(--primary); }
+.ss-table .td-total { color: var(--purple); }
+
+/* ── RESUMEN BRECHA ── */
+.brecha-viz {
+  display: flex; align-items: stretch; gap: 0; border-radius: var(--r-lg);
+  overflow: hidden; box-shadow: var(--sh-md); margin: .75rem 0;
+}
+.brecha-col {
+  flex: 1; padding: .75rem; text-align: center;
+}
+.brecha-col.neto { background: var(--success-l); }
+.brecha-col.ss-trab { background: #dbeafe; }
+.brecha-col.irpf { background: #fef3c7; }
+.brecha-col.ss-emp { background: #fee2e2; }
+.brecha-col.total { background: var(--gray-800); color: #fff; }
+
+/* ── COSTES INDIRECTOS ── */
+.ci-categoria {
+  background: #fff; border-radius: var(--r-lg);
+  border: 2px solid var(--gray-200); margin-bottom: .65rem;
+  box-shadow: var(--sh-sm);
+}
+.ci-cat-head {
+  padding: .55rem .9rem; font-weight: 700; font-size: .82rem;
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer; border-radius: var(--r-md);
+}
+.ci-cat-body { padding: 0 .9rem .9rem; }
+
+/* ── UMBRAL GRÁFICO ── */
+.umbral-labels {
+  display: flex; justify-content: space-between; font-size: .7rem;
+  font-family: var(--font-mono); color: var(--gray-500); margin-top: .3rem;
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1100px){
+  .main-wrap { flex-direction: column; padding: 1rem; }
+  .panel-side { position: static; max-height: none; }
+  .kpi-grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .grid4 { grid-template-columns: 1fr 1fr; }
+}
+@media(max-width:768px){
+  .tabs { flex-direction: column; }
+  .tab-btn { border-bottom: none; border-right: 3px solid transparent; }
+  .tab-btn.active { border-right-color: var(--primary); }
+  .kpi-grid-4, .kpi-grid-3 { grid-template-columns: 1fr 1fr; }
+  .grid2, .grid3, .grid4 { grid-template-columns: 1fr; }
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after { animation-duration: .01ms !important; transition-duration: .2s !important; }
+}
+@media print {
+  .header-sim, .mod-nav, .tabs, .btn-group, .panel-side { display: none !important; }
+  .main-wrap { flex-direction: column; padding: 0; }
+  .panel-work { box-shadow: none; max-height: none; }
+}
+:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; border-radius: var(--r-md); }
+
+/* utils */
+.mb-0  { margin-bottom: 0; }
+.mb-sm { margin-bottom: .5rem; }
+.mb-md { margin-bottom: 1rem; }
+.mt-sm { margin-top: .5rem; }
+.mt-md { margin-top: 1rem; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-mono  { font-family: var(--font-mono); }
+.text-xs    { font-size: .72rem; }
+.text-sm    { font-size: .8rem; }
+.text-muted { color: var(--gray-500); }
+.font-bold  { font-weight: 700; }
+.font-black { font-weight: 800; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+.flex-gap     { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+.w-full { width: 100%; }
+.hidden { display: none !important; }
+
+/* nota educativa */
+.edu-box {
+  background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+  border: 2px solid #86efac; border-radius: var(--r-lg);
+  padding: .85rem 1rem; margin-bottom: 1rem; font-size: .8rem; line-height: 1.6;
+}
+.edu-box strong { color: var(--success); }
+.concept-box {
+  background: linear-gradient(135deg, var(--purple-l), #f5f3ff);
+  border: 2px solid #c4b5fd; border-radius: var(--r-lg);
+  padding: .85rem 1rem; margin-bottom: 1rem; font-size: .8rem; line-height: 1.6;
+}
+.concept-box strong { color: var(--purple); }
+
+/* Etiqueta resultado */
+.result-tag {
+  display: inline-flex; align-items: center; gap: .3rem;
+  background: var(--gray-100); border-radius: var(--r-sm);
+  padding: .25rem .6rem; font-size: .78rem; font-family: var(--font-mono); font-weight: 700;
+}
+.result-tag.rt-green { background: var(--success-l); color: var(--success); }
+.result-tag.rt-red   { background: var(--danger-l); color: var(--danger); }
+.result-tag.rt-blue  { background: var(--primary-xl); color: var(--primary); }
+.result-tag.rt-amber { background: var(--warning-l); color: var(--warning); }
+
+/* Separador visual de módulo */
+.mod-banner {
+  background: linear-gradient(135deg, var(--gray-800), var(--gray-900));
+  color: #fff; padding: .7rem 1.5rem;
+  display: flex; align-items: center; gap: .75rem;
+  margin: -1.5rem -1.5rem 1.5rem;
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
+}
+.mod-banner .icon { font-size: 1.5rem; }
+.mod-banner h2 { font-size: .95rem; font-weight: 800; }
+.mod-banner p  { font-size: .72rem; color: #9ca3af; }
+
+/* scroll custom */
+.panel-work::-webkit-scrollbar, .panel-side::-webkit-scrollbar { width: 5px; }
+.panel-work::-webkit-scrollbar-track, .panel-side::-webkit-scrollbar-track { background: var(--gray-100); }
+.panel-work::-webkit-scrollbar-thumb, .panel-side::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 3px; }
+
+/* Cotizaciones del trabajador editables */
+.ss-trab-input { display:inline-block; width:4.8rem; min-width:4.4rem; padding:.2rem .25rem; text-align:right; font-size:.8rem; }
+.td-trab .ss-trab-input { margin-right:.12rem; }
+/* Desglose del multiplicador */
+.multiplicador-detail { margin-top:.8rem; padding:.9rem 1rem; border:1px solid var(--gray-300, #d1d5db); border-left:4px solid var(--primary, #2563eb); border-radius:.55rem; background:#f8fafc; color:var(--gray-800, #1f2937); font-size:.82rem; line-height:1.55; }
+.multiplicador-detail > strong { display:block; margin-bottom:.55rem; font-size:.92rem; }
+.multiplicador-detail .formula { margin:.22rem 0 .58rem; padding:.4rem .55rem; border-radius:.35rem; background:#fff; border:1px solid #e5e7eb; font-family:var(--font-mono, monospace); font-size:.8rem; overflow-wrap:anywhere; }
+.multiplicador-detail .mult-step { margin-top:.25rem; }
+</style>
+</head>
+<body>
+
+<!-- BANNER SIMULACIÓN -->
+<div class="header-sim">
+  <span>⚠️ ENTORNO DE SIMULACIÓN DOCENTE — Datos ficticios · No válido a efectos laborales ni fiscales</span>
+  <span>FP Superior · Administración y Finanzas · Costes y Pricing</span>
+</div>
+
+<!-- NAVEGACIÓN MÓDULOS -->
+<nav class="mod-nav">
+  <div class="brand">💼 Suite FP — Costes</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchMod('personal')">👤 Módulo 3A · Coste Real Personal</button>
+    <button class="nav-tab" onclick="switchMod('indirectos')">⚡ Módulo 3B · Costes Indirectos</button>
+    <button class="nav-tab" onclick="switchMod('umbral')">📈 Módulo 3C · Punto de Equilibrio</button>
+    <button class="nav-tab" onclick="switchMod('dashboard')">🎯 Cuadro de Mando</button>
+  </div>
+  <button class="nav-tab" type="button" onclick="openHelp()" style="flex:0 0 auto">❔ Ayuda</button>
+</nav>
+
+<!-- AYUDA / MANUAL DE USO -->
+<div id="help-modal" role="dialog" aria-modal="true" aria-labelledby="help-title" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.62);z-index:20000;padding:1rem;overflow:auto">
+  <section style="max-width:900px;margin:2rem auto;background:#fff;border-radius:1rem;padding:1.5rem;box-shadow:0 20px 50px #0004">
+    <div class="flex-between" style="gap:1rem">
+      <h2 id="help-title" style="font-size:1.25rem">Manual de uso · Suite FP Costes</h2>
+      <button class="btn btn-outline" onclick="closeHelp()" aria-label="Cerrar manual">Cerrar ✕</button>
+    </div>
+    <p class="text-muted text-sm mb-md">Guía rápida para realizar una simulación de costes y comprender los resultados.</p>
+    <div class="edu-box"><strong>Objetivo:</strong> estimar cuánto cuesta mantener la actividad, cuánto cuesta cada hora productiva y qué volumen de ventas permite cubrir los costes. Los datos iniciales son ejemplos ficticios: sustitúyelos por los de tu caso.</div>
+    <h3>1. Orden recomendado de trabajo</h3>
+    <ol style="padding-left:1.3rem;margin:.5rem 0 1rem;line-height:1.8">
+      <li><strong>Coste de personal (3A):</strong> configura contrato, jornada y supuestos; revisa o añade empleados; ajusta el calendario; consulta el coste anual y el coste por hora efectiva.</li>
+      <li><strong>Costes indirectos (3B):</strong> registra suministros, activos y otros gastos; indica periodicidad, porcentaje de uso y criterio de reparto cuando proceda.</li>
+      <li><strong>Punto de equilibrio (3C):</strong> introduce costes fijos y productos/servicios; define precio, porcentaje de coste variable, unidades previstas y mix de ventas.</li>
+      <li><strong>Cuadro de mando:</strong> revisa conjuntamente los resultados y comprueba que los módulos estén completos antes de utilizarlos.</li>
+    </ol>
+    <h3>2. Qué significa cada resultado</h3>
+    <ul style="padding-left:1.3rem;margin:.5rem 0 1rem;line-height:1.8">
+      <li><strong>Salario bruto:</strong> remuneración antes de deducciones.</li>
+      <li><strong>SS empresa:</strong> cotización empresarial estimada; se añade al coste salarial.</li>
+      <li><strong>SS trabajador e IRPF:</strong> deducciones del trabajador. El IRPF retenido no es un coste adicional empresarial.</li>
+      <li><strong>Coste empresa:</strong> bruto + cotizaciones empresariales + extras incluidos en el escenario.</li>
+      <li><strong>Horas efectivas:</strong> horas productivas estimadas tras descontar días no trabajados indicados en el calendario.</li>
+      <li><strong>Coste hora efectiva:</strong> coste anual dividido entre horas efectivas; es una referencia para presupuestar trabajo.</li>
+      <li><strong>Coste indirecto por hora:</strong> costes indirectos anuales divididos entre las horas de plantilla utilizadas como base de reparto.</li>
+      <li><strong>Margen de contribución:</strong> precio menos coste variable unitario. Debe ser positivo para contribuir a cubrir costes fijos.</li>
+      <li><strong>Punto de equilibrio:</strong> volumen estimado en el que ingresos y costes totales se igualan. Por debajo hay pérdidas; por encima, beneficio, bajo los supuestos introducidos.</li>
+    </ul>
+    <h3>3. Cómo introducir los datos</h3>
+    <ul style="padding-left:1.3rem;margin:.5rem 0 1rem;line-height:1.8">
+      <li>Introduce importes anuales donde se solicite anualidad y mensuales donde se solicite coste mensual.</li>
+      <li>En activos, comprueba vida útil, porcentaje anual de amortización y porcentaje de utilización empresarial.</li>
+      <li>En periodicidad, selecciona mensual, trimestral, semestral o anual según el importe introducido.</li>
+      <li>En productos, el mix representa el peso relativo de cada producto en la combinación de unidades vendidas. Mantén una combinación razonable y estable para interpretar el umbral ponderado.</li>
+      <li>Los botones CSV descargan los datos calculados; el botón de impresión permite guardar una copia en PDF desde el navegador.</li>
+    </ul>
+    <h3>4. Supuestos y límites importantes</h3>
+    <div class="alert alert-warning">Esta herramienta es didáctica y de simulación. No genera nóminas ni sustituye una asesoría laboral, fiscal o contable. Los tipos de cotización, bases, bonificaciones, convenio, retenciones y calendario deben contrastarse con la normativa y circunstancias reales del ejercicio.</div>
+    <ul style="padding-left:1.3rem;margin:.5rem 0 1rem;line-height:1.8">
+      <li>El cálculo de Seguridad Social utiliza porcentajes simplificados y no contempla todos los topes, bases y conceptos legales.</li>
+      <li>La retención IRPF es una aproximación fija elegida por el usuario, no un cálculo oficial de nómina.</li>
+      <li>La jornada parcial debe reflejarse ajustando las horas diarias de referencia; todos los empleados comparten ese calendario y el modelo no calcula jornadas individuales distintas.</li>
+      <li>Los días de vacaciones se introducen como días laborables estimados. No conviertas automáticamente los 30 días naturales legales en 22 laborables sin revisar calendario y convenio.</li>
+      <li>La indemnización depende de la causa de extinción y de las circunstancias del contrato. Los escenarios de días/año son estimaciones, no obligaciones automáticas de provisión.</li>
+      <li>El punto de equilibrio multiproducto presupone que se mantiene el mix de ventas introducido. Si cambia la composición, cambia el resultado.</li>
+      <li>Los costes indirectos se reparten con criterios simplificados. Evita duplicarlos en costes fijos y en los módulos anteriores.</li>
+    </ul>
+    <h3>5. Glosario breve</h3>
+    <p class="text-sm" style="line-height:1.8"><strong>CF:</strong> costes fijos · <strong>CV:</strong> costes variables · <strong>CVu:</strong> coste variable unitario · <strong>MC:</strong> margen de contribución · <strong>PE:</strong> punto de equilibrio · <strong>IT:</strong> incapacidad temporal · <strong>SS:</strong> Seguridad Social · <strong>AT/EP:</strong> accidentes de trabajo y enfermedades profesionales · <strong>MEI:</strong> mecanismo de equidad intergeneracional.</p>
+    <div class="btn-group"><button class="btn btn-primary" onclick="closeHelp()">Empezar a trabajar</button></div>
+  </section>
+</div>
+\n<div class="app-body">
+
+<!-- ══════════════════════════════════════════════════
+     MÓDULO 3A — COSTE REAL DE PERSONAL
+     ══════════════════════════════════════════════════ -->
+<div id="mod-personal" class="modulo active">
+<div class="main-wrap">
+  <main class="panel-work">
+    <div class="mod-banner">
+      <div class="icon">👤</div>
+      <div>
+        <h2>Módulo 3A — Coste Real de Personal</h2>
+        <p>Cotizaciones SS, brecha fiscal empresa/trabajador, horas efectivas y coste hora real</p>
+      </div>
+    </div>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="swTab('p','conf',this)">1 · Configurar empresa</button>
+      <button class="tab-btn" onclick="swTab('p','empleados',this)">2 · Empleados</button>
+      <button class="tab-btn" onclick="swTab('p','calendario',this)">3 · Calendario laboral</button>
+      <button class="tab-btn" onclick="swTab('p','resumen',this)">4 · Resumen & Hora efectiva</button>
+    </div>
+
+    <!-- TAB 1: CONFIGURAR EMPRESA -->
+    <div id="p-conf" class="tab-content active">
+      <div class="edu-box">
+        📚 <strong>Concepto clave:</strong> El salario bruto que negocia el trabajador es solo una parte del coste real para la empresa. A ello se suman las cotizaciones patronales a la Seguridad Social (≈30–33%), contingencias imprevisibles y retribuciones en especie. La brecha puede superar el <strong>40%</strong> sobre el salario neto percibido.
+      </div>
+
+      <div class="sec-title"><span class="sec-badge badge-blue">Configuración</span> Datos de la empresa y convenio</div>
+      <div class="grid2">
+        <div class="fg">
+          <label>Sector / Convenio colectivo <span class="tt" data-tip="El convenio colectivo establece tablas salariales mínimas, pagas extras, categorías profesionales y condiciones laborales">CC</span></label>
+          <select id="conf-sector" class="sel" onchange="updateConvenioPagas()">
+            <option value="comercio">Comercio al por menor</option>
+            <option value="hosteleria">Hostelería y restauración</option>
+            <option value="construccion">Construcción</option>
+            <option value="industria">Industria manufacturera</option>
+            <option value="oficinas">Oficinas y despachos</option>
+            <option value="tecnologia">Tecnología y consultoría</option>
+            <option value="sanidad">Sanidad y servicios sociales</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>Tipo de contrato de referencia</label>
+          <select id="conf-contrato" class="sel" onchange="recalcAll()">
+            <option value="indefinido">Indefinido (desempleo 5,5% empresa)</option>
+            <option value="temporal">Temporal (desempleo 6,7% empresa)</option>
+            <option value="parcial">Tiempo parcial (ajusta también las horas de referencia)</option>
+            <option value="fijo-discontinuo">Fijo discontinuo (tipo de cotización indefinido)</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>Pagas extraordinarias <span class="tt" data-tip="ET art.31: mínimo 2 pagas extras/año. Convenios pueden fijar más.">ET art.31</span></label>
+          <select id="conf-pagas" class="sel" onchange="recalcAll()">
+            <option value="2">2 pagas (mínimo legal)</option>
+            <option value="3">3 pagas</option>
+            <option value="4">4 pagas</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>Jornada de referencia (horas/día)</label>
+          <input type="number" id="conf-horas-dia" class="inp" value="8" min="1" max="12" step=".5" onchange="recalcAll()">
+        </div>
+      </div>
+
+      <div class="alert alert-info">Introduce el salario bruto anual total, incluidas las pagas extraordinarias. El importe medio mensual se muestra como anual ÷ 12; la cuantía de cada nómina dependerá del número de pagas.</div>\n      <div class="sec-title mt-md"><span class="sec-badge badge-amber">SS Patronal</span> Cotizaciones Seguridad Social — Empresa</div>
+      <div class="alert alert-warning">
+        <strong>Modelo simplificado:</strong> se aplican porcentajes ilustrativos sobre el salario anual. No se modelan topes mínimos/máximos de bases, conceptos excluidos, horas extraordinarias, bonificaciones, cotización adicional de solidaridad ni particularidades de cada régimen. El porcentaje AT/EP sectorial es orientativo.
+      </div>
+      <div class="alert alert-warning">
+        ⚖️ <strong>LGSS y RDL 28/2018:</strong> La empresa cotiza mensualmente a la TGSS. Las bases y tipos se actualizan con los Presupuestos Generales del Estado. Tipos simplificados para ejercicios. No sustituyen los tipos oficiales ni las bases y conceptos de cotización vigentes.
+      </div>
+      <div class="alert alert-info">
+<strong>Tipos de cotización del trabajador editables.</strong>
+Puedes modificar los porcentajes de contingencias comunes, desempleo, formación profesional y MEI.
+El total de cotización del trabajador, el salario neto y los multiplicadores se recalculan automáticamente.
+FOGASA y AT/EP aparecen al 0,00 % porque son cotizaciones a cargo de la empresa, no del trabajador.
+</div>
+<table class="ss-table" id="tabla-ss">
+        <thead>
+          <tr>
+            <th>Contingencia</th>
+            <th class="td-r">% Empresa</th>
+            <th class="td-r">% Trabajador</th>
+            <th class="td-r">Base cálculo</th>
+            <th class="td-r">Norma</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Contingencias comunes <span class="tt" data-tip="Cubre enfermedad común, maternidad, jubilación, incapacidad permanente">CC</span></td>
+            <td class="td-r td-emp">23,60%</td>
+            <td class="td-r td-trab"><input type="number" class="inp inp-sm inp-mono ss-trab-input" aria-label="Tipo de cotización del trabajador: Contingencias comunes" min="0" max="100" step="0.01" value="4.70" onchange="updSSTrab('comunes',this.value)">%</td>
+            <td class="td-r">Salario bruto</td>
+            <td class="td-r text-xs">Art.108 LGSS</td>
+          </tr>
+          <tr>
+            <td>Desempleo <span id="td-paro-label">(indefinido)</span></td>
+            <td class="td-r td-emp" id="td-paro-emp">5,50%</td>
+            <td class="td-r td-trab"><input type="number" class="inp inp-sm inp-mono ss-trab-input" aria-label="Tipo de cotización del trabajador: Desempleo" min="0" max="100" step="0.01" value="1.55" onchange="updSSTrab('desempleo',this.value)">%</td>
+            <td class="td-r">Salario bruto</td>
+            <td class="td-r text-xs">Art.269 LGSS</td>
+          </tr>
+          <tr>
+            <td>FOGASA <span class="tt" data-tip="Fondo de Garantía Salarial — garantiza salarios impagados en insolvencia empresarial">FOGASA</span></td>
+            <td class="td-r td-emp">0,20%</td>
+            <td class="td-r td-trab">0,00%</td>
+            <td class="td-r">Salario bruto</td>
+            <td class="td-r text-xs">ET art.33</td>
+          </tr>
+          <tr>
+            <td>Formación profesional</td>
+            <td class="td-r td-emp">0,60%</td>
+            <td class="td-r td-trab"><input type="number" class="inp inp-sm inp-mono ss-trab-input" aria-label="Tipo de cotización del trabajador: Formación profesional" min="0" max="100" step="0.01" value="0.10" onchange="updSSTrab('formacion',this.value)">%</td>
+            <td class="td-r">Salario bruto</td>
+            <td class="td-r text-xs">LOLS/LFE</td>
+          </tr>
+          <tr>
+            <td>AT/EP — Accidentes trabajo <span class="tt" data-tip="Variable según CNAE/actividad. Tabla primas AT/EP según RD 1299/2006. El tipo real depende del CNAE; valor orientativo editable">CNAE</span></td>
+            <td class="td-r td-emp" id="td-atep">1,50%</td>
+            <td class="td-r td-trab">0,00%</td>
+            <td class="td-r">Salario bruto</td>
+            <td class="td-r text-xs">RD 1299/2006</td>
+          </tr>
+          <tr>
+            <td>MEI (Mecanismo de equidad intergeneracional)</td>
+            <td class="td-r td-emp">0,58%</td>
+            <td class="td-r td-trab"><input type="number" class="inp inp-sm inp-mono ss-trab-input" aria-label="Tipo de cotización del trabajador: Mecanismo de equidad intergeneracional" min="0" max="100" step="0.01" value="0.12" onchange="updSSTrab('mei',this.value)">%</td>
+            <td class="td-r">Salario bruto</td>
+            <td class="td-r text-xs">Ley 21/2021</td>
+          </tr>
+          <tr style="font-weight:800;background:#f9fafb">
+            <td><strong>TOTAL SS Empresa / Trabajador</strong></td>
+            <td class="td-r td-emp" id="td-total-emp"><strong>31,98%</strong></td>
+            <td class="td-r td-trab" id="td-total-trab"><strong>6,47%</strong></td>
+            <td class="td-r">—</td>
+            <td class="td-r">—</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="sec-title mt-md"><span class="sec-badge badge-purple">IRPF</span> Retención IRPF — informativa</div>
+      <div class="alert alert-info">
+        ℹ️ <strong>LIRPF art.99:</strong> La empresa retiene e ingresa el IRPF en nombre del trabajador. No es coste adicional para la empresa, pero sí reduce el neto percibido. Estimación didáctica: el tipo efectivo debe calcularse con los datos personales y el procedimiento oficial.
+      </div>
+      <div class="grid3">
+        <div class="fg">
+          <label>Tipo de retención IRPF (supuesto didáctico)</label>
+          <select id="conf-irpf" class="sel" onchange="recalcAll()">
+            <option value="0.07">7% (supuesto)</option>
+            <option value="0.12">12% (supuesto)</option>
+            <option value="0.15" selected>15% (supuesto)</option>
+            <option value="0.19">19% (supuesto)</option>
+            <option value="0.23">23% (supuesto)</option>
+            <option value="0.26">26% (supuesto)</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>Provisión finiquito/despido <span class="tt" data-tip="Escenario hipotético de coste. La indemnización depende de la causa, antigüedad, salario regulador y límites legales; no es una provisión automática obligatoria">Coste real</span></label>
+          <select id="conf-provision" class="sel" onchange="recalcAll()">
+            <option value="0">No provisionar (solo formativo)</option>
+            <option value="12">12 días/año (fin contrato temporal, si procede)</option>
+            <option value="20">20 días/año (despido objetivo procedente)</option>
+            <option value="33">33 días/año (despido improcedente, regla general)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="swTab('p','empleados',this)">Continuar → Empleados</button>
+      </div>
+    </div>
+
+    <!-- TAB 2: EMPLEADOS -->
+    <div id="p-empleados" class="tab-content">
+      <div class="sec-title"><span class="sec-badge badge-blue">Plantilla</span> Añadir y gestionar empleados</div>
+      <div class="concept-box">
+        🧮 <strong>Coste empresa ≠ Salario bruto:</strong> El trabajador percibe el <em>salario neto</em> (bruto – SS trab – IRPF). La empresa paga adicionalmente la cuota patronal SS. La diferencia entre lo que cobra el empleado y lo que cuesta la empresa puede superar el <strong>45–50%</strong> del neto.
+      </div>
+      <div class="sec-title mt-md"><span class="sec-badge badge-amber">Bandas salariales</span> Rangos por categoría profesional</div>
+      <div class="alert alert-info">
+        Define el salario bruto anual mínimo y máximo de cada categoría. Al asignar una categoría a una persona, se propone inicialmente el punto medio del rango; después puedes ajustar su salario individual. Los importes son ejemplos editables, no tablas oficiales de convenio.
+      </div>
+      <div id="bandas-salariales" class="grid2"></div>
+      <div class="sec-title mt-md"><span class="sec-badge badge-blue">Plantilla</span> Personas y coste individual</div>
+      <div id="emp-lista"></div>
+      <div class="btn-group">
+        <button class="btn btn-success" onclick="addEmpleado()">➕ Añadir empleado</button>
+        <button class="btn btn-outline" onclick="swTab('p','conf',this)">← Volver</button>
+        <button class="btn btn-primary" onclick="swTab('p','calendario',this)">Continuar → Calendario</button>
+      </div>
+    </div>
+
+    <!-- TAB 3: CALENDARIO LABORAL -->
+    <div id="p-calendario" class="tab-content">
+      <div class="sec-title"><span class="sec-badge badge-amber">Horas efectivas</span> Calendario laboral y disponibilidad real</div>
+      <div class="alert alert-warning">
+        ⏰ <strong>Concepto crítico:</strong> Una empresa paga 52 semanas/año, pero el trabajador no está disponible ese tiempo. Las vacaciones, festivos, bajas y formación reducen drásticamente las horas productivas. Ignorar esto lleva a <strong>infravalorar el coste hora real</strong>.
+      </div>
+
+      <div class="grid2">
+        <div>
+          <div class="sec-title" style="font-size:.88rem"><span class="sec-badge badge-blue">Días</span> Días laborables del año</div>
+          <div class="grid2">
+            <div class="fg">
+              <label>Días totales año</label>
+              <input type="number" id="cal-dias-ano" class="inp inp-mono" value="365" readonly style="background:var(--gray-100)">
+            </div>
+            <div class="fg">
+              <label>Fines de semana (sábados+domingos)</label>
+              <input type="number" id="cal-fds" class="inp inp-mono" value="104" readonly style="background:var(--gray-100)">
+            </div>
+            <div class="fg">
+              <label>Festivos nacionales + locales <span class="tt" data-tip="ET art.37.2: hasta 14 fiestas laborales anuales, incluyendo autonómicas y locales">ET art.37</span></label>
+              <input type="number" id="cal-festivos" class="inp inp-mono" value="14" min="12" max="20" onchange="calcCalendario()">
+            </div>
+            <div class="fg">
+              <label>Días laborables brutos</label>
+              <input type="number" id="cal-laborables-brutos" class="inp inp-read inp-mono" value="247" readonly>
+            </div>
+            <div class="fg">
+              <label>Vacaciones (días/año) <span class="tt" data-tip="ET art.38: mínimo 30 días naturales. El equivalente en laborables depende de la distribución de jornada y convenio">ET art.38</span></label>
+              <input type="number" id="cal-vacaciones" class="inp inp-mono" value="22" min="22" max="30" onchange="calcCalendario()">
+            </div>
+            <div class="fg">
+              <label>Días IT/Absentismo estimado <span class="tt" data-tip="Media España: 5–7 días/año por IT de corta duración. Incluir para coste real">Absentismo</span></label>
+              <input type="number" id="cal-it" class="inp inp-mono" value="5" min="0" max="30" onchange="calcCalendario()">
+            </div>
+            <div class="fg">
+              <label>Formación obligatoria (días/año)</label>
+              <input type="number" id="cal-form" class="inp inp-mono" value="2" min="0" max="20" onchange="calcCalendario()">
+            </div>
+            <div class="fg">
+              <label>Permisos retribuidos (días/año) <span class="tt" data-tip="ET art.37.3: matrimonio, mudanza, enfermedad grave familiar, etc.">ET art.37.3</span></label>
+              <input type="number" id="cal-permisos" class="inp inp-mono" value="3" min="0" max="15" onchange="calcCalendario()">
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="sec-title" style="font-size:.88rem"><span class="sec-badge badge-green">Resultado</span> Días y horas efectivas</div>
+          <div class="kpi-grid kpi-grid-2">
+            <div class="kpi k-blue">
+              <div class="kpi-label">Días efectivos/año</div>
+              <div class="kpi-val" id="cal-res-dias">215</div>
+              <div class="kpi-sub">días productivos</div>
+            </div>
+            <div class="kpi k-green">
+              <div class="kpi-label">Horas efectivas/año</div>
+              <div class="kpi-val" id="cal-res-horas">1.720</div>
+              <div class="kpi-sub">horas productivas estimadas</div>
+            </div>
+            <div class="kpi k-amber">
+              <div class="kpi-label">% aprovechamiento</div>
+              <div class="kpi-val" id="cal-res-pct">70,1%</div>
+              <div class="kpi-sub">vs jornada teórica</div>
+            </div>
+            <div class="kpi k-red">
+              <div class="kpi-label">Días no productivos</div>
+              <div class="kpi-val" id="cal-res-no-prod">150</div>
+              <div class="kpi-sub">días no productivos estimados</div>
+            </div>
+          </div>
+          <div class="chart-box mt-md" style="height:130px;">
+            <canvas id="cal-chart" style="width:100%;height:130px;"></canvas>
+          </div>
+          <div class="alert alert-info mt-sm" style="font-size:.75rem">
+            📐 <strong>Horas teóricas:</strong> <span id="cal-h-teoricas">—</span> h/año · <strong>Horas efectivas:</strong> <span id="cal-h-efectivas">—</span> h/año · <strong>Diferencia:</strong> <span id="cal-h-diff">—</span> h pagadas sin productividad directa
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="swTab('p','resumen',this)">Continuar → Resumen & Coste Hora</button>
+        <button class="btn btn-outline" onclick="swTab('p','empleados',this)">← Volver</button>
+      </div>
+    </div>
+
+    <!-- TAB 4: RESUMEN & HORA EFECTIVA -->
+    <div id="p-resumen" class="tab-content">
+      <div class="sec-title"><span class="sec-badge badge-green">Resumen</span> Coste real por empleado y coste hora efectiva</div>
+
+      <div class="alert alert-success mb-md">
+        ✅ <strong>Aplicación al presupuesto:</strong> El <strong>coste hora efectiva</strong> es el valor que debes usar al presupuestar mano de obra. Si usas el salario bruto/hora, estarás perdiendo dinero sistemáticamente.
+      </div>
+
+      <div id="resumen-empleados"></div>
+
+      <hr class="divider">
+      <div class="sec-title"><span class="sec-badge badge-purple">Total plantilla</span> Consolidado anual</div>
+      <div class="kpi-grid kpi-grid-4">
+        <div class="kpi k-blue">
+          <div class="kpi-label">Masa salarial bruta</div>
+          <div class="kpi-val text-mono" id="tot-bruto">0 €</div>
+          <div class="kpi-sub">Suma salarios brutos</div>
+        </div>
+        <div class="kpi k-red">
+          <div class="kpi-label">SS Patronal total</div>
+          <div class="kpi-val text-mono" id="tot-ss">0 €</div>
+          <div class="kpi-sub">≈32% sobre masa salarial</div>
+        </div>
+        <div class="kpi k-amber">
+          <div class="kpi-label">Costes adicionales</div>
+          <div class="kpi-val text-mono" id="tot-adic">0 €</div>
+          <div class="kpi-sub">Especie, provision, otros</div>
+        </div>
+        <div class="kpi k-purple">
+          <div class="kpi-label">Coste empresa TOTAL</div>
+          <div class="kpi-val text-mono" id="tot-total">0 €</div>
+          <div class="kpi-sub">Coste real anual</div>
+        </div>
+      </div>
+      <div class="kpi-grid kpi-grid-2 mt-sm">
+        <div class="kpi k-green">
+          <div class="kpi-label">Coste hora efectiva medio</div>
+          <div class="kpi-val text-mono" id="tot-coste-hora">—</div>
+          <div class="kpi-sub">€/hora · Usar en presupuestos M.O.</div>
+          <div class="kpi-delta" id="tot-delta-hora"></div>
+        </div>
+        <div class="kpi k-teal">
+          <div class="kpi-label">Multiplicador real</div>
+          <div class="kpi-val text-mono" id="tot-multiplicador">—</div>
+          <div class="kpi-sub">Coste empresa / Salario neto percibido</div>
+        </div>
+      </div>
+
+      <div class="multiplicador-detail mt-md" id="multiplicador-desglose">
+<strong>¿Cómo se obtiene el multiplicador global?</strong>
+<div class="mult-step"><b>1. Coste total de empresa</b> = masa salarial bruta + cotizaciones empresariales + costes adicionales.</div>
+<div class="formula" id="mult-formula-coste">—</div>
+<div class="mult-step"><b>2. Salario neto total estimado</b> = masa salarial bruta − cotizaciones de los trabajadores − IRPF estimado.</div>
+<div class="formula" id="mult-formula-neto">—</div>
+<div class="mult-step"><b>3. Multiplicador global</b> = coste total de empresa ÷ salario neto total estimado.</div>
+<div class="formula" id="mult-formula-final">—</div>
+<div class="text-xs text-muted mt-sm">El IRPF se estima aplicando el tipo configurado al bruto después de descontar la cotización del trabajador. Es un cálculo orientativo, no una nómina oficial.</div>
+</div>
+
+      <div class="btn-group">
+        <button class="btn btn-success" onclick="exportarCostesPersonal()">📋 Exportar hoja de costes CSV</button>
+        <button class="btn btn-primary" onclick="switchMod('indirectos')">Continuar → Costes Indirectos ⚡</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- PANEL LATERAL PERSONAL -->
+  <aside class="panel-side">
+    <h3>📚 Guía Normativa</h3>
+    <div class="alert alert-info mb-sm">
+      <strong>Módulo 3A — Personal</strong><br>
+      <span class="text-xs">Brecha fiscal · Horas efectivas · Coste hora real</span>
+    </div>
+
+    <div class="text-xs font-bold text-muted mb-sm" style="text-transform:uppercase;letter-spacing:.05em">Estado del análisis</div>
+    <ul class="ck-list" id="ck-personal">
+      <li class="ck-item"><span class="ck-mark" id="ckp-sector">?</span><span>Sector/convenio configurado</span></li>
+      <li class="ck-item"><span class="ck-mark" id="ckp-empleados">?</span><span>Al menos 1 empleado añadido</span></li>
+      <li class="ck-item"><span class="ck-mark" id="ckp-calendario">?</span><span>Calendario laboral revisado</span></li>
+      <li class="ck-item"><span class="ck-mark" id="ckp-hora">?</span><span>Coste hora efectiva calculado</span></li>
+    </ul>
+
+    <hr class="divider">
+    <div class="text-xs font-bold text-muted mb-sm" style="text-transform:uppercase;letter-spacing:.05em">Brecha fiscal resumen</div>
+    <div id="brecha-resumen" class="text-xs" style="line-height:1.9">
+      <span class="text-muted">Añade empleados para ver el desglose…</span>
+    </div>
+
+    <hr class="divider">
+    <div class="text-xs font-bold text-muted mb-sm" style="text-transform:uppercase;letter-spacing:.05em">Normativa laboral clave</div>
+    <div class="text-xs" style="line-height:2">
+      📜 ET art.4 — Derechos laborales<br>
+      📜 ET art.26 — Concepto salario<br>
+      📜 ET art.28 — Igualdad retributiva<br>
+      📜 ET art.31 — Pagas extras<br>
+      📜 ET art.37 — Descansos/permisos<br>
+      📜 ET art.38 — Vacaciones anuales<br>
+      📜 LGSS art.108 — Cotizaciones<br>
+      📜 RD 2064/1995 — Reglamento SS<br>
+      📜 Ley 21/2021 — MEI pensiones
+    </div>
+
+    <hr class="divider">
+    <div class="alert alert-warning text-xs">Los porcentajes efectivos dependen del ejercicio, contrato, CNAE y bases de cotización. Consulta la tabla principal y contrasta los tipos oficiales antes de usar datos reales.</div>
+  </aside>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     MÓDULO 3B — COSTES INDIRECTOS
+     ══════════════════════════════════════════════════ -->
+<div id="mod-indirectos" class="modulo">
+<div class="main-wrap">
+  <main class="panel-work">
+    <div class="mod-banner" style="background:linear-gradient(135deg,#0f766e,#0d9488)">
+      <div class="icon">⚡</div>
+      <div>
+        <h2>Módulo 3B — Costes Indirectos e Imputación</h2>
+        <p>Suministros, amortizaciones, seguros y reparto por centro de coste</p>
+      </div>
+    </div>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="swTab('ci','suministros',this)">1 · Suministros</button>
+      <button class="tab-btn" onclick="swTab('ci','activos',this)">2 · Activos / Amortiz.</button>
+      <button class="tab-btn" onclick="swTab('ci','otros',this)">3 · Otros fijos</button>
+      <button class="tab-btn" onclick="swTab('ci','imputacion',this)">4 · Imputación</button>
+    </div>
+
+    <!-- TAB SUMINISTROS -->
+    <div id="ci-suministros" class="tab-content active">
+      <div class="sec-title"><span class="sec-badge badge-teal">Suministros</span> Energía, agua, telecomunicaciones</div>
+      <div class="edu-box">
+        💡 <strong>Regla de imputación:</strong> Los costes indirectos no se asignan directamente a un producto/servicio, pero deben repartirse para conocer el coste real. Métodos: <em>reparto por m², horas-máquina, nº empleados, o criterio de uso real</em>.
+      </div>
+
+      <table class="t-edit" id="tabla-suministros">
+        <thead>
+          <tr>
+            <th>Concepto</th>
+            <th>Coste mensual (€)</th>
+            <th>Variabilidad</th>
+            <th>Criterio imputación</th>
+            <th>Coste anual</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="sum-body"></tbody>
+        <tfoot>
+          <tr>
+            <td colspan="4" style="text-align:right;font-weight:700;padding:.6rem">TOTAL suministros/año</td>
+            <td class="td-calc" id="sum-total">0,00 €</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+      <button class="btn btn-ghost btn-sm mt-sm" onclick="addSuministro()">➕ Añadir suministro</button>
+
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="swTab('ci','activos',this)">Continuar → Activos/Amortiz.</button>
+      </div>
+    </div>
+
+    <!-- TAB ACTIVOS / AMORTIZACIÓN -->
+    <div id="ci-activos" class="tab-content">
+      <div class="sec-title"><span class="sec-badge badge-amber">Amortización</span> Activos fijos y desgaste</div>
+      <div class="concept-box">
+        🏭 <strong>Amortización (RIS/LIS art.12):</strong> El uso o paso del tiempo deprecia los activos. Su coste debe imputarse a la actividad. Tablas AEAT fijan coeficientes máximos. Ignorar la amortización <strong>distorsiona gravemente los costes reales</strong> y puede llevar a vender por debajo del coste.
+      </div>
+      <div class="alert alert-info mb-md">
+        📋 <strong>Tabla simplificada AEAT (LIS art.12):</strong> Maquinaria industrial 12%, Equipos informáticos 25%, Mobiliario 10%, Vehículos 16%, Herramientas 30%, Edificios 2–3%.
+      </div>
+
+      <table class="t-edit" id="tabla-activos">
+        <thead>
+          <tr>
+            <th>Activo / Herramienta</th>
+            <th>Valor adquisición (€)</th>
+            <th>Vida útil (años)</th>
+            <th>% Amort. anual</th>
+            <th>Uso en actividad (%)</th>
+            <th>Amort. imputable/año</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="act-body"></tbody>
+        <tfoot>
+          <tr>
+            <td colspan="5" style="text-align:right;font-weight:700;padding:.6rem">TOTAL amortización anual imputable</td>
+            <td class="td-calc" id="act-total">0,00 €</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+      <button class="btn btn-ghost btn-sm mt-sm" onclick="addActivo()">➕ Añadir activo</button>
+
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="swTab('ci','otros',this)">Continuar → Otros costes fijos</button>
+        <button class="btn btn-outline" onclick="swTab('ci','suministros',this)">← Volver</button>
+      </div>
+    </div>
+
+    <!-- TAB OTROS FIJOS -->
+    <div id="ci-otros" class="tab-content">
+      <div class="sec-title"><span class="sec-badge badge-purple">Costes fijos</span> Alquiler, seguros, servicios externos</div>
+      <table class="t-edit" id="tabla-otros">
+        <thead>
+          <tr>
+            <th>Concepto</th>
+            <th>Periodicidad</th>
+            <th>Importe</th>
+            <th>Tipo</th>
+            <th>Coste anual</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="otros-body"></tbody>
+        <tfoot>
+          <tr>
+            <td colspan="4" style="text-align:right;font-weight:700;padding:.6rem">TOTAL otros costes fijos/año</td>
+            <td class="td-calc" id="otros-total">0,00 €</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+      <button class="btn btn-ghost btn-sm mt-sm" onclick="addOtro()">➕ Añadir coste</button>
+
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="swTab('ci','imputacion',this)">Continuar → Imputación</button>
+        <button class="btn btn-outline" onclick="swTab('ci','activos',this)">← Volver</button>
+      </div>
+    </div>
+
+    <!-- TAB IMPUTACIÓN -->
+    <div id="ci-imputacion" class="tab-content">
+      <div class="sec-title"><span class="sec-badge badge-teal">Imputación</span> Coste indirecto por unidad de actividad</div>
+      <div class="concept-box">
+        🎯 <strong>Coste hora real (incluye indirectos):</strong> Una vez distribuidos todos los costes indirectos entre las horas efectivas de trabajo, obtenemos el verdadero coste/hora que debe trasladarse a presupuestos y precios de venta.
+      </div>
+
+      <div class="kpi-grid kpi-grid-3 mb-md">
+        <div class="kpi k-teal">
+          <div class="kpi-label">Total costes indirectos/año</div>
+          <div class="kpi-val text-mono" id="ci-total-anual">0 €</div>
+          <div class="kpi-sub">Suma de todas las categorías</div>
+        </div>
+        <div class="kpi k-blue">
+          <div class="kpi-label">Horas efectivas totales plantilla</div>
+          <div class="kpi-val text-mono" id="ci-horas-plantilla">0 h</div>
+          <div class="kpi-sub">Desde Módulo 3A</div>
+        </div>
+        <div class="kpi k-purple">
+          <div class="kpi-label">Coste indirecto / hora</div>
+          <div class="kpi-val text-mono" id="ci-coste-hora">— €/h</div>
+          <div class="kpi-sub">A sumar al coste directo M.O.</div>
+        </div>
+      </div>
+
+      <div class="sec-title"><span class="sec-badge badge-green">Coste hora total</span> Personal + Indirectos</div>
+      <div class="kpi-grid kpi-grid-2">
+        <div class="kpi k-blue">
+          <div class="kpi-label">Coste hora M.O. directa</div>
+          <div class="kpi-val text-mono" id="res-hora-personal">— €/h</div>
+          <div class="kpi-sub">Del Módulo 3A</div>
+        </div>
+        <div class="kpi k-green">
+          <div class="kpi-label">Coste hora TOTAL (MO + CI)</div>
+          <div class="kpi-val text-mono" id="res-hora-total">— €/h</div>
+          <div class="kpi-sub">✅ Este valor va a tus presupuestos</div>
+        </div>
+      </div>
+
+      <div class="sec-title mt-md"><span class="sec-badge badge-amber">Desglose</span> Reparto de indirectos por categoría</div>
+      <div id="ci-desglose-grafico" class="chart-box" style="height:140px;"></div>
+
+      <div class="sec-title mt-md"><span class="sec-badge badge-purple">Resumen</span> Coste total por empleado/hora (integrado)</div>
+      <div id="tabla-coste-hora-integrado"></div>
+
+      <div class="btn-group">
+        <button class="btn btn-success" onclick="exportarCostesIndirectos()">📋 Exportar CSV</button>
+        <button class="btn btn-primary" onclick="switchMod('umbral')">Continuar → Punto de Equilibrio 📈</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- PANEL LATERAL COSTES INDIRECTOS -->
+  <aside class="panel-side">
+    <h3>⚡ Costes Indirectos</h3>
+    <div class="alert alert-teal mb-sm">
+      <span class="text-xs"><strong>Módulo 3B</strong> — Suministros · Amortizaciones · Imputación</span>
+    </div>
+
+    <div class="text-xs font-bold text-muted mb-sm" style="text-transform:uppercase;letter-spacing:.05em">Resumen costes indirectos</div>
+    <ul class="ck-list mb-md">
+      <li class="ck-item" style="justify-content:space-between"><span>Suministros/año</span><span class="result-tag rt-blue" id="ci-sum-badge">0 €</span></li>
+      <li class="ck-item" style="justify-content:space-between"><span>Amortización/año</span><span class="result-tag rt-amber" id="ci-act-badge">0 €</span></li>
+      <li class="ck-item" style="justify-content:space-between"><span>Otros fijos/año</span><span class="result-tag rt-blue" id="ci-ot-badge">0 €</span></li>
+      <li class="ck-item" style="justify-content:space-between;font-weight:700"><span>TOTAL anual</span><span class="result-tag rt-green" id="ci-tot-badge">0 €</span></li>
+    </ul>
+
+    <hr class="divider">
+    <div class="text-xs font-bold text-muted mb-sm" style="text-transform:uppercase;letter-spacing:.05em">Coeficientes AEAT (LIS art.12)</div>
+    <table style="width:100%;font-size:.7rem;border-collapse:collapse">
+      <tr style="background:var(--gray-100)"><th style="padding:3px 5px">Elemento</th><th style="padding:3px 5px;text-align:right">Coef.máx</th><th style="padding:3px 5px;text-align:right">Años máx</th></tr>
+      <tr><td style="padding:2px 5px">Edificios</td><td style="padding:2px 5px;text-align:right;font-family:var(--font-mono)">3%</td><td style="padding:2px 5px;text-align:right;font-family:var(--font-mono)">68</td></tr>
+      <tr><td style="padding:2px 5px">Maquinaria</td><td style="padding:2px 5px;text-align:right;font-family:var(--font-mono)">12%</td><td style="padding:2px 5px;text-align:right;font-family:var(--font-mono)">18</td></tr>
+      <tr><td style="padding:2px 5px">Equipos inf.</td><td style="padding:2px 5px;text-align:right;font-family:var(--font-mono)">25%</td><td style="padding:2px 5px;text-align:right;font-family:var(--font-mono)">8</td></tr>
+      <tr><td style="padding:2px 5px">Vehículos</td><td style="padding:2px 5px;text-align:right;font-family:var(--font-mono)">16%</td><td style="padding:2px 5px;text-align:right;font-family:var(--font-mono)">14</td></tr>
+      <tr><td style="padding:2px 5px">Mobiliario</td><td style="padding:2px 5px;text-align:right;font-family:var(--font-mono)">10%</td><td style="padding:2px 5px;text-align:right;font-family:var(--font-mono)">20</td></tr>
+      <tr><td style="padding:2px 5px">Herramientas</td><td style="padding:2px 5px;text-align:right;font-family:var(--font-mono)">30%</td><td style="padding:2px 5px;text-align:right;font-family:var(--font-mono)">8</td></tr>
+      <tr><td style="padding:2px 5px">Instalaciones</td><td style="padding:2px 5px;text-align:right;font-family:var(--font-mono)">10%</td><td style="padding:2px 5px;text-align:right;font-family:var(--font-mono)">20</td></tr>
+    </table>
+
+    <hr class="divider">
+    <div class="alert alert-warning text-xs">
+      ⚠️ La <strong>amortización acelerada</strong> (LIS art.102) permite doblar coeficiente para empresas de reducida dimensión (ERD &lt;10M€ cifra de negocio).
+    </div>
+  </aside>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     MÓDULO 3C — PUNTO DE EQUILIBRIO
+     ══════════════════════════════════════════════════ -->
+<div id="mod-umbral" class="modulo">
+<div class="main-wrap">
+  <main class="panel-work">
+    <div class="mod-banner" style="background:linear-gradient(135deg,#7c3aed,#6d28d9)">
+      <div class="icon">📈</div>
+      <div>
+        <h2>Módulo 3C — Punto de Equilibrio (Umbral de Rentabilidad)</h2>
+        <p>CF, CV, margen contribución, apalancamiento operativo, análisis multiproducto</p>
+      </div>
+    </div>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="swTab('umb','costes',this)">1 · Costes F/V</button>
+      <button class="tab-btn" onclick="swTab('umb','productos',this)">2 · Productos</button>
+      <button class="tab-btn" onclick="swTab('umb','grafico',this)">3 · Gráfico umbral</button>
+      <button class="tab-btn" onclick="swTab('umb','sensibilidad',this)">4 · Sensibilidad</button>
+    </div>
+
+    <!-- TAB COSTES F/V -->
+    <div id="umb-costes" class="tab-content active">
+      <div class="concept-box">
+        🎯 <strong>Punto de equilibrio:</strong> Nivel de ventas donde ingresos = costes totales. Por encima: beneficio. Por debajo: pérdida.<br>
+        <strong>Fórmula:</strong> PE(uds) = Costes Fijos ÷ (Precio − Coste Variable Unitario)<br>
+        <strong>Margen de contribución</strong> (MC) = Precio − CVu · Un MC positivo contribuye a cubrir costes fijos.
+      </div>
+
+      <div class="sec-title"><span class="sec-badge badge-red">Costes Fijos</span> No dependen del volumen de producción</div>
+      <div class="alert alert-info">
+        📌 Los costes de personal y los costes indirectos calculados en los módulos anteriores son en su mayoría <strong>costes fijos</strong>. Se importan automáticamente si los has calculado.
+      </div>
+      <div class="grid2">
+        <div class="fg">
+          <label>Personal (coste empresa total/año) <span class="tt" data-tip="Calculado en Módulo 3A. Puedes editar si no has completado ese módulo">3A</span></label>
+          <input type="number" id="cf-personal" class="inp inp-mono" value="0" min="0" step="100" onchange="calcUmbral()">
+        </div>
+        <div class="fg">
+          <label>Alquiler / Arrendamiento anual</label>
+          <input type="number" id="cf-alquiler" class="inp inp-mono" value="18000" min="0" step="100" onchange="calcUmbral()">
+        </div>
+        <div class="fg">
+          <label>Suministros fijos/año <span class="tt" data-tip="Calculado en Módulo 3B. Parte fija de luz, agua, gas, etc.">3B</span></label>
+          <input type="number" id="cf-suministros" class="inp inp-mono" value="0" min="0" step="100" onchange="calcUmbral()">
+        </div>
+        <div class="fg">
+          <label>Amortizaciones/año <span class="tt" data-tip="Calculado en Módulo 3B">3B</span></label>
+          <input type="number" id="cf-amort" class="inp inp-mono" value="0" min="0" step="100" onchange="calcUmbral()">
+        </div>
+        <div class="fg">
+          <label>Seguros anuales</label>
+          <input type="number" id="cf-seguros" class="inp inp-mono" value="3600" min="0" step="100" onchange="calcUmbral()">
+        </div>
+        <div class="fg">
+          <label>Marketing / Publicidad fija anual</label>
+          <input type="number" id="cf-marketing" class="inp inp-mono" value="2400" min="0" step="100" onchange="calcUmbral()">
+        </div>
+        <div class="fg">
+          <label>Gastos financieros / préstamos anuales</label>
+          <input type="number" id="cf-financieros" class="inp inp-mono" value="1200" min="0" step="100" onchange="calcUmbral()">
+        </div>
+        <div class="fg">
+          <label>Otros costes fijos anuales</label>
+          <input type="number" id="cf-otros" class="inp inp-mono" value="2000" min="0" step="100" onchange="calcUmbral()">
+        </div>
+      </div>
+      <div class="kpi-grid kpi-grid-2 mt-md">
+        <div class="kpi k-red">
+          <div class="kpi-label">Total Costes Fijos / año</div>
+          <div class="kpi-val text-mono" id="kpi-cf">0 €</div>
+          <div class="kpi-sub">No varían con la producción</div>
+        </div>
+        <div class="kpi k-amber">
+          <div class="kpi-label">Costes fijos / mes</div>
+          <div class="kpi-val text-mono" id="kpi-cf-mes">0 €</div>
+          <div class="kpi-sub">Mínimo a cubrir mensualmente</div>
+        </div>
+      </div>
+
+      <div class="sec-title mt-md"><span class="sec-badge badge-blue">Costes Variables</span> Varían con cada unidad producida</div>
+      <div class="alert alert-info">
+        📊 Los costes variables por unidad se configuran en el editor de productos (Tab 2). Aquí puedes establecer parámetros globales de materiales variables.
+      </div>
+      <div class="grid2">
+        <div class="fg">
+          <label>Materias primas/materiales variables (% sobre precio medio)</label>
+          <input type="number" id="cv-mat" class="inp inp-mono" value="25" min="0" max="100" step="1" onchange="calcUmbral()">
+        </div>
+        <div class="fg">
+          <label>Comisiones de ventas (%)</label>
+          <input type="number" id="cv-com" class="inp inp-mono" value="3" min="0" max="30" step=".5" onchange="calcUmbral()">
+        </div>
+        <div class="fg">
+          <label>Transporte/logística variable (%)</label>
+          <input type="number" id="cv-trans" class="inp inp-mono" value="2" min="0" max="20" step=".5" onchange="calcUmbral()">
+        </div>
+        <div class="fg">
+          <label>Otros variables (%)</label>
+          <input type="number" id="cv-otros" class="inp inp-mono" value="1" min="0" max="20" step=".5" onchange="calcUmbral()">
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="swTab('umb','productos',this)">Continuar → Productos</button>
+      </div>
+    </div>
+
+    <!-- TAB PRODUCTOS -->
+    <div id="umb-productos" class="tab-content">
+      <div class="sec-title"><span class="sec-badge badge-teal">Productos</span> Mix de ventas para análisis multiproducto</div>
+      <div class="edu-box">
+        📦 <strong>Análisis multiproducto:</strong> Cuando tienes varios productos/servicios con distinto margen, el punto de equilibrio se calcula con el <em>margen de contribución ponderado</em> según el mix de ventas previsto. Cambiar el mix puede desplazar el umbral significativamente.
+      </div>
+      <div id="prods-lista"></div>
+      <button class="btn btn-success btn-sm mt-sm" onclick="addProducto()">➕ Añadir producto/servicio</button>
+
+      <div class="kpi-grid kpi-grid-3 mt-md">
+        <div class="kpi k-teal">
+          <div class="kpi-label">Precio medio ponderado</div>
+          <div class="kpi-val text-mono" id="prod-precio-medio">—</div>
+          <div class="kpi-sub">Por unidad vendida</div>
+        </div>
+        <div class="kpi k-green">
+          <div class="kpi-label">MC medio ponderado</div>
+          <div class="kpi-val text-mono" id="prod-mc-medio">—</div>
+          <div class="kpi-sub">Margen contribución unitario</div>
+        </div>
+        <div class="kpi k-purple">
+          <div class="kpi-label">Ratio MC / ventas</div>
+          <div class="kpi-val text-mono" id="prod-ratio-mc">—</div>
+          <div class="kpi-sub">€ que cubren CF por cada € vendido</div>
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="swTab('umb','grafico',this)">Continuar → Gráfico umbral</button>
+        <button class="btn btn-outline" onclick="swTab('umb','costes',this)">← Volver</button>
+      </div>
+    </div>
+
+    <!-- TAB GRÁFICO -->
+    <div id="umb-grafico" class="tab-content">
+      <div class="sec-title"><span class="sec-badge badge-purple">Umbral</span> Punto de Equilibrio — Representación gráfica</div>
+      <div class="kpi-grid kpi-grid-4 mb-md">
+        <div class="kpi k-red">
+          <div class="kpi-label">Costes fijos totales</div>
+          <div class="kpi-val text-mono" id="pe-cf">0 €</div>
+        </div>
+        <div class="kpi k-purple">
+          <div class="kpi-label">P.E. en unidades</div>
+          <div class="kpi-val text-mono" id="pe-uds">—</div>
+          <div class="kpi-sub">Uds. a vender p/recuperar CF</div>
+        </div>
+        <div class="kpi k-blue">
+          <div class="kpi-label">P.E. en euros (ventas)</div>
+          <div class="kpi-val text-mono" id="pe-euros">—</div>
+          <div class="kpi-sub">Facturación mínima anual</div>
+        </div>
+        <div class="kpi k-green">
+          <div class="kpi-label">Margen de seguridad</div>
+          <div class="kpi-val text-mono" id="pe-margen-seg">—</div>
+          <div class="kpi-sub">% ventas sobre el PE</div>
+        </div>
+      </div>
+
+      <div class="chart-box" style="height:280px;">
+        <canvas id="umbral-chart" style="width:100%;height:280px;"></canvas>
+      </div>
+      <div class="umbral-labels" id="umbral-labels">
+        <span>0 uds</span><span id="umbral-label-pe">—</span><span id="umbral-label-max">—</span>
+      </div>
+
+      <div class="kpi-grid kpi-grid-3 mt-md">
+        <div class="kpi k-amber">
+          <div class="kpi-label">Apalancamiento operativo</div>
+          <div class="kpi-val text-mono" id="pe-apalancamiento">—</div>
+          <div class="kpi-sub">MC total / BAIT</div>
+          <div class="kpi-delta" id="pe-apal-label"></div>
+        </div>
+        <div class="kpi k-teal">
+          <div class="kpi-label">Ventas actuales previstas</div>
+          <div class="kpi-val text-mono" id="pe-ventas-actuales">—</div>
+          <div class="kpi-sub">Suma unidades × precio</div>
+        </div>
+        <div class="kpi k-green">
+          <div class="kpi-label">Beneficio/Pérdida previsto</div>
+          <div class="kpi-val text-mono" id="pe-bait">—</div>
+          <div class="kpi-sub">BAIT estimado</div>
+        </div>
+      </div>
+
+      <div class="concept-box mt-md">
+        🔧 <strong>Apalancamiento operativo (GAO):</strong> Indica cuánto aumenta el BAIT ante un aumento del 1% en ventas. GAO alto = empresa con muchos costes fijos → más riesgo si bajan ventas, pero más beneficio si suben. <strong>GAO = MC / BAIT</strong>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="swTab('umb','sensibilidad',this)">Continuar → Sensibilidad</button>
+      </div>
+    </div>
+
+    <!-- TAB SENSIBILIDAD -->
+    <div id="umb-sensibilidad" class="tab-content">
+      <div class="sec-title"><span class="sec-badge badge-amber">Sensibilidad</span> ¿Qué pasa si...? Escenarios dinámicos</div>
+      <div class="alert alert-warning">
+        ⚠️ <strong>Análisis de escenarios:</strong> Pequeñas variaciones en costes o precios pueden desplazar el punto de equilibrio de forma no lineal. Dominar este análisis es esencial para tomar decisiones de pricing y compras.
+      </div>
+
+      <div class="grid3">
+        <div class="fg">
+          <label>Variación en costes fijos (%)</label>
+          <input type="range" id="sens-cf" min="-30" max="50" value="0" oninput="calcSensibilidad()" style="margin-top:.4rem">
+          <div class="flex-between mt-sm"><span class="text-xs text-muted">-30%</span><strong id="sens-cf-val" class="text-mono">0%</strong><span class="text-xs text-muted">+50%</span></div>
+        </div>
+        <div class="fg">
+          <label>Variación en precio de venta (%)</label>
+          <input type="range" id="sens-precio" min="-30" max="50" value="0" oninput="calcSensibilidad()" style="margin-top:.4rem">
+          <div class="flex-between mt-sm"><span class="text-xs text-muted">-30%</span><strong id="sens-precio-val" class="text-mono">0%</strong><span class="text-xs text-muted">+50%</span></div>
+        </div>
+        <div class="fg">
+          <label>Variación en coste variable/unidad (%)</label>
+          <input type="range" id="sens-cv" min="-30" max="50" value="0" oninput="calcSensibilidad()" style="margin-top:.4rem">
+          <div class="flex-between mt-sm"><span class="text-xs text-muted">-30%</span><strong id="sens-cv-val" class="text-mono">0%</strong><span class="text-xs text-muted">+50%</span></div>
+        </div>
+      </div>
+
+      <div class="kpi-grid kpi-grid-4 mt-md">
+        <div class="kpi k-blue">
+          <div class="kpi-label">PE base (uds)</div>
+          <div class="kpi-val text-mono" id="sens-pe-base">—</div>
+          <div class="kpi-sub">Sin variaciones</div>
+        </div>
+        <div class="kpi k-red">
+          <div class="kpi-label">PE ajustado (uds)</div>
+          <div class="kpi-val text-mono" id="sens-pe-nuevo">—</div>
+          <div class="kpi-sub">Con variaciones aplicadas</div>
+        </div>
+        <div class="kpi k-amber">
+          <div class="kpi-label">Diferencia uds</div>
+          <div class="kpi-val text-mono" id="sens-diferencia">—</div>
+          <div class="kpi-sub">+uds = más difícil de alcanzar</div>
+        </div>
+        <div class="kpi k-green">
+          <div class="kpi-label">Impacto en BAIT</div>
+          <div class="kpi-val text-mono" id="sens-impacto-bait">—</div>
+          <div class="kpi-sub">vs escenario base</div>
+        </div>
+      </div>
+
+      <div class="chart-box mt-md" style="height:180px;">
+        <canvas id="sens-chart" style="width:100%;height:180px;"></canvas>
+      </div>
+
+      <div class="btn-group mt-md">
+        <button class="btn btn-success" onclick="exportarUmbral()">📋 Exportar análisis CSV</button>
+        <button class="btn btn-primary" onclick="switchMod('dashboard')">Ver Cuadro de Mando 🎯</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- PANEL LATERAL UMBRAL -->
+  <aside class="panel-side">
+    <h3>📈 Punto de Equilibrio</h3>
+    <div class="alert alert-purple mb-sm">
+      <span class="text-xs"><strong>Módulo 3C</strong> — PE · MC · GAO · Sensibilidad</span>
+    </div>
+    <div class="text-xs font-bold text-muted mb-sm" style="text-transform:uppercase;letter-spacing:.05em">Formulario rápido</div>
+    <ul class="ck-list mb-md">
+      <li class="ck-item" style="justify-content:space-between"><span>CF totales/año</span><span class="result-tag rt-red" id="sid-cf">0 €</span></li>
+      <li class="ck-item" style="justify-content:space-between"><span>MC ponderado/ud</span><span class="result-tag rt-green" id="sid-mc">—</span></li>
+      <li class="ck-item" style="justify-content:space-between"><span>PE (unidades)</span><span class="result-tag rt-blue" id="sid-pe">—</span></li>
+      <li class="ck-item" style="justify-content:space-between"><span>PE (€ ventas)</span><span class="result-tag rt-amber" id="sid-pe-e">—</span></li>
+      <li class="ck-item" style="justify-content:space-between"><span>Margen seguridad</span><span class="result-tag" id="sid-ms">—</span></li>
+    </ul>
+
+    <hr class="divider">
+    <div class="text-xs font-bold text-muted mb-sm" style="text-transform:uppercase;letter-spacing:.05em">Fórmulas clave</div>
+    <div class="text-xs" style="line-height:2.1;font-family:var(--font-mono)">
+      <span style="color:var(--danger)">CF</span> = Costes que no cambian<br>
+      <span style="color:var(--primary)">CVu</span> = Coste variable/unidad<br>
+      <span style="color:var(--success)">MC</span> = P − CVu<br>
+      <span style="color:var(--purple)">PE(u)</span> = CF ÷ MC<br>
+      <span style="color:var(--teal)">PE(€)</span> = CF ÷ (MC/P)<br>
+      <span style="color:var(--warning)">MS</span> = (V−PE)/V×100<br>
+      <span style="color:var(--primary)">GAO</span> = ΣMC / BAIT<br>
+    </div>
+
+    <hr class="divider">
+    <div class="text-xs font-bold text-muted mb-sm" style="text-transform:uppercase;letter-spacing:.05em">Interpretación GAO</div>
+    <div class="text-xs" style="line-height:1.9">
+      <span class="result-tag rt-green">GAO &lt; 3</span> → Riesgo bajo<br>
+      <span class="result-tag rt-amber">GAO 3–7</span> → Riesgo moderado<br>
+      <span class="result-tag rt-red">GAO &gt; 7</span> → Alto riesgo/rentabilidad<br>
+      <br>
+      Un GAO de 5 significa que un aumento del 10% en ventas genera un aumento del <strong>50%</strong> en BAIT.
+    </div>
+  </aside>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     CUADRO DE MANDO INTEGRADO
+     ══════════════════════════════════════════════════ -->
+<div id="mod-dashboard" class="modulo">
+<div class="main-wrap">
+  <main class="panel-work">
+    <div class="mod-banner" style="background:linear-gradient(135deg,#1e3a5f,#1e40af)">
+      <div class="icon">🎯</div>
+      <div>
+        <h2>Cuadro de Mando Integrado — Suite FP Costes</h2>
+        <p>Visión global: personal + indirectos + umbral → precio orientativo de presupuestos</p>
+      </div>
+    </div>
+
+    <div class="edu-box mb-md">
+      🔗 <strong>Integración completa:</strong> Este cuadro consolida los resultados de los 3 módulos anteriores para darte el <strong>coste mínimo por hora facturable</strong> y el <strong>precio de venta mínimo por producto/servicio</strong> que necesitas para al menos cubrir costes. Este dato alimenta directamente el Módulo 1 (Presupuestos) de la Suite Empresarial FP.
+    </div>
+
+    <div class="kpi-grid kpi-grid-4 mb-md">
+      <div class="kpi k-blue">
+        <div class="kpi-label">Coste empresa personal</div>
+        <div class="kpi-val text-mono" id="dm-personal">0 €</div>
+        <div class="kpi-sub">Anual total plantilla</div>
+      </div>
+      <div class="kpi k-teal">
+        <div class="kpi-label">Costes indirectos</div>
+        <div class="kpi-val text-mono" id="dm-indirectos">0 €</div>
+        <div class="kpi-sub">Suministros + amort. + otros</div>
+      </div>
+      <div class="kpi k-red">
+        <div class="kpi-label">Total costes fijos</div>
+        <div class="kpi-val text-mono" id="dm-cf">0 €</div>
+        <div class="kpi-sub">Estructura anual mínima</div>
+      </div>
+      <div class="kpi k-purple">
+        <div class="kpi-label">P.E. facturación anual</div>
+        <div class="kpi-val text-mono" id="dm-pe">—</div>
+        <div class="kpi-sub">Mínimo para no perder</div>
+      </div>
+    </div>
+
+    <div class="kpi-grid kpi-grid-3 mb-md">
+      <div class="kpi k-green">
+        <div class="kpi-label">✅ Coste hora M.O. efectiva</div>
+        <div class="kpi-val text-mono" id="dm-hora-mo">— €/h</div>
+        <div class="kpi-sub">Usar en presupuestos de MO</div>
+      </div>
+      <div class="kpi k-purple">
+        <div class="kpi-label">✅ Coste hora total (MO+CI)</div>
+        <div class="kpi-val text-mono" id="dm-hora-total">— €/h</div>
+        <div class="kpi-sub">Coste mínimo facturable/hora</div>
+      </div>
+      <div class="kpi k-amber">
+        <div class="kpi-label">Precio mínimo de venta/hora</div>
+        <div class="kpi-val text-mono" id="dm-precio-min">— €/h</div>
+        <div class="kpi-sub">Con margen 20% sobre coste</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+    <div class="sec-title"><span class="sec-badge badge-green">Nexo Presupuestos</span> Conexión con Módulo 1 — Simulador de Presupuestos</div>
+    <div class="alert alert-success mb-md">
+      🔗 <strong>Datos calculados para trasladar al Módulo 1 (Presupuestos):</strong> Introduce estos valores como "Coste M.O." y "Coste directo" en las líneas de presupuesto de la Suite Empresarial FP para obtener precios coherentes con tu estructura de costes real.
+    </div>
+    <div id="nexo-presupuestos"></div>
+
+    <hr class="divider">
+    <div class="sec-title"><span class="sec-badge badge-purple">Gráfico integrado</span> Estructura de costes por componente</div>
+    <div class="chart-box" style="height:200px;">
+      <canvas id="dm-chart" style="width:100%;height:200px;"></canvas>
+    </div>
+
+    <hr class="divider">
+    <div class="sec-title"><span class="sec-badge badge-amber">Omisiones</span> Costes habitualmente olvidados</div>
+    <div class="grid2">
+      <div class="alert alert-warning text-xs">⚠️ <strong>Provisión despido:</strong> Si no la incluyes en el coste hora, deberás financiar el despido con tesorería en el momento que ocurra. Recomienda provisionarla mensualmente.</div>
+      <div class="alert alert-warning text-xs">⚠️ <strong>Periodo de no facturación:</strong> Vacaciones, formación, bajas... las horas no productivas deben pagarse con las horas productivas cobradas al cliente.</div>
+      <div class="alert alert-danger text-xs">🚨 <strong>IVA soportado vs repercutido:</strong> El IVA de compras se recupera, pero hay que financiarlo hasta el trimestre. Tenerlo en cuenta en liquidez.</div>
+      <div class="alert alert-danger text-xs">🚨 <strong>Inflación de costes:</strong> Suministros y salarios suben anualmente. Un presupuesto plurianual debe incorporar revisión de precios (cláusula de revisión al IPC u otro índice).</div>
+      <div class="alert alert-info text-xs">ℹ️ <strong>Coste de oportunidad:</strong> El tiempo del empresario tiene valor. Si el autónomo no se incluye como trabajador, los costes aparecen subestimados artificialmente.</div>
+      <div class="alert alert-info text-xs">ℹ️ <strong>Obsolescencia tecnológica:</strong> Las amortizaciones lineales no siempre reflejan la depreciación real en sectores tecnológicos. Revisar criterio cada ejercicio.</div>
+    </div>
+
+    <div class="btn-group mt-md">
+      <button class="btn btn-success" onclick="exportarCompleto()">📥 Exportar análisis completo CSV</button>
+      <button class="btn btn-primary" onclick="imprimirResumen()">🖨️ Imprimir/PDF resumen</button>
+      <button class="btn btn-outline" onclick="resetAll()">🔄 Reiniciar todo</button>
+    </div>
+  </main>
+
+  <aside class="panel-side">
+    <h3>🎯 Cuadro de Mando</h3>
+    <div class="alert alert-info mb-sm text-xs">
+      Consolida los 3 módulos de costes en un único vistazo
+    </div>
+    <div class="text-xs font-bold text-muted mb-sm" style="text-transform:uppercase;letter-spacing:.05em">Estado de módulos</div>
+    <ul class="ck-list mb-md">
+      <li class="ck-item"><span class="ck-mark" id="dm-ck-3a">?</span><span>3A Personal completado</span></li>
+      <li class="ck-item"><span class="ck-mark" id="dm-ck-3b">?</span><span>3B Indirectos completado</span></li>
+      <li class="ck-item"><span class="ck-mark" id="dm-ck-3c">?</span><span>3C Umbral configurado</span></li>
+      <li class="ck-item"><span class="ck-mark" id="dm-ck-nexo">?</span><span>Datos exportables Módulo 1</span></li>
+    </ul>
+    <hr class="divider">
+    <div class="text-xs font-bold text-muted mb-sm" style="text-transform:uppercase;letter-spacing:.05em">Reglas de oro</div>
+    <div class="text-xs" style="line-height:2.2">
+      💡 Coste/hora real &gt; Salario bruto/hora<br>
+      💡 PE siempre en unidades Y en euros<br>
+      💡 Amortizar todo activo desde día 1<br>
+      💡 Provisionar despido mensualmente<br>
+      💡 MS &gt; 20% → empresa estable<br>
+      💡 GAO alto → revisar estructura CF<br>
+      💡 Precio mín. = Coste/hora × (1+margen)
+    </div>
+  </aside>
+</div>
+</div>
+
+</div><!-- /app-body -->
+
+<script>
+// ═══════════════════════════════════════════════════
+//  SUITE FP — COSTES DE PERSONAL & PUNTO EQUILIBRIO
+// ═══════════════════════════════════════════════════
+
+// ── ESTADO GLOBAL ────────────────────────────────────
+const S = {
+  empleados: [],
+  suministros: [],
+  activos: [],
+  otros: [],
+  productos: [],
+  cal: { festivos:14, vacaciones:22, it:5, form:2, permisos:3 },
+  totales: {
+    costoEmpresaTotal: 0,
+    horasEfectivasTotal: 0,
+    costeHoraPersonal: 0,
+    ciTotal: 0,
+    ciHora: 0,
+    costeHoraTotal: 0,
+    cfTotal: 0,
+    peUds: 0,
+    peEuros: 0
+  }
+};
+
+// ── HELPERS ───────────────────────────────────────────
+const $ = id => document.getElementById(id);
+const fmt  = (v, d=0) => v == null ? '—' : v.toLocaleString('es-ES', { minimumFractionDigits: d, maximumFractionDigits: d });
+const fmtE = (v, d=2) => v == null ? '—' : v.toLocaleString('es-ES', { minimumFractionDigits: d, maximumFractionDigits: d }) + ' €';
+const fmtH = v => v == null ? '—' : v.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €/h';
+const fmtP = v => v == null ? '—' : v.toLocaleString('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%';
+const setTxt = (id, v) => { const el=$(id); if(el) el.textContent=v; };
+const setMark = (id, tipo) => {
+  const el=$(id); if(!el) return;
+  const map = { verde:['ck-verde','✓'], ambar:['ck-ambar','!'], rojo:['ck-rojo','✗'], purple:['ck-purple','★'] };
+  const [cls, txt] = map[tipo] || ['','?'];
+  el.className = 'ck-mark ' + cls;
+  el.textContent = txt;
+};
+
+// ── NAVEGACIÓN ────────────────────────────────────────
+function switchMod(id) {
+  document.querySelectorAll('.modulo').forEach(m => m.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  const mod = $('mod-' + id);
+  if(mod) mod.classList.add('active');
+  const tabs = document.querySelectorAll('.nav-tab');
+  const map = { personal:0, indirectos:1, umbral:2, dashboard:3 };
+  if(tabs[map[id]]) tabs[map[id]].classList.add('active');
+  if(id==='dashboard') updateDashboard();
+  if(id==='umbral') { calcUmbral(); setTimeout(drawUmbralChart,100); }
+  if(id==='indirectos') updateIndirectosTotals();
+}
+
+function swTab(prefijo, id, clickedButton) {
+  const allContent = document.querySelectorAll(`[id^="${prefijo}-"]`);
+  allContent.forEach(el => { if(el.classList.contains('tab-content')) el.classList.remove('active'); });
+  const target = $(`${prefijo}-${id}`);
+  if(target) target.classList.add('active');
+  // Update active button
+  const btn = clickedButton || (window.event && window.event.currentTarget) || null;
+  if(btn) {
+    btn.parentElement.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  if(id==='resumen') { calcResumenPersonal(); updateChecklist(); }
+  if(id==='grafico') { calcUmbral(); setTimeout(drawUmbralChart, 80); }
+  if(id==='sensibilidad') { calcUmbral(); setTimeout(drawSensChart, 80); }
+  if(id==='imputacion') { updateImputacion(); }
+  if(id==='calendario') calcCalendario();
+}
+
+// ── INIT ─────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  // Empleados de muestra
+  addEmpleado('Ana García', 'Técnico', 28000);
+  addEmpleado('Carlos López', 'Auxiliar', 22000);
+  // Suministros de muestra
+  initSuministros();
+  // Activos de muestra
+  initActivos();
+  // Otros costes de muestra
+  initOtros();
+  // Productos de muestra
+  initProductos();
+  calcCalendario();
+  updateConvenioPagas();
+  updateChecklist();
+});
+
+// ══════════════════════════════════════════════════════
+//  MÓDULO 3A — PERSONAL
+// ══════════════════════════════════════════════════════
+
+const SS_EMP = {
+  comunes: 23.60, desempleo_indef: 5.50, desempleo_temp: 6.70,
+  fogasa: 0.20, formacion: 0.60, atep: 1.50, mei: 0.58
+};
+const SS_TRAB = { comunes: 4.70, desempleo: 1.55, formacion: 0.10, mei: 0.12 };
+
+// Bandas salariales anuales orientativas y editables por categoría.
+const CATEGORIAS = ['Director/a','Técnico superior','Técnico medio','Técnico','Auxiliar administrativo','Auxiliar','Operario cualificado','Operario no cualificado','En prácticas'];
+const BANDAS_SALARIALES = {
+  'Director/a': { min: 35000, max: 55000 },
+  'Técnico superior': { min: 26000, max: 36000 },
+  'Técnico medio': { min: 22000, max: 30000 },
+  'Técnico': { min: 24000, max: 32000 },
+  'Auxiliar administrativo': { min: 18000, max: 24000 },
+  'Auxiliar': { min: 18000, max: 23000 },
+  'Operario cualificado': { min: 21000, max: 28000 },
+  'Operario no cualificado': { min: 17000, max: 22000 },
+  'En prácticas': { min: 16000, max: 20000 }
+};
+
+function renderBandasSalariales() {
+  const cont = $('bandas-salariales');
+  if (!cont) return;
+  cont.innerHTML = CATEGORIAS.map((cat, i) => {
+    const b = BANDAS_SALARIALES[cat];
+    return `<div class="fg mb-0" style="border:1px solid var(--gray-200);border-radius:.45rem;padding:.6rem">
+      <strong style="font-size:.8rem">${cat}</strong>
+      <div class="grid2 mt-sm">
+        <div><label style="font-size:.7rem">Mínimo €/año</label><input type="number" class="inp inp-sm inp-mono" min="0" step="500" value="${b.min}" onchange="updBanda('${cat}','min',this.value)"></div>
+        <div><label style="font-size:.7rem">Máximo €/año</label><input type="number" class="inp inp-sm inp-mono" min="0" step="500" value="${b.max}" onchange="updBanda('${cat}','max',this.value)"></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function updBanda(cat, extremo, valor) {
+  const n = Number(valor);
+  if (!Number.isFinite(n) || n < 0) { alert('Introduce una cantidad válida igual o superior a cero.'); renderBandasSalariales(); return; }
+  const b = BANDAS_SALARIALES[cat];
+  const otro = extremo === 'min' ? b.max : b.min;
+  if ((extremo === 'min' && n > otro) || (extremo === 'max' && n < otro)) {
+    alert('El mínimo no puede superar al máximo ni el máximo ser inferior al mínimo.');
+    renderBandasSalariales(); return;
+  }
+  b[extremo] = n;
+  renderEmpleados();
+}
+
+function getTotalSSEmp(contrato) {
+  const des = contrato === 'temporal' ? SS_EMP.desempleo_temp : SS_EMP.desempleo_indef;
+  const sector = $('conf-sector')?.value || 'comercio';
+  const atepMap = { comercio:1.50, hosteleria:2.20, construccion:3.60, industria:1.80, oficinas:0.90, tecnologia:0.80, sanidad:1.10 };
+  const atep = atepMap[sector] ?? SS_EMP.atep;
+  return SS_EMP.comunes + des + SS_EMP.fogasa + SS_EMP.formacion + atep + SS_EMP.mei;
+}
+function getTotalSSTrab() {
+  return SS_TRAB.comunes + SS_TRAB.desempleo + SS_TRAB.formacion + SS_TRAB.mei;
+}
+
+function updSSTrab(concepto, valor) {
+  if (!Object.prototype.hasOwnProperty.call(SS_TRAB, concepto)) return;
+  const n = Number(valor);
+  if (!Number.isFinite(n) || n < 0 || n > 100) {
+    alert('Introduce un porcentaje válido entre 0 y 100.');
+    const input = Array.from(document.querySelectorAll('.ss-trab-input'))
+      .find(el => (el.getAttribute('onchange') || '').includes("'" + concepto + "'"));
+    if (input) input.value = SS_TRAB[concepto].toFixed(2);
+    return;
+  }
+  SS_TRAB[concepto] = n;
+  recalcAll();
+}
+
+function updateConvenioPagas() {
+  const sector = $('conf-sector')?.value;
+  const atepMap = { comercio:1.50, hosteleria:2.20, construccion:3.60, industria:1.80, oficinas:0.90, tecnologia:0.80, sanidad:1.10 };
+  const atepEl = $('td-atep');
+  if(atepEl) atepEl.textContent = (atepMap[sector]||1.50).toFixed(2) + '%';
+  recalcAll();
+}
+
+function recalcAll() {
+  const contrato = $('conf-contrato')?.value || 'indefinido';
+  const totalEmp = getTotalSSEmp(contrato);
+  setTxt('td-paro-emp', (contrato === 'temporal' ? 6.70 : 5.50).toFixed(2) + '%');
+  setTxt('td-paro-label', contrato === 'temporal' ? '(temporal)' : '(indefinido)');
+  setTxt('td-total-emp', totalEmp.toFixed(2) + '%');
+  setTxt('td-total-trab', getTotalSSTrab().toFixed(2) + '%');
+  renderEmpleados();
+  calcResumenPersonal();
+  updateChecklist();
+}
+
+let empIdC = 0;
+function addEmpleado(nombre='', cat='Auxiliar administrativo', bruto=21000) {
+  empIdC++;
+  S.empleados.push({
+    id: empIdC, nombre, categoria: cat, brutoAnual: bruto,
+    retEsp: 0, otros: 0, open: true
+  });
+  renderEmpleados();
+  calcResumenPersonal();
+  updateChecklist();
+}
+
+function renderEmpleados() {
+  const cont = $('emp-lista');
+  if(!cont) return;
+  if(S.empleados.length === 0) {
+    cont.innerHTML = '<div class="alert alert-warning">Añade al menos un empleado para continuar.</div>';
+    return;
+  }
+  const contrato = $('conf-contrato')?.value || 'indefinido';
+  const irpf = parseFloat($('conf-irpf')?.value || 0.15);
+  const provision = parseInt($('conf-provision')?.value || 0);
+  const pagas = parseInt($('conf-pagas')?.value || 2);
+  const ssEmpPct = getTotalSSEmp(contrato) / 100;
+  const ssTrabPct = getTotalSSTrab() / 100;
+
+  cont.innerHTML = S.empleados.map(e => {
+    const bruto = e.brutoAnual;
+    const ssEmp = bruto * ssEmpPct;
+    const ssTrab = bruto * ssTrabPct;
+    const irpfAmt = (bruto - ssTrab) * irpf;
+    const neto = bruto - ssTrab - irpfAmt;
+    const provAmt = provision > 0 ? (bruto / 365) * provision : 0;
+    const costEmp = bruto + ssEmp + e.retEsp + e.otros + provAmt;
+    const multiplicador = neto > 0 ? costEmp / neto : 0;
+    const brecha = costEmp - neto;
+
+    return `
+    <div class="emp-card">
+      <div class="emp-card-head" onclick="toggleEmp(${e.id})">
+        <div class="flex-gap">
+          <span style="font-size:.8rem">👤</span>
+          <div>
+            <div style="font-weight:700;font-size:.85rem">${e.nombre||'Empleado '+e.id} — ${e.categoria||'Sin categoría'}</div>
+            <div style="font-size:.7rem;color:#9ca3af">Bruto: ${fmtE(bruto)} · Coste empresa: ${fmtE(costEmp)} · Hora efectiva: ${fmtH(costEmp / (getHorasEfectivas()))}</div>
+          </div>
+        </div>
+        <div class="flex-gap">
+          <span class="result-tag rt-${multiplicador > 1.45 ? 'red' : 'amber'}">${multiplicador.toFixed(2)}x</span>
+          <button class="btn btn-danger btn-xs" onclick="event.stopPropagation();delEmpleado(${e.id})">✕</button>
+        </div>
+      </div>
+      <div class="emp-card-body" ${e.open ? '' : 'style="display:none"'}>
+        <div class="grid3 mb-md">
+          <div class="fg mb-0">
+            <label style="font-size:.75rem">Nombre completo</label>
+            <input class="inp inp-sm" value="${e.nombre}" onchange="updEmp(${e.id},'nombre',this.value)" placeholder="Nombre Apellido">
+          </div>
+          <div class="fg mb-0">
+            <label style="font-size:.75rem">Categoría profesional</label>
+            <select class="sel inp-sm" onchange="updEmp(${e.id},'categoria',this.value)">
+              ${CATEGORIAS.map(c=>`<option value="${c}" ${e.categoria===c?'selected':''}>${c}</option>`).join('')}
+            </select>
+          </div>
+          <div class="fg mb-0">
+            <label style="font-size:.75rem">Salario bruto anual (€)</label>
+            <input type="number" class="inp inp-sm inp-mono" value="${bruto}" min="0" step="100" inputmode="decimal" autocomplete="off" aria-label="Salario bruto anual total, incluidas pagas extraordinarias" oninput="updEmpSalaryInput(${e.id},this)" onchange="updEmp(${e.id},'brutoAnual',this.value === '' ? 0 : Number(this.value))">
+            <div class="text-xs text-muted mt-sm">${BANDAS_SALARIALES[e.categoria] ? `Rango de categoría: ${fmtE(BANDAS_SALARIALES[e.categoria].min,0)} – ${fmtE(BANDAS_SALARIALES[e.categoria].max,0)}` : 'Define primero una categoría salarial.'}</div>
+            ${BANDAS_SALARIALES[e.categoria] && (bruto < BANDAS_SALARIALES[e.categoria].min || bruto > BANDAS_SALARIALES[e.categoria].max) ? '<div class="text-xs" style="color:var(--danger)">⚠ Salario fuera del rango orientativo definido.</div>' : ''}
+          </div>
+        </div>
+        <div class="grid3 mb-md">
+          <div class="fg mb-0">
+            <label style="font-size:.75rem">Retribución en especie/año <span class="tt" data-tip="Ticket restaurante, seguro médico, vehículo empresa, etc. Art.42 LIRPF">LIRPF</span></label>
+            <input type="number" class="inp inp-sm inp-mono" value="${e.retEsp}" min="0" step="100" onchange="updEmp(${e.id},'retEsp',+this.value)" placeholder="0">
+          </div>
+          <div class="fg mb-0">
+            <label style="font-size:.75rem">Otros costes extra/año</label>
+            <input type="number" class="inp inp-sm inp-mono" value="${e.otros}" min="0" step="100" onchange="updEmp(${e.id},'otros',+this.value)" placeholder="EPI, uniforme…">
+          </div>
+          <div class="fg mb-0">
+            <label style="font-size:.75rem">Provisión despido estimada</label>
+            <input class="inp inp-sm inp-read inp-mono" value="${fmtE(provAmt,0)}" readonly>
+          </div>
+        </div>
+
+        <!-- BRECHA VISUAL -->
+        <div class="text-xs font-bold text-muted mb-sm" style="text-transform:uppercase;letter-spacing:.04em">Desglose coste empresa → neto trabajador</div>
+        <div class="brecha-viz">
+          <div class="brecha-col neto" style="flex:${neto}">
+            <div style="font-size:.65rem;font-weight:700;color:#166534">Neto</div>
+            <div style="font-family:var(--font-mono);font-size:.8rem;font-weight:800;color:#166534">${fmtE(neto,0)}</div>
+          </div>
+          <div class="brecha-col ss-trab" style="flex:${ssTrab}">
+            <div style="font-size:.6rem;font-weight:700;color:var(--primary)">SS Trab.</div>
+            <div style="font-family:var(--font-mono);font-size:.72rem;color:var(--primary)">${fmtE(ssTrab,0)}</div>
+          </div>
+          <div class="brecha-col irpf" style="flex:${irpfAmt}">
+            <div style="font-size:.6rem;font-weight:700;color:var(--warning)">IRPF</div>
+            <div style="font-family:var(--font-mono);font-size:.72rem;color:var(--warning)">${fmtE(irpfAmt,0)}</div>
+          </div>
+          <div class="brecha-col ss-emp" style="flex:${ssEmp + e.retEsp + e.otros + provAmt}">
+            <div style="font-size:.6rem;font-weight:700;color:var(--danger)">SS Emp.+</div>
+            <div style="font-family:var(--font-mono);font-size:.72rem;color:var(--danger)">${fmtE(ssEmp+e.retEsp+e.otros+provAmt,0)}</div>
+          </div>
+          <div class="brecha-col total">
+            <div style="font-size:.65rem;font-weight:700">TOTAL</div>
+            <div style="font-family:var(--font-mono);font-size:.8rem;font-weight:800">${fmtE(costEmp,0)}</div>
+          </div>
+        </div>
+
+        <div class="multiplicador-detail">
+<strong>Desglose del multiplicador individual: ${multiplicador.toFixed(2)}x</strong>
+<div class="mult-step"><b>1. Coste anual para la empresa</b> = salario bruto + cotizaciones empresariales + retribución en especie + otros costes + provisión.</div>
+<div class="formula">${fmtE(bruto,2)} + ${fmtE(ssEmp,2)} + ${fmtE(e.retEsp,2)} + ${fmtE(e.otros,2)} + ${fmtE(provAmt,2)} = <b>${fmtE(costEmp,2)} €</b></div>
+<div class="mult-step"><b>2. Salario neto estimado</b> = salario bruto − cotización del trabajador − IRPF estimado.</div>
+<div class="formula">${fmtE(bruto,2)} − ${fmtE(ssTrab,2)} − ${fmtE(irpfAmt,2)} = <b>${fmtE(neto,2)} €</b></div>
+<div class="mult-step"><b>3. Multiplicador</b> = coste anual empresa ÷ salario neto anual.</div>
+<div class="formula">${fmtE(costEmp,2)} ÷ ${fmtE(neto,2)} = <b>${multiplicador.toFixed(2)}x</b></div>
+</div>
+
+<div class="grid4" style="margin-top:.6rem">
+          <div style="text-center:center;background:#f9fafb;padding:.4rem;border-radius:.35rem;text-align:center">
+            <div class="text-xs text-muted">Bruto por paga (anual ÷ (12 + extras))</div>
+            <div class="text-mono font-bold text-sm">${fmtE(bruto/(12+pagas),2)}</div>
+          </div>
+          <div style="background:#f0fdf4;padding:.4rem;border-radius:.35rem;text-align:center">
+            <div class="text-xs" style="color:var(--success)">Neto mensual</div>
+            <div class="text-mono font-bold text-sm" style="color:var(--success)">${fmtE(neto/12)}</div>
+          </div>
+          <div style="background:#fee2e2;padding:.4rem;border-radius:.35rem;text-align:center">
+            <div class="text-xs" style="color:var(--danger)">Coste empresa/mes</div>
+            <div class="text-mono font-bold text-sm" style="color:var(--danger)">${fmtE(costEmp/12)}</div>
+          </div>
+          <div style="background:#f5f3ff;padding:.4rem;border-radius:.35rem;text-align:center">
+            <div class="text-xs" style="color:var(--purple)">Coste hora efectiva</div>
+            <div class="text-mono font-bold text-sm" style="color:var(--purple)">${fmtH(costEmp/getHorasEfectivas())}</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// Actualiza el salario mientras se escribe, sin redibujar la tarjeta
+// ni quitar el foco del campo en cada pulsación.
+function updEmpSalaryInput(id, input) {
+  const e = S.empleados.find(x => x.id === id);
+  if (!e) return;
+  if (input.value === '') return;
+  const valor = Number(input.value);
+  if (Number.isFinite(valor) && valor >= 0) {
+    e.brutoAnual = valor;
+    calcResumenPersonal();
+    updateChecklist();
+  }
+}
+
+function updEmp(id, campo, valor) {
+  const e = S.empleados.find(x => x.id === id);
+  if(e) {
+    e[campo] = valor;
+    if (campo === 'categoria' && BANDAS_SALARIALES[valor]) {
+      const b = BANDAS_SALARIALES[valor];
+      e.brutoAnual = Math.round((b.min + b.max) / 2);
+    }
+    renderEmpleados();
+    calcResumenPersonal();
+    updateChecklist();
+  }
+}
+function delEmpleado(id) {
+  if(!confirm('¿Eliminar empleado?')) return;
+  S.empleados = S.empleados.filter(e => e.id !== id);
+  renderEmpleados(); calcResumenPersonal(); updateChecklist();
+}
+function toggleEmp(id) {
+  const e = S.empleados.find(x => x.id === id);
+  if(e) { e.open = !e.open; renderEmpleados(); }
+}
+
+function getHorasEfectivas() {
+  const horasDia = parseFloat($('conf-horas-dia')?.value || 8);
+  const festivos = parseInt($('cal-festivos')?.value || 14);
+  const vacaciones = parseInt($('cal-vacaciones')?.value || 22);
+  const it = parseInt($('cal-it')?.value || 5);
+  const form = parseInt($('cal-form')?.value || 2);
+  const permisos = parseInt($('cal-permisos')?.value || 3);
+  const laborablesBrutos = 365 - 104 - festivos;
+  const diasEfectivos = Math.max(0, laborablesBrutos - vacaciones - it - form - permisos);
+  return Math.max(0, diasEfectivos) * horasDia;
+}
+
+// ── CALENDARIO ────────────────────────────────────────
+function calcCalendario() {
+  const horasDia = parseFloat($('conf-horas-dia')?.value || 8);
+  const festivos = parseInt($('cal-festivos')?.value || 14);
+  const vacaciones = parseInt($('cal-vacaciones')?.value || 22);
+  const it = parseInt($('cal-it')?.value || 5);
+  const form = parseInt($('cal-form')?.value || 2);
+  const permisos = parseInt($('cal-permisos')?.value || 3);
+
+  const laborablesBrutos = 365 - 104 - festivos;
+  const diasEfectivos = Math.max(0, laborablesBrutos - vacaciones - it - form - permisos);
+  const horasTeo = laborablesBrutos * horasDia;
+  const horasEf = diasEfectivos * horasDia;
+  const diasNoProd = 365 - 104 - diasEfectivos;
+  const pct = horasTeo > 0 ? (horasEf / horasTeo * 100) : 0;
+
+  setTxt('cal-laborables-brutos', laborablesBrutos);
+  setTxt('cal-res-dias', fmt(diasEfectivos));
+  setTxt('cal-res-horas', fmt(horasEf));
+  setTxt('cal-res-pct', fmtP(pct));
+  setTxt('cal-res-no-prod', fmt(diasNoProd));
+  setTxt('cal-h-teoricas', fmt(horasTeo));
+  setTxt('cal-h-efectivas', fmt(horasEf));
+  setTxt('cal-h-diff', fmt(horasTeo - horasEf) + ' h');
+
+  S.cal = { festivos, vacaciones, it, form, permisos };
+  drawCalChart(laborablesBrutos, vacaciones, it, form, permisos, festivos);
+  calcResumenPersonal();
+}
+
+function drawCalChart(lab, vac, it, form, permisos, festivos) {
+  const cv = $('cal-chart'); if(!cv) return;
+  const W = cv.offsetWidth || 400; const H = 120;
+  cv.width = W; cv.height = H;
+  const ctx = cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+
+  const data = [
+    { label:'Efectivos', val: lab - vac - it - form - permisos, color:'#16a34a' },
+    { label:'Vacaciones', val: vac, color:'#3b82f6' },
+    { label:'IT/Absent.', val: it, color:'#ef4444' },
+    { label:'Formación', val: form, color:'#f59e0b' },
+    { label:'Permisos', val: permisos, color:'#7c3aed' },
+    { label:'FDS+Festivos', val: 104 + festivos, color:'#d1d5db' },
+  ];
+  const total = data.reduce((s,d)=>s+d.val,0);
+  const bw = 28; const by = 20; const bh = 50;
+  let x = 30;
+  ctx.fillStyle = '#374151'; ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('Distribución de días del año (365)', W/2, 13);
+  data.forEach(d => {
+    const bw2 = Math.max(4, (d.val/total)*(W-60));
+    ctx.fillStyle = d.color;
+    ctx.fillRect(x, by, bw2, bh);
+    if(bw2 > 25) {
+      ctx.fillStyle = d.color === '#d1d5db' ? '#374151' : '#fff';
+      ctx.font = 'bold 9px sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText(d.val, x + bw2/2, by + bh/2 + 3);
+    }
+    ctx.fillStyle = d.color; ctx.font = '8px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText(d.label, x + bw2/2, by + bh + 13);
+    x += bw2;
+  });
+}
+
+// ── RESUMEN PERSONAL ──────────────────────────────────
+function calcResumenPersonal() {
+  const contrato = $('conf-contrato')?.value || 'indefinido';
+  const provision = parseInt($('conf-provision')?.value || 0);
+  const ssEmpPct = getTotalSSEmp(contrato) / 100;
+  const ssTrabPct = getTotalSSTrab() / 100;
+  const irpf = parseFloat($('conf-irpf')?.value || 0.15);
+  const horasEf = getHorasEfectivas();
+  const numEmp = S.empleados.length;
+
+  let masaBruta = 0, totalSS = 0, totalAdic = 0, totalNeto = 0, totalSSTrab = 0, totalIRPF = 0;
+  S.empleados.forEach(e => {
+    const bruto = e.brutoAnual;
+    masaBruta += bruto;
+    totalSS += bruto * ssEmpPct;
+    const provAmt = provision > 0 ? (bruto / 365) * provision : 0;
+    totalAdic += e.retEsp + e.otros + provAmt;
+    const ssTrab = bruto * ssTrabPct;
+    const irpfAmt = (bruto - ssTrab) * irpf;
+    totalSSTrab += ssTrab;
+    totalIRPF += irpfAmt;
+    totalNeto += bruto - ssTrab - irpfAmt;
+  });
+
+  const totalEmpresa = masaBruta + totalSS + totalAdic;
+  const costeHora = horasEf > 0 && numEmp > 0 ? totalEmpresa / (horasEf * numEmp) : 0;
+  const multiplicador = totalNeto > 0 ? totalEmpresa / totalNeto : 0;
+
+  S.totales.costoEmpresaTotal = totalEmpresa;
+  S.totales.horasEfectivasTotal = horasEf * numEmp;
+  S.totales.costeHoraPersonal = costeHora;
+
+  setTxt('tot-bruto', fmtE(masaBruta, 0));
+  setTxt('tot-ss', fmtE(totalSS, 0));
+  setTxt('tot-adic', fmtE(totalAdic, 0));
+  setTxt('tot-total', fmtE(totalEmpresa, 0));
+  setTxt('tot-coste-hora', fmtH(costeHora));
+  setTxt('tot-multiplicador', multiplicador.toFixed(2) + 'x');
+  setTxt('mult-formula-coste', `${fmtE(masaBruta,2)} + ${fmtE(totalSS,2)} + ${fmtE(totalAdic,2)} = ${fmtE(totalEmpresa,2)} €`);
+  setTxt('mult-formula-neto', `${fmtE(masaBruta,2)} − ${fmtE(totalSSTrab,2)} − ${fmtE(totalIRPF,2)} = ${fmtE(totalNeto,2)} €`);
+  setTxt('mult-formula-final', `${fmtE(totalEmpresa,2)} ÷ ${fmtE(totalNeto,2)} = ${multiplicador.toFixed(2)}x`);
+  const delta = multiplicador > 0 ? `La empresa paga ${fmtP((multiplicador-1)*100)} más de lo que el trabajador percibe` : '';
+  setTxt('tot-delta-hora', delta);
+
+  // Resumen empleados en tab
+  const resDiv = $('resumen-empleados');
+  if(resDiv) {
+    resDiv.innerHTML = S.empleados.map(e => {
+      const bruto = e.brutoAnual;
+      const ssEmp = bruto * ssEmpPct;
+      const provAmt = provision > 0 ? (bruto / 365) * provision : 0;
+      const costEmp = bruto + ssEmp + e.retEsp + e.otros + provAmt;
+      const ch = horasEf > 0 ? costEmp / horasEf : 0;
+      return `<div style="display:grid;grid-template-columns:1fr 100px 110px 110px 110px;gap:.4rem;padding:.5rem .75rem;border-bottom:1px solid var(--gray-200);font-size:.78rem;align-items:center;">
+        <div><strong>${e.nombre||'Empleado '+e.id}</strong><br><span class="text-xs text-muted">${e.categoria||'—'}</span></div>
+        <div class="text-mono text-right">${fmtE(bruto,0)}</div>
+        <div class="text-mono text-right" style="color:var(--danger)">${fmtE(ssEmp,0)}</div>
+        <div class="text-mono text-right" style="color:var(--purple)">${fmtE(costEmp,0)}</div>
+        <div class="text-mono text-right font-bold" style="color:var(--teal)">${fmtH(ch)}</div>
+      </div>`;
+    }).join('');
+    if(S.empleados.length > 0) {
+      resDiv.innerHTML = `<div style="display:grid;grid-template-columns:1fr 100px 110px 110px 110px;gap:.4rem;padding:.4rem .75rem;background:var(--gray-800);border-radius:.35rem .35rem 0 0;font-size:.7rem;color:#fff;font-weight:700;text-transform:uppercase;letter-spacing:.04em;">
+        <div>Empleado</div><div class="text-right">Bruto/año</div><div class="text-right">SS empresa</div><div class="text-right">Coste empresa</div><div class="text-right">€/hora ef.</div>
+      </div>` + resDiv.innerHTML;
+    }
+  }
+
+  // Panel lateral
+  const brDiv = $('brecha-resumen');
+  if(brDiv && S.empleados.length > 0) {
+    brDiv.innerHTML = `💼 <strong>${numEmp}</strong> empleado(s)<br>💰 Masa salarial: <strong>${fmtE(masaBruta,0)}</strong><br>🏛️ SS patronal: <span style="color:var(--danger)"><strong>${fmtE(totalSS,0)}</strong></span><br>🏷️ Coste real: <span style="color:var(--purple)"><strong>${fmtE(totalEmpresa,0)}</strong></span><br>⏱️ Hora efectiva: <span style="color:var(--success)"><strong>${fmtH(costeHora)}</strong></span><br>📈 Multiplicador: <strong>${multiplicador.toFixed(2)}x</strong>`;
+  }
+
+  // Sync a umbral
+  const cfPersonal = $('cf-personal');
+  if(cfPersonal && totalEmpresa > 0) { cfPersonal.value = Math.round(totalEmpresa); calcUmbral(); }
+
+  updateChecklist();
+}
+
+function updateChecklist() {
+  const hasSector = true;
+  const hasEmp = S.empleados.length > 0;
+  const hasCalendario = parseInt($('cal-festivos')?.value || 14) >= 12;
+  const hasHora = S.totales.costeHoraPersonal > 0;
+  setMark('ckp-sector', 'verde');
+  setMark('ckp-empleados', hasEmp ? 'verde' : 'rojo');
+  setMark('ckp-calendario', hasCalendario ? 'verde' : 'ambar');
+  setMark('ckp-hora', hasHora ? 'verde' : 'rojo');
+}
+
+// ══════════════════════════════════════════════════════
+//  MÓDULO 3B — COSTES INDIRECTOS
+// ══════════════════════════════════════════════════════
+
+function initSuministros() {
+  const datos = [
+    { concepto:'Electricidad', mensual:450, variabilidad:'Semi-fijo', criterio:'Superficie m²' },
+    { concepto:'Gas/Calefacción', mensual:180, variabilidad:'Semi-variable', criterio:'Superficie m²' },
+    { concepto:'Agua', mensual:80, variabilidad:'Variable', criterio:'Nº empleados' },
+    { concepto:'Telefonía / Internet', mensual:120, variabilidad:'Fijo', criterio:'Nº empleados' },
+    { concepto:'Limpieza externalizada', mensual:200, variabilidad:'Fijo', criterio:'Superficie m²' },
+  ];
+  datos.forEach(d => addSuministroData(d));
+}
+
+let sumId = 0;
+function addSuministro() {
+  addSuministroData({ concepto:'', mensual:0, variabilidad:'Fijo', criterio:'Proporcional' });
+}
+function addSuministroData(d) {
+  sumId++;
+  S.suministros.push({ id: sumId, ...d });
+  renderSuministros();
+}
+function renderSuministros() {
+  const tbody = $('sum-body'); if(!tbody) return;
+  tbody.innerHTML = S.suministros.map(s => {
+    const anual = s.mensual * 12;
+    return `<tr>
+      <td><input value="${s.concepto}" onchange="updSum(${s.id},'concepto',this.value)" placeholder="Concepto" style="min-width:140px"></td>
+      <td><input type="number" value="${s.mensual}" min="0" step="10" onchange="updSum(${s.id},'mensual',+this.value)" style="width:90px"></td>
+      <td><select onchange="updSum(${s.id},'variabilidad',this.value)" style="width:120px">
+        ${['Fijo','Semi-fijo','Semi-variable','Variable'].map(v=>`<option ${s.variabilidad===v?'selected':''}>${v}</option>`).join('')}
+      </select></td>
+      <td><select onchange="updSum(${s.id},'criterio',this.value)" style="width:130px">
+        ${['Superficie m²','Nº empleados','Horas máquina','Proporcional','Uso real'].map(v=>`<option ${s.criterio===v?'selected':''}>${v}</option>`).join('')}
+      </select></td>
+      <td class="td-calc">${fmtE(anual)}</td>
+      <td><button class="btn btn-danger btn-xs" onclick="delSum(${s.id})">✕</button></td>
+    </tr>`;
+  }).join('');
+  updateIndirectosTotals();
+}
+function updSum(id, c, v) { const s=S.suministros.find(x=>x.id===id); if(s){s[c]=v; renderSuministros();} }
+function delSum(id) { S.suministros=S.suministros.filter(x=>x.id!==id); renderSuministros(); }
+
+function initActivos() {
+  const datos = [
+    { nombre:'Equipos informáticos', valor:8000, vidaUtil:4, pctAmort:25, uso:100 },
+    { nombre:'Maquinaria industrial', valor:25000, vidaUtil:10, pctAmort:10, uso:80 },
+    { nombre:'Mobiliario oficina', valor:5000, vidaUtil:10, pctAmort:10, uso:100 },
+    { nombre:'Herramientas taller', valor:3500, vidaUtil:5, pctAmort:20, uso:90 },
+  ];
+  datos.forEach(d => addActivoData(d));
+}
+let actId = 0;
+function addActivo() { addActivoData({ nombre:'', valor:0, vidaUtil:5, pctAmort:20, uso:100 }); }
+function addActivoData(d) {
+  actId++;
+  S.activos.push({ id: actId, ...d });
+  renderActivos();
+}
+function renderActivos() {
+  const tbody = $('act-body'); if(!tbody) return;
+  tbody.innerHTML = S.activos.map(a => {
+    const amortAnual = a.valor > 0 && a.pctAmort > 0 ? a.valor * (a.pctAmort/100) * (a.uso/100) : 0;
+    return `<tr>
+      <td><input value="${a.nombre}" onchange="updAct(${a.id},'nombre',this.value)" placeholder="Descripción activo" style="min-width:140px"></td>
+      <td><input type="number" value="${a.valor}" min="0" step="100" onchange="updAct(${a.id},'valor',+this.value)" style="width:80px"></td>
+      <td><input type="number" value="${a.vidaUtil}" min="1" max="100" onchange="updAct(${a.id},'vidaUtil',+this.value)" style="width:55px"></td>
+      <td><input type="number" value="${a.pctAmort}" min="1" max="100" onchange="updAct(${a.id},'pctAmort',+this.value)" style="width:55px"></td>
+      <td><input type="number" value="${a.uso}" min="1" max="100" onchange="updAct(${a.id},'uso',+this.value)" style="width:55px"></td>
+      <td class="td-calc">${fmtE(amortAnual)}</td>
+      <td><button class="btn btn-danger btn-xs" onclick="delAct(${a.id})">✕</button></td>
+    </tr>`;
+  }).join('');
+  updateIndirectosTotals();
+}
+function updAct(id, c, v) { const a=S.activos.find(x=>x.id===id); if(a){a[c]=v; renderActivos();} }
+function delAct(id) { S.activos=S.activos.filter(x=>x.id!==id); renderActivos(); }
+
+function initOtros() {
+  const datos = [
+    { concepto:'Alquiler local/nave', periodicidad:'mensual', importe:1500, tipo:'Fijo' },
+    { concepto:'Seguro multirriesgo empresa', periodicidad:'anual', importe:1800, tipo:'Fijo' },
+    { concepto:'Seguro responsabilidad civil', periodicidad:'anual', importe:600, tipo:'Fijo' },
+    { concepto:'Asesoría fiscal/laboral', periodicidad:'mensual', importe:250, tipo:'Fijo' },
+    { concepto:'Marketing y publicidad', periodicidad:'mensual', importe:300, tipo:'Semi-fijo' },
+    { concepto:'Gestoría/nóminas', periodicidad:'mensual', importe:150, tipo:'Fijo' },
+  ];
+  datos.forEach(d => addOtroData(d));
+}
+let otroId = 0;
+function addOtro() { addOtroData({ concepto:'', periodicidad:'mensual', importe:0, tipo:'Fijo' }); }
+function addOtroData(d) {
+  otroId++;
+  S.otros.push({ id: otroId, ...d });
+  renderOtros();
+}
+function renderOtros() {
+  const tbody = $('otros-body'); if(!tbody) return;
+  tbody.innerHTML = S.otros.map(o => {
+    const mult = { mensual:12, trimestral:4, semestral:2, anual:1 }[o.periodicidad] || 12;
+    const anual = o.importe * mult;
+    return `<tr>
+      <td><input value="${o.concepto}" onchange="updOtro(${o.id},'concepto',this.value)" placeholder="Concepto" style="min-width:150px"></td>
+      <td><select onchange="updOtro(${o.id},'periodicidad',this.value)" style="width:100px">
+        ${['mensual','trimestral','semestral','anual'].map(v=>`<option ${o.periodicidad===v?'selected':''}>${v}</option>`).join('')}
+      </select></td>
+      <td><input type="number" value="${o.importe}" min="0" step="50" onchange="updOtro(${o.id},'importe',+this.value)" style="width:80px"></td>
+      <td><select onchange="updOtro(${o.id},'tipo',this.value)" style="width:100px">
+        ${['Fijo','Semi-fijo','Variable'].map(v=>`<option ${o.tipo===v?'selected':''}>${v}</option>`).join('')}
+      </select></td>
+      <td class="td-calc">${fmtE(anual)}</td>
+      <td><button class="btn btn-danger btn-xs" onclick="delOtro(${o.id})">✕</button></td>
+    </tr>`;
+  }).join('');
+  updateIndirectosTotals();
+}
+function updOtro(id, c, v) { const o=S.otros.find(x=>x.id===id); if(o){o[c]=v; renderOtros();} }
+function delOtro(id) { S.otros=S.otros.filter(x=>x.id!==id); renderOtros(); }
+
+function updateIndirectosTotals() {
+  const sumTotal = S.suministros.reduce((s,x)=>s+x.mensual*12,0);
+  const actTotal = S.activos.reduce((s,x)=>s+(x.valor*(x.pctAmort/100)*(x.uso/100)),0);
+  const otrosTotal = S.otros.reduce((s,x)=>{
+    const mult={mensual:12,trimestral:4,semestral:2,anual:1}[x.periodicidad]||12;
+    return s+x.importe*mult;
+  },0);
+  const ciTotal = sumTotal + actTotal + otrosTotal;
+  S.totales.ciTotal = ciTotal;
+
+  setTxt('sum-total', fmtE(sumTotal));
+  setTxt('act-total', fmtE(actTotal));
+  setTxt('otros-total', fmtE(otrosTotal));
+  setTxt('ci-sum-badge', fmtE(sumTotal,0));
+  setTxt('ci-act-badge', fmtE(actTotal,0));
+  setTxt('ci-ot-badge', fmtE(otrosTotal,0));
+  setTxt('ci-tot-badge', fmtE(ciTotal,0));
+
+  // Sync a Umbral
+  const cfSum = $('cf-suministros'); if(cfSum) { cfSum.value = Math.round(sumTotal); }
+  const cfAm = $('cf-amort'); if(cfAm) { cfAm.value = Math.round(actTotal); }
+  calcUmbral();
+}
+
+function updateImputacion() {
+  const sumTotal = S.suministros.reduce((s,x)=>s+x.mensual*12,0);
+  const actTotal = S.activos.reduce((s,x)=>s+(x.valor*(x.pctAmort/100)*(x.uso/100)),0);
+  const otrosTotal = S.otros.reduce((s,x)=>{
+    const mult={mensual:12,trimestral:4,semestral:2,anual:1}[x.periodicidad]||12;
+    return s+x.importe*mult;
+  },0);
+  const ciTotal = sumTotal + actTotal + otrosTotal;
+  const horasPlantilla = S.totales.horasEfectivasTotal || getHorasEfectivas() * Math.max(1, S.empleados.length);
+  const ciHora = horasPlantilla > 0 ? ciTotal / horasPlantilla : 0;
+  const horaPersonal = S.totales.costeHoraPersonal;
+  const horaTotal = horaPersonal + ciHora;
+  S.totales.ciTotal = ciTotal;
+  S.totales.ciHora = ciHora;
+  S.totales.costeHoraTotal = horaTotal;
+
+  setTxt('ci-total-anual', fmtE(ciTotal,0));
+  setTxt('ci-horas-plantilla', fmt(horasPlantilla,0) + ' h');
+  setTxt('ci-coste-hora', fmtH(ciHora));
+  setTxt('res-hora-personal', fmtH(horaPersonal));
+  setTxt('res-hora-total', fmtH(horaTotal));
+
+  drawCIBarChart(sumTotal, actTotal, otrosTotal);
+
+  const tabla = $('tabla-coste-hora-integrado');
+  if(tabla && S.empleados.length > 0) {
+    const contrato = $('conf-contrato')?.value || 'indefinido';
+    const provision = parseInt($('conf-provision')?.value || 0);
+    const ssEmpPct = getTotalSSEmp(contrato) / 100;
+    const irpf = parseFloat($('conf-irpf')?.value || 0.15);
+    const ssTrabPct = getTotalSSTrab() / 100;
+    const numEmp = S.empleados.length;
+    const horasEf = S.totales.horasEfectivasTotal / Math.max(1, numEmp);
+    const ciPorEmp = ciTotal / Math.max(1, numEmp);
+
+    tabla.innerHTML = `<div style="display:grid;grid-template-columns:1fr 100px 100px 110px 120px;gap:.35rem;padding:.4rem .75rem;background:var(--gray-800);border-radius:.35rem .35rem 0 0;font-size:.7rem;color:#fff;font-weight:700;text-transform:uppercase;letter-spacing:.04em;">
+      <div>Empleado</div><div class="text-right">Coste MO</div><div class="text-right">CI imput.</div><div class="text-right">Total empresa</div><div class="text-right">€/hora total</div>
+    </div>` + S.empleados.map(e => {
+      const bruto = e.brutoAnual;
+      const ssEmp = bruto * ssEmpPct;
+      const provAmt = provision > 0 ? (bruto / 365) * provision : 0;
+      const costMO = bruto + ssEmp + e.retEsp + e.otros + provAmt;
+      const costTotal = costMO + ciPorEmp;
+      const ch = horasEf > 0 ? costTotal / horasEf : 0;
+      return `<div style="display:grid;grid-template-columns:1fr 100px 100px 110px 120px;gap:.35rem;padding:.45rem .75rem;border-bottom:1px solid var(--gray-100);font-size:.78rem;align-items:center;">
+        <div><strong>${e.nombre||'Empleado '+e.id}</strong></div>
+        <div class="text-mono text-right" style="color:var(--danger)">${fmtE(costMO,0)}</div>
+        <div class="text-mono text-right" style="color:var(--teal)">${fmtE(ciPorEmp,0)}</div>
+        <div class="text-mono text-right" style="color:var(--purple)">${fmtE(costTotal,0)}</div>
+        <div class="text-mono text-right font-bold" style="font-size:.85rem;color:var(--success)">${fmtH(ch)}</div>
+      </div>`;
+    }).join('');
+  }
+}
+
+function drawCIBarChart(sum, act, otros) {
+  const cv = $('ci-desglose-grafico'); if(!cv) return;
+  const canvas = document.createElement('canvas');
+  canvas.style.width='100%'; canvas.style.height='130px';
+  cv.innerHTML = ''; cv.appendChild(canvas);
+  const W = cv.offsetWidth || 500; const H = 130;
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  const total = sum + act + otros;
+  if(total <= 0) { ctx.fillStyle='#9ca3af'; ctx.font='12px sans-serif'; ctx.textAlign='center'; ctx.fillText('Sin datos de costes', W/2, H/2); return; }
+  const data = [
+    { label:'Suministros', val:sum, color:'#0d9488' },
+    { label:'Amortizaciones', val:act, color:'#d97706' },
+    { label:'Otros fijos', val:otros, color:'#7c3aed' },
+  ];
+  const pad = {t:15,b:35,l:10,r:10};
+  const barW = (W - pad.l - pad.r) / (data.length * 2 + 1);
+  ctx.fillStyle='#374151'; ctx.font='bold 9px sans-serif'; ctx.textAlign='center';
+  ctx.fillText('Distribución costes indirectos anuales', W/2, 11);
+  data.forEach((d, i) => {
+    const x = pad.l + barW * (i*2 + 1);
+    const h = (d.val/total) * (H - pad.t - pad.b);
+    const y = H - pad.b - h;
+    ctx.fillStyle = d.color;
+    ctx.fillRect(x, y, barW, h);
+    ctx.fillStyle = '#fff'; ctx.font = 'bold 9px sans-serif'; ctx.textAlign = 'center';
+    if(h > 18) ctx.fillText(fmtE(d.val,0), x + barW/2, y + h/2 + 3);
+    ctx.fillStyle = d.color; ctx.font = '9px sans-serif';
+    ctx.fillText(d.label, x + barW/2, H - pad.b + 13);
+    ctx.fillText(fmtP(d.val/total*100), x + barW/2, H - pad.b + 24);
+  });
+}
+
+// ══════════════════════════════════════════════════════
+//  MÓDULO 3C — PUNTO DE EQUILIBRIO
+// ══════════════════════════════════════════════════════
+
+function initProductos() {
+  const datos = [
+    { nombre:'Servicio consultoría (hora)', precio:85, cvPct:15, udsVendidas:800, mix:60 },
+    { nombre:'Formación (curso 20h)', precio:350, cvPct:20, udsVendidas:40, mix:25 },
+    { nombre:'Informe técnico', precio:550, cvPct:10, udsVendidas:30, mix:15 },
+  ];
+  datos.forEach(d => addProductoData(d));
+}
+
+let prodId = 0;
+function addProducto() {
+  addProductoData({ nombre:'', precio:100, cvPct:20, udsVendidas:50, mix:50 });
+}
+function addProductoData(d) {
+  prodId++;
+  S.productos.push({ id: prodId, ...d });
+  renderProductos();
+}
+
+function renderProductos() {
+  const cont = $('prods-lista'); if(!cont) return;
+  cont.innerHTML = S.productos.map(p => {
+    const mc = p.precio * (1 - p.cvPct/100);
+    const cv = p.precio * (p.cvPct/100);
+    const ingresosAnuales = p.precio * p.udsVendidas;
+    return `
+    <div class="prod-card">
+      <div class="prod-card-head">
+        <div class="flex-gap">
+          <span>📦</span>
+          <div>
+            <div style="font-weight:700;font-size:.82rem">${p.nombre||'Producto/Servicio '+p.id}</div>
+            <div style="font-size:.68rem;opacity:.8">MC: ${fmtE(mc)} · ${fmtP(mc/p.precio*100)} | Ingresos: ${fmtE(ingresosAnuales,0)}</div>
+          </div>
+        </div>
+        <button class="btn btn-danger btn-xs" onclick="delProd(${p.id})">✕</button>
+      </div>
+      <div style="padding:.75rem">
+        <div class="grid4">
+          <div class="fg mb-0">
+            <label style="font-size:.72rem">Nombre producto/servicio</label>
+            <input class="inp inp-sm" value="${p.nombre}" onchange="updProd(${p.id},'nombre',this.value)" placeholder="Descripción">
+          </div>
+          <div class="fg mb-0">
+            <label style="font-size:.72rem">Precio venta (€/ud) <span class="tt" data-tip="Usar coste hora total del Módulo 3B como base para fijar precio mínimo">3B</span></label>
+            <input type="number" class="inp inp-sm inp-mono" value="${p.precio}" min="0.01" step="1" onchange="updProd(${p.id},'precio',+this.value)">
+          </div>
+          <div class="fg mb-0">
+            <label style="font-size:.72rem">% Coste variable/unidad</label>
+            <input type="number" class="inp inp-sm inp-mono" value="${p.cvPct}" min="0" max="99" step="1" onchange="updProd(${p.id},'cvPct',+this.value)">
+          </div>
+          <div class="fg mb-0">
+            <label style="font-size:.72rem">Uds. previstas vender/año</label>
+            <input type="number" class="inp inp-sm inp-mono" value="${p.udsVendidas}" min="1" step="10" onchange="updProd(${p.id},'udsVendidas',+this.value)">
+          </div>
+        </div>
+        <div style="margin-top:.5rem">
+          <div class="flex-between" style="font-size:.72rem;margin-bottom:.2rem">
+            <span class="text-muted">% del mix de unidades vendidas</span>
+            <strong class="text-mono">${p.mix}%</strong>
+          </div>
+          <input type="range" min="0" max="100" value="${p.mix}" oninput="updProd(${p.id},'mix',+this.value);event.target.previousElementSibling.querySelector('strong').textContent=this.value+'%'">
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;margin-top:.5rem;">
+            <div style="background:#f0fdf4;padding:.35rem;border-radius:.3rem;text-align:center">
+              <div style="font-size:.65rem;color:var(--success)">CVu</div>
+              <div class="text-mono font-bold text-sm" style="color:var(--success)">${fmtE(cv)}</div>
+            </div>
+            <div style="background:#eff6ff;padding:.35rem;border-radius:.3rem;text-align:center">
+              <div style="font-size:.65rem;color:var(--primary)">MC unitario</div>
+              <div class="text-mono font-bold text-sm" style="color:var(--primary)">${fmtE(mc)}</div>
+            </div>
+            <div style="background:#f5f3ff;padding:.35rem;border-radius:.3rem;text-align:center">
+              <div style="font-size:.65rem;color:var(--purple)">Ratio MC</div>
+              <div class="text-mono font-bold text-sm" style="color:var(--purple)">${fmtP(mc/p.precio*100)}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  calcUmbral();
+}
+function updProd(id, c, v) { const p=S.productos.find(x=>x.id===id); if(p){p[c]=v; renderProductos();} }
+function delProd(id) { S.productos=S.productos.filter(x=>x.id!==id); renderProductos(); calcUmbral(); }
+
+function calcUmbral() {
+  const cf = getCF();
+  const {mcPonderado, precioPonderado, cvuPonderado, ventasReales, mcTotal} = getMCPonderado();
+
+  const peUds = mcPonderado > 0 ? cf / mcPonderado : 0;
+  const ratioMC = precioPonderado > 0 ? mcPonderado / precioPonderado : 0;
+  const peEuros = ratioMC > 0 ? cf / ratioMC : 0;
+  const margenSeg = ventasReales > 0 ? ((ventasReales - peEuros) / ventasReales * 100) : 0;
+  const bait = mcTotal - cf;
+  const gao = bait > 0 ? mcTotal / bait : (mcTotal > 0 ? Infinity : 0);
+
+  S.totales.cfTotal = cf;
+  S.totales.peUds = peUds;
+  S.totales.peEuros = peEuros;
+
+  setTxt('kpi-cf', fmtE(cf,0));
+  setTxt('kpi-cf-mes', fmtE(cf/12,0));
+  setTxt('pe-cf', fmtE(cf,0));
+  setTxt('pe-uds', peUds > 0 ? fmt(Math.ceil(peUds)) + ' uds' : '—');
+  setTxt('pe-euros', fmtE(peEuros,0));
+  setTxt('pe-margen-seg', fmtP(margenSeg));
+  setTxt('pe-ventas-actuales', fmtE(ventasReales,0));
+  setTxt('pe-bait', fmtE(bait,0));
+  setTxt('prod-precio-medio', fmtE(precioPonderado));
+  setTxt('prod-mc-medio', fmtE(mcPonderado));
+  setTxt('prod-ratio-mc', fmtP(ratioMC*100));
+  const gaoBadge = isFinite(gao) ? gao.toFixed(1) + 'x' : '∞ (sin beneficio)';
+  setTxt('pe-apalancamiento', gaoBadge);
+  setTxt('pe-apal-label', gao < 3 ? '✅ Riesgo bajo' : gao < 7 ? '⚠️ Riesgo moderado' : '🔴 Alto riesgo/rentabilidad');
+
+  // Sidebar
+  setTxt('sid-cf', fmtE(cf,0));
+  setTxt('sid-mc', fmtE(mcPonderado));
+  setTxt('sid-pe', peUds > 0 ? fmt(Math.ceil(peUds)) + ' uds' : '—');
+  setTxt('sid-pe-e', fmtE(peEuros,0));
+  const msEl = $('sid-ms');
+  if(msEl) {
+    msEl.textContent = fmtP(margenSeg);
+    msEl.className = 'result-tag ' + (margenSeg > 20 ? 'rt-green' : margenSeg > 0 ? 'rt-amber' : 'rt-red');
+  }
+}
+
+function getCF() {
+  const vals = ['cf-personal','cf-alquiler','cf-suministros','cf-amort','cf-seguros','cf-marketing','cf-financieros','cf-otros'];
+  return vals.reduce((s,id) => s + (parseFloat($(id)?.value || 0)), 0);
+}
+
+function getMCPonderado() {
+  if(S.productos.length === 0) return { mcPonderado:0, precioPonderado:0, cvuPonderado:0, ventasReales:0, mcTotal:0 };
+  const totalMix = S.productos.reduce((s,p) => s + p.mix, 0) || 1;
+  let mcPond = 0, precioPond = 0, cvuPond = 0;
+  S.productos.forEach(p => {
+    const w = p.mix / totalMix;
+    const mc = p.precio * (1 - p.cvPct/100);
+    mcPond += mc * w;
+    precioPond += p.precio * w;
+    cvuPond += (p.precio * p.cvPct/100) * w;
+  });
+  const ventasReales = S.productos.reduce((s,p) => s + p.precio * p.udsVendidas, 0);
+  const mcTotal = S.productos.reduce((s,p) => s + p.precio * (1-p.cvPct/100) * p.udsVendidas, 0);
+  return { mcPonderado: mcPond, precioPonderado: precioPond, cvuPonderado: cvuPond, ventasReales, mcTotal };
+}
+
+function drawUmbralChart() {
+  const cv = $('umbral-chart'); if(!cv) return;
+  const W = cv.offsetWidth || 600; const H = 270;
+  cv.width = W; cv.height = H;
+  const ctx = cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+
+  const cf = getCF();
+  const {mcPonderado, precioPonderado, cvuPonderado} = getMCPonderado();
+  if(precioPonderado <= 0 || mcPonderado <= 0) {
+    ctx.fillStyle = '#9ca3af'; ctx.font = '13px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('Configura productos y costes para ver el gráfico', W/2, H/2);
+    return;
+  }
+  const peUds = cf / mcPonderado;
+  const maxUds = Math.max(peUds * 2.2, S.productos.reduce((s,p)=>s+p.udsVendidas,0) * 1.3, 10);
+  const maxIngresos = maxUds * precioPonderado;
+  const maxCostes = cf + maxUds * cvuPonderado;
+  const maxY = Math.max(maxIngresos, maxCostes) * 1.1;
+
+  const pad = { t:25, b:40, l:70, r:20 };
+  const toX = uds => pad.l + (uds/maxUds)*(W-pad.l-pad.r);
+  const toY = val => pad.t + (1 - val/maxY)*(H-pad.t-pad.b);
+
+  // Grid
+  ctx.strokeStyle = '#f3f4f6'; ctx.lineWidth = 1;
+  for(let i=1;i<=5;i++) {
+    const y = pad.t + (i/5)*(H-pad.t-pad.b);
+    ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(W-pad.r,y); ctx.stroke();
+    ctx.fillStyle = '#9ca3af'; ctx.font = '9px sans-serif'; ctx.textAlign = 'right';
+    const val = maxY * (1 - i/5);
+    ctx.fillText(fmtE(val,0), pad.l-5, y+3);
+  }
+
+  // Zona pérdida (izquierda del PE)
+  const peX = toX(peUds);
+  ctx.fillStyle = 'rgba(239,68,68,.07)';
+  ctx.fillRect(pad.l, pad.t, Math.min(peX-pad.l, W-pad.l-pad.r), H-pad.t-pad.b);
+
+  // Zona beneficio (derecha del PE)
+  ctx.fillStyle = 'rgba(16,163,74,.07)';
+  ctx.fillRect(peX, pad.t, W-pad.r-peX, H-pad.t-pad.b);
+
+  // Coste total = CF + CVu*x
+  ctx.beginPath();
+  ctx.moveTo(toX(0), toY(cf));
+  ctx.lineTo(toX(maxUds), toY(cf + maxUds * cvuPonderado));
+  ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 2.5; ctx.setLineDash([]); ctx.stroke();
+
+  // Ingresos
+  ctx.beginPath();
+  ctx.moveTo(toX(0), toY(0));
+  ctx.lineTo(toX(maxUds), toY(maxUds * precioPonderado));
+  ctx.strokeStyle = '#16a34a'; ctx.lineWidth = 2.5; ctx.stroke();
+
+  // Línea CF
+  ctx.beginPath();
+  ctx.moveTo(pad.l, toY(cf)); ctx.lineTo(W-pad.r, toY(cf));
+  ctx.strokeStyle = '#d97706'; ctx.lineWidth = 1.5; ctx.setLineDash([5,3]); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Ventas actuales
+  const ventasAct = S.productos.reduce((s,p)=>s+p.udsVendidas,0);
+  if(ventasAct > 0 && ventasAct <= maxUds) {
+    ctx.beginPath();
+    ctx.moveTo(toX(ventasAct), pad.t);
+    ctx.lineTo(toX(ventasAct), H-pad.b);
+    ctx.strokeStyle = '#7c3aed'; ctx.lineWidth = 1.5; ctx.setLineDash([3,3]); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#7c3aed'; ctx.font = 'bold 9px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('Ventas actuales', toX(ventasAct), pad.t-4);
+  }
+
+  // Punto de equilibrio
+  const peY = toY(cf + peUds * cvuPonderado);
+  ctx.beginPath(); ctx.arc(peX, peY, 6, 0, Math.PI*2);
+  ctx.fillStyle = '#fff'; ctx.fill();
+  ctx.strokeStyle = '#1e40af'; ctx.lineWidth = 2.5; ctx.stroke();
+  ctx.fillStyle = '#1e40af'; ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('PE', peX, peY-10);
+
+  // Eje X etiquetas
+  ctx.fillStyle = '#6b7280'; ctx.font = '9px sans-serif'; ctx.textAlign = 'center';
+  [0, .25, .5, .75, 1].forEach(f => {
+    const uds = Math.round(maxUds*f);
+    ctx.fillText(fmt(uds), toX(uds), H-pad.b+13);
+  });
+  ctx.fillText('→ Unidades vendidas', W/2, H-3);
+
+  // Leyenda
+  ctx.font = '9px sans-serif'; ctx.textAlign = 'left';
+  [[0,'#16a34a','Ingresos'],[15,'#ef4444','Coste total'],[30,'#d97706','Costes fijos']].forEach(([dy,c,l])=>{
+    ctx.fillStyle=c; ctx.fillRect(pad.l,pad.t+5+dy,18,3);
+    ctx.fillStyle='#374151'; ctx.fillText(l,pad.l+22,pad.t+9+dy);
+  });
+
+  // Etiquetas zona
+  ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillStyle = 'rgba(239,68,68,.6)';
+  ctx.fillText('PÉRDIDA', (pad.l + peX)/2, H - pad.b - 8);
+  ctx.fillStyle = 'rgba(16,163,74,.6)';
+  ctx.fillText('BENEFICIO', (peX + W - pad.r)/2, H - pad.b - 8);
+
+  setTxt('umbral-label-pe', 'PE: ' + fmt(Math.ceil(peUds)) + ' uds');
+  setTxt('umbral-label-max', 'Máx: ' + fmt(Math.round(maxUds)) + ' uds');
+}
+
+function calcSensibilidad() {
+  const cfVar = parseFloat($('sens-cf')?.value || 0) / 100;
+  const precioVar = parseFloat($('sens-precio')?.value || 0) / 100;
+  const cvVar = parseFloat($('sens-cv')?.value || 0) / 100;
+
+  setTxt('sens-cf-val', (cfVar*100 >= 0 ? '+' : '') + (cfVar*100).toFixed(0) + '%');
+  setTxt('sens-precio-val', (precioVar*100 >= 0 ? '+' : '') + (precioVar*100).toFixed(0) + '%');
+  setTxt('sens-cv-val', (cvVar*100 >= 0 ? '+' : '') + (cvVar*100).toFixed(0) + '%');
+
+  const cfBase = getCF();
+  const {mcPonderado, precioPonderado, cvuPonderado, ventasReales, mcTotal} = getMCPonderado();
+  const peBase = mcPonderado > 0 ? cfBase / mcPonderado : 0;
+
+  const cfNuevo = cfBase * (1 + cfVar);
+  const precioNuevo = precioPonderado * (1 + precioVar);
+  const cvuNuevo = cvuPonderado * (1 + cvVar);
+  const mcNuevo = precioNuevo - cvuNuevo;
+  const peNuevo = mcNuevo > 0 ? cfNuevo / mcNuevo : 0;
+
+  const baitBase = mcTotal - cfBase;
+  const ventasNuevo = precioNuevo > 0 ? (ventasReales / precioPonderado) * precioNuevo : ventasReales;
+  const mcTotalNuevo = S.productos.reduce((s,p) => {
+    const precioN = p.precio * (1 + precioVar);
+    const cvuN = p.precio * (p.cvPct/100) * (1 + cvVar);
+    return s + (precioN - cvuN) * p.udsVendidas;
+  }, 0);
+  const baitNuevo = mcTotalNuevo - cfNuevo;
+  const impactoBait = baitNuevo - baitBase;
+
+  setTxt('sens-pe-base', fmt(Math.ceil(peBase)) + ' uds');
+  setTxt('sens-pe-nuevo', fmt(Math.ceil(peNuevo)) + ' uds');
+  const diff = peNuevo - peBase;
+  setTxt('sens-diferencia', (diff >= 0 ? '+' : '') + fmt(Math.round(diff)) + ' uds');
+  setTxt('sens-impacto-bait', fmtE(impactoBait, 0));
+
+  drawSensChart(cfBase, peBase, cfNuevo, peNuevo, precioPonderado, precioNuevo);
+}
+
+function drawSensChart(cfBase, peBase, cfNuevo, peNuevo, precioBase, precioNuevo) {
+  const cv = $('sens-chart'); if(!cv) return;
+  const W = cv.offsetWidth || 500; const H = 170;
+  cv.width = W; cv.height = H;
+  const ctx = cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+
+  if(!cfBase) { cfBase = getCF(); const r = getMCPonderado(); peBase = r.mcPonderado > 0 ? cfBase/r.mcPonderado : 0; precioBase = r.precioPonderado; cfNuevo = cfBase; peNuevo = peBase; precioNuevo = precioBase; }
+
+  const maxUds = Math.max(peBase, peNuevo, 1) * 2.5;
+  const maxVal = Math.max(cfBase + maxUds * (precioBase*0.25), cfNuevo + maxUds * (precioNuevo*0.25), peBase*precioBase, peNuevo*precioNuevo) * 1.1;
+  const {cvuPonderado} = getMCPonderado();
+
+  const pad = { t:20, b:35, l:60, r:10 };
+  const toX = uds => pad.l + (uds/maxUds)*(W-pad.l-pad.r);
+  const toY = val => pad.t + (1 - val/maxVal)*(H-pad.t-pad.b);
+
+  // Base scenario
+  ctx.beginPath(); ctx.moveTo(toX(0),toY(cfBase)); ctx.lineTo(toX(maxUds),toY(cfBase+maxUds*cvuPonderado));
+  ctx.strokeStyle='#bfdbfe'; ctx.lineWidth=1.5; ctx.setLineDash([4,2]); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(toX(0),toY(0)); ctx.lineTo(toX(maxUds),toY(maxUds*precioBase));
+  ctx.strokeStyle='#bbf7d0'; ctx.lineWidth=1.5; ctx.stroke();
+
+  // New scenario
+  const cvuN = parseFloat($('sens-cv')?.value||0)/100 * cvuPonderado + cvuPonderado;
+  ctx.beginPath(); ctx.moveTo(toX(0),toY(cfNuevo)); ctx.lineTo(toX(maxUds),toY(cfNuevo+maxUds*cvuN));
+  ctx.strokeStyle='#ef4444'; ctx.lineWidth=2.5; ctx.setLineDash([]); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(toX(0),toY(0)); ctx.lineTo(toX(maxUds),toY(maxUds*precioNuevo));
+  ctx.strokeStyle='#16a34a'; ctx.lineWidth=2.5; ctx.stroke();
+
+  // PE dots
+  [[peBase,'#94a3b8'],[peNuevo,'#1e40af']].forEach(([pe,c],i) => {
+    if(pe > 0 && pe <= maxUds) {
+      const x=toX(pe); const costeFijo = i===0 ? cfBase : cfNuevo;
+      const cvuEscenario = i===0 ? cvuPonderado : cvuPonderado * (1 + (parseFloat($('sens-cv')?.value||0)/100));
+      const y=toY(costeFijo+pe*cvuEscenario);
+      ctx.beginPath(); ctx.arc(x,y,5,0,Math.PI*2);
+      ctx.fillStyle=c; ctx.fill();
+      ctx.fillStyle=c; ctx.font='bold 9px sans-serif'; ctx.textAlign='center';
+      ctx.fillText('PE'+(i===0?'₀':'₁'), x, y-8);
+    }
+  });
+
+  ctx.font='9px sans-serif'; ctx.textAlign='center';
+  ctx.fillStyle='#6b7280';
+  [0,.25,.5,.75,1].forEach(f=>{ ctx.fillText(fmt(Math.round(maxUds*f)), toX(maxUds*f), H-pad.b+13); });
+  ctx.fillText('→ Unidades', W/2, H-2);
+  ctx.textAlign='right';
+  [0,.5,1].forEach(f=>{ const v=maxVal*(1-f); ctx.fillStyle='#9ca3af'; ctx.fillText(fmtE(v,0),pad.l-4,pad.t+(f*(H-pad.t-pad.b))+4); });
+
+  ctx.font='8px sans-serif'; ctx.textAlign='left';
+  ctx.fillStyle='#94a3b8'; ctx.fillRect(pad.l,5,16,3); ctx.fillText('Escenario base',pad.l+20,9);
+  ctx.fillStyle='#1e40af'; ctx.fillRect(pad.l+105,5,16,3); ctx.fillText('Escenario ajustado',pad.l+125,9);
+}
+
+// ══════════════════════════════════════════════════════
+//  CUADRO DE MANDO
+// ══════════════════════════════════════════════════════
+function updateDashboard() {
+  const has3A = S.totales.costoEmpresaTotal > 0;
+  const has3B = S.totales.ciTotal > 0;
+  const has3C = S.totales.cfTotal > 0;
+
+  setMark('dm-ck-3a', has3A ? 'verde' : 'rojo');
+  setMark('dm-ck-3b', has3B ? 'verde' : 'ambar');
+  setMark('dm-ck-3c', has3C ? 'verde' : 'ambar');
+  setMark('dm-ck-nexo', (has3A || has3C) ? 'verde' : 'rojo');
+
+  const personal = S.totales.costoEmpresaTotal;
+  const indirectos = S.totales.ciTotal;
+  const cfTotal = S.totales.cfTotal;
+  const horaPersonal = S.totales.costeHoraPersonal;
+  const horaTotal = S.totales.costeHoraTotal || horaPersonal;
+  const precioMinHora = horaTotal > 0 ? horaTotal * 1.20 : 0;
+  const {peEuros} = S.totales;
+
+  setTxt('dm-personal', fmtE(personal,0));
+  setTxt('dm-indirectos', fmtE(indirectos,0));
+  setTxt('dm-cf', fmtE(cfTotal,0));
+  setTxt('dm-pe', fmtE(peEuros,0));
+  setTxt('dm-hora-mo', fmtH(horaPersonal));
+  setTxt('dm-hora-total', fmtH(horaTotal));
+  setTxt('dm-precio-min', fmtH(precioMinHora));
+
+  // Nexo presupuestos
+  const nexo = $('nexo-presupuestos');
+  if(nexo) {
+    nexo.innerHTML = `
+    <div class="grid3" style="margin-bottom:.75rem">
+      <div style="background:#f0fdf4;border:2px solid #86efac;border-radius:.5rem;padding:.75rem;text-align:center">
+        <div class="text-xs font-bold" style="color:var(--success);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.3rem">Coste M.O. directo</div>
+        <div class="text-mono font-black" style="font-size:1.2rem;color:var(--success)">${fmtH(horaPersonal)}</div>
+        <div class="text-xs text-muted mt-sm">Campo "Coste M.O." en líneas de presupuesto del Módulo 1</div>
+      </div>
+      <div style="background:#f0fdfa;border:2px solid #99f6e4;border-radius:.5rem;padding:.75rem;text-align:center">
+        <div class="text-xs font-bold" style="color:var(--teal);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.3rem">Coste hora total</div>
+        <div class="text-mono font-black" style="font-size:1.2rem;color:var(--teal)">${fmtH(horaTotal)}</div>
+        <div class="text-xs text-muted mt-sm">Suma MO + costes indirectos imputados</div>
+      </div>
+      <div style="background:#eff6ff;border:2px solid #bfdbfe;border-radius:.5rem;padding:.75rem;text-align:center">
+        <div class="text-xs font-bold" style="color:var(--primary);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.3rem">Precio mín. facturable</div>
+        <div class="text-mono font-black" style="font-size:1.2rem;color:var(--primary)">${fmtH(precioMinHora)}</div>
+        <div class="text-xs text-muted mt-sm">Con margen mínimo 20% sobre coste total</div>
+      </div>
+    </div>
+    <div class="alert alert-info text-xs">
+      📋 <strong>Instrucciones de uso en Módulo 1:</strong> En el Simulador de Presupuestos (Suite Empresarial), introduce estos valores en las columnas "Coste Material" + "Coste M.O." según el tiempo estimado de cada operación. El sistema calculará automáticamente el PVP = Coste/(1-Margen).
+    </div>`;
+  }
+
+  drawDashboardChart(personal, indirectos, cfTotal - personal - indirectos);
+}
+
+function drawDashboardChart(personal, indirectos, otrosCF) {
+  const cv = $('dm-chart'); if(!cv) return;
+  const W = cv.offsetWidth || 500; const H = 190;
+  cv.width = W; cv.height = H;
+  const ctx = cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+
+  const total = personal + indirectos + Math.max(0, otrosCF);
+  if(total <= 0) { ctx.fillStyle='#9ca3af'; ctx.font='12px sans-serif'; ctx.textAlign='center'; ctx.fillText('Completa los módulos 3A, 3B y 3C para ver el gráfico', W/2, H/2); return; }
+
+  const data = [
+    { label:'Personal (SS incl.)', val:personal, color:'#1e40af' },
+    { label:'Costes indirectos', val:indirectos, color:'#0d9488' },
+    { label:'Otros CF', val:Math.max(0,otrosCF), color:'#7c3aed' },
+  ].filter(d => d.val > 0);
+
+  // Donut
+  const cx = 90, cy = H/2, r = 70, ri = 42;
+  let angle = -Math.PI/2;
+  data.forEach(d => {
+    const sweep = (d.val/total) * Math.PI*2;
+    ctx.beginPath(); ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,r,angle,angle+sweep);
+    ctx.closePath(); ctx.fillStyle=d.color; ctx.fill();
+    angle += sweep;
+  });
+  ctx.beginPath(); ctx.arc(cx,cy,ri,0,Math.PI*2); ctx.fillStyle='#fff'; ctx.fill();
+  ctx.fillStyle='#1f2937'; ctx.font='bold 10px sans-serif'; ctx.textAlign='center';
+  ctx.fillText('Total CF', cx, cy-4);
+  ctx.fillText(fmtE(total,0), cx, cy+10);
+
+  // Barras horizontales
+  const bx = 190, bw = W-bx-20, bh = 22, gap = 10;
+  data.forEach((d,i) => {
+    const y = 25 + i*(bh+gap);
+    ctx.fillStyle='#f3f4f6'; ctx.fillRect(bx, y, bw, bh);
+    const fw = (d.val/total)*bw;
+    ctx.fillStyle=d.color; ctx.fillRect(bx, y, fw, bh);
+    ctx.fillStyle='#fff'; ctx.font='bold 9px sans-serif'; ctx.textAlign='left';
+    if(fw > 30) ctx.fillText(fmtP(d.val/total*100), bx+6, y+bh/2+3);
+    ctx.fillStyle='#374151'; ctx.font='9px sans-serif'; ctx.textAlign='left';
+    ctx.fillText(d.label, bx, y-3);
+    ctx.textAlign='right'; ctx.font='bold 9px sans-serif'; ctx.fillStyle=d.color;
+    ctx.fillText(fmtE(d.val,0), W-20, y+bh/2+3);
+  });
+}
+
+// ══════════════════════════════════════════════════════
+//  EXPORTS
+// ══════════════════════════════════════════════════════
+function exportarCostesPersonal() {
+  const contrato = $('conf-contrato')?.value || 'indefinido';
+  const provision = parseInt($('conf-provision')?.value || 0);
+  const ssEmpPct = getTotalSSEmp(contrato) / 100;
+  const ssTrabPct = getTotalSSTrab() / 100;
+  const irpf = parseFloat($('conf-irpf')?.value || 0.15);
+  const horasEf = getHorasEfectivas();
+
+  let csv = 'Empleado;Categoría;Bruto anual;SS empresa;Retrib.especie;Provisión;Coste empresa;Neto trabajador;Coste hora efectiva\n';
+  S.empleados.forEach(e => {
+    const ssEmp = e.brutoAnual * ssEmpPct;
+    const ssTrab = e.brutoAnual * ssTrabPct;
+    const irpfAmt = (e.brutoAnual - ssTrab) * irpf;
+    const neto = e.brutoAnual - ssTrab - irpfAmt;
+    const provAmt = provision > 0 ? (e.brutoAnual/365)*provision : 0;
+    const costEmp = e.brutoAnual + ssEmp + e.retEsp + e.otros + provAmt;
+    const ch = horasEf > 0 ? costEmp/horasEf : 0;
+    csv += `${e.nombre};${e.categoria};${e.brutoAnual.toFixed(2)};${ssEmp.toFixed(2)};${e.retEsp.toFixed(2)};${provAmt.toFixed(2)};${costEmp.toFixed(2)};${neto.toFixed(2)};${ch.toFixed(2)}\n`;
+  });
+  downloadCSV(csv, 'SIMULACION-CostesPersonal.csv');
+}
+function exportarCostesIndirectos() {
+  let csv = 'Categoría;Concepto;Coste anual\n';
+  S.suministros.forEach(s => csv += `Suministros;${s.concepto};${(s.mensual*12).toFixed(2)}\n`);
+  S.activos.forEach(a => { const v=a.valor*(a.pctAmort/100)*(a.uso/100); csv += `Amortización;${a.nombre};${v.toFixed(2)}\n`; });
+  S.otros.forEach(o => { const m={mensual:12,trimestral:4,semestral:2,anual:1}[o.periodicidad]||12; csv += `Otros fijos;${o.concepto};${(o.importe*m).toFixed(2)}\n`; });
+  downloadCSV(csv, 'SIMULACION-CostesIndirectos.csv');
+}
+function exportarUmbral() {
+  const cf = getCF();
+  const {mcPonderado, precioPonderado, ventasReales, mcTotal} = getMCPonderado();
+  const peUds = mcPonderado > 0 ? cf/mcPonderado : 0;
+  const peEuros = precioPonderado > 0 ? peUds * precioPonderado : 0;
+  const bait = mcTotal - cf;
+  let csv = 'Concepto;Valor\n';
+  csv += `Total Costes Fijos;${cf.toFixed(2)}\n`;
+  csv += `MC ponderado/unidad;${mcPonderado.toFixed(2)}\n`;
+  csv += `PE (unidades);${Math.ceil(peUds)}\n`;
+  csv += `PE (euros ventas);${peEuros.toFixed(2)}\n`;
+  csv += `Ventas reales previstas;${ventasReales.toFixed(2)}\n`;
+  csv += `BAIT estimado;${bait.toFixed(2)}\n`;
+  csv += '\nProducto;Precio;%CV;MC;Uds.previstas;Ingresos;Contribución MC\n';
+  S.productos.forEach(p => {
+    const mc=p.precio*(1-p.cvPct/100);
+    csv += `${p.nombre};${p.precio};${p.cvPct};${mc.toFixed(2)};${p.udsVendidas};${(p.precio*p.udsVendidas).toFixed(2)};${(mc*p.udsVendidas).toFixed(2)}\n`;
+  });
+  downloadCSV(csv, 'SIMULACION-PuntoEquilibrio.csv');
+}
+function exportarCompleto() {
+  exportarCostesPersonal();
+  setTimeout(()=>exportarCostesIndirectos(),300);
+  setTimeout(()=>exportarUmbral(),600);
+}
+function downloadCSV(content, filename) {
+  const blob = new Blob(['\ufeff'+content], {type:'text/csv;charset=utf-8;'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = filename; a.click();
+}
+function imprimirResumen() { window.print(); }
+function resetAll() {
+  if(!confirm('¿Reiniciar todos los datos? Se perderán los cambios.')) return;
+  S.empleados=[]; S.suministros=[]; S.activos=[]; S.otros=[]; S.productos=[];
+  empIdC=0; sumId=0; actId=0; otroId=0; prodId=0;
+  document.addEventListener('DOMContentLoaded', ()=>{});
+  location.reload();
+}
+window.addEventListener('resize', () => {
+  if($('umb-grafico')?.classList.contains('active')) drawUmbralChart();
+  if($('umb-sensibilidad')?.classList.contains('active')) calcSensibilidad();
+  if($('ci-imputacion')?.classList.contains('active')) updateImputacion();
+  if($('p-calendario')?.classList.contains('active')) calcCalendario();
+  if($('mod-dashboard')?.classList.contains('active')) updateDashboard();
+});
+
+function openHelp() {
+  const modal = $('help-modal');
+  if (modal) { modal.style.display = 'block'; document.body.style.overflow = 'hidden'; }
+}
+function closeHelp() {
+  const modal = $('help-modal');
+  if (modal) { modal.style.display = 'none'; document.body.style.overflow = ''; }
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeHelp(); });
+</script>
+</body>
+</html>

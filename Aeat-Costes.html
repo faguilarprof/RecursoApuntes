@@ -318,7 +318,93 @@
             from { transform: translateY(-50px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
-    </style>
+
+
+        .balance-profiles { margin:1.4rem 0; }
+        .balance-profiles h3 { color:var(--primary); margin-bottom:.8rem; }
+        .balance-profile-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.8rem; }
+        .balance-profile-grid article { background:#fff; border:1px solid #e5eaf0; border-radius:9px; padding:1rem; box-shadow:var(--card-shadow); }
+        .balance-profile-grid article strong { color:var(--primary); }
+        .balance-profile-grid article p { margin:.45rem 0 0; color:#5c6672; font-size:.87rem; }
+        @media (max-width:800px) { .balance-profile-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+        @media (max-width:520px) { .balance-profile-grid { grid-template-columns:1fr; } }
+\n
+        /* Balance familiar: actividad visual breve */
+        .bf-quick-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:1rem; margin:1.4rem 0; }
+        .bf-profile { display:flex; flex-direction:column; align-items:center; gap:.45rem; min-height:145px; padding:1.1rem .8rem; border:1px solid #dce4ec; border-radius:14px; background:#fff; color:var(--primary); cursor:pointer; box-shadow:var(--card-shadow); transition:transform .18s,border-color .18s,box-shadow .18s; font:inherit; }
+        .bf-profile:hover { transform:translateY(-3px); border-color:var(--secondary); box-shadow:0 8px 20px rgba(0,0,0,.09); }
+        .bf-profile span { font-size:2rem; }
+        .bf-profile strong { font-size:1rem; text-align:center; }
+        .bf-profile small { color:#687583; text-align:center; font-size:.8rem; }
+        .bf-showcase { min-height:190px; margin:1rem 0; padding:1.3rem; background:#fff; border:1px solid #e3e9ef; border-radius:14px; box-shadow:var(--card-shadow); }
+        .bf-empty { display:flex; min-height:150px; flex-direction:column; align-items:center; justify-content:center; text-align:center; color:#687583; }
+        .bf-empty span { font-size:2.2rem; margin-bottom:.4rem; }
+        .bf-empty strong { color:var(--primary); font-size:1.1rem; }
+        .bf-empty p { margin:.3rem 0; }
+        .bf-result-head { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:.5rem; color:var(--primary); font-weight:700; }
+        .bf-result-head small { color:#687583; font-weight:400; }
+        .bf-total { display:flex; flex-direction:column; align-items:center; margin:1rem 0; padding:1rem; border-radius:12px; background:#eef5fb; color:var(--primary); }
+        .bf-total strong { font-size:clamp(2rem,5vw,2.8rem); line-height:1.2; }
+        .bf-breakdown-row { display:flex; justify-content:space-between; align-items:center; gap:1rem; padding:.7rem .2rem; border-bottom:1px solid #edf0f3; }
+        .bf-breakdown-row strong { white-space:nowrap; color:var(--primary); }
+        .bf-takeaway { margin-top:1rem; padding:.9rem 1rem; border-radius:9px; background:#f6f8fa; color:#34495e; }
+        .bf-note { color:#66717d; font-size:.84rem; margin:1rem 0; }
+        .bf-sources { margin-top:1rem; padding:1rem; border:1px solid #e3e9ef; border-radius:10px; background:#fff; }
+        .bf-sources summary { cursor:pointer; color:var(--primary); font-weight:700; }
+        .bf-sources p { margin:.8rem 0 0; font-size:.88rem; }
+        @media(max-width:850px){.bf-quick-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+        @media(max-width:480px){.bf-quick-grid{grid-template-columns:1fr 1fr;gap:.6rem}.bf-profile{min-height:130px;padding:.8rem .4rem}.bf-breakdown-row{font-size:.88rem}}
+
+        /* NUEVO MÓDULO: Balance fiscal familiar */
+        .balance-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1.25rem; align-items:start; margin:1.5rem 0; }
+        .balance-panel, .balance-result, .balance-data { background:#fff; border:1px solid #e5eaf0; border-radius:var(--radius); padding:1.4rem; box-shadow:var(--card-shadow); }
+        .balance-panel h3, .balance-data h3 { color:var(--primary); margin-bottom:.7rem; }
+        .balance-panel > p, .balance-data > p { color:#5c6672; font-size:.92rem; margin-bottom:1rem; }
+        .balance-field { display:grid; grid-template-columns:minmax(0,1fr) minmax(110px,145px); gap:.35rem .8rem; align-items:center; margin:.8rem 0; padding-bottom:.65rem; border-bottom:1px solid #f0f2f5; }
+        .balance-field label { font-weight:600; font-size:.9rem; }
+        .balance-field input { width:100%; min-width:0; padding:.65rem; border:1px solid #ccd5df; border-radius:7px; font:inherit; }
+        .balance-field small { grid-column:1/-1; color:#6c757d; font-size:.78rem; }
+        .balance-subtitle { margin-top:1.2rem; padding:.55rem .7rem; background:#eef4fa; border-radius:7px; color:var(--primary); font-weight:700; }
+        .balance-reset { width:100%; margin-top:.6rem; padding:.65rem; border:1px solid #cbd5df; background:#f8fafc; border-radius:8px; cursor:pointer; font-weight:600; color:#39495a; }
+        .balance-result { margin:1.2rem 0; }
+        .balance-result h3 { color:var(--primary); margin-bottom:.8rem; }
+        .balance-totals { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.8rem; margin:1rem 0; }
+        .balance-total-card { padding:1rem; border-radius:9px; background:#f3f6f9; }
+        .balance-total-card span { display:block; color:#5c6672; font-size:.82rem; }
+        .balance-total-card strong { display:block; margin-top:.35rem; font-size:1.15rem; color:var(--primary); overflow-wrap:anywhere; }
+        .balance-warning { margin:1.2rem 0; padding:1rem 1.2rem; border-left:4px solid #d89b22; background:#fff8e8; border-radius:8px; font-size:.9rem; }
+        .balance-warning p { margin:.4rem 0 0; }
+        .balance-data { margin-top:1.2rem; }
+        .balance-data-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.9rem; margin-top:1rem; }
+        .balance-data-card { padding:1rem; background:#f7f9fb; border:1px solid #e6ebf0; border-radius:9px; font-size:.88rem; }
+        .balance-data-card p { margin:.55rem 0; color:#505b66; }
+        .balance-data-card a { color:var(--primary); font-weight:600; }
+        .balance-key { margin-top:1rem; padding:1rem; background:#eef4fa; border-radius:8px; }
+        @media (max-width:800px) { .balance-grid, .balance-data-grid { grid-template-columns:1fr; } }
+        @media (max-width:520px) { .balance-field { grid-template-columns:1fr 105px; } .balance-totals { grid-template-columns:1fr; } .balance-panel,.balance-result,.balance-data { padding:1rem; } }
+\n    
+        /* MÓDULO BALANCE FISCAL: presentación visual y compacta */
+        .fisc-intro-strip{display:flex;gap:1rem;align-items:center;padding:1rem 1.2rem;margin:1.2rem 0;background:#f1f6fb;border-left:4px solid var(--secondary);border-radius:12px;color:var(--primary)}
+        .fisc-intro-icon{font-size:2rem;flex:0 0 auto}.fisc-intro-strip strong,.fisc-intro-strip span{display:block}.fisc-intro-strip span{margin-top:.25rem;color:#536170;font-size:.91rem;line-height:1.45}
+        .fisc-profile-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.7rem;margin:1.2rem 0}
+        .fisc-profile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.35rem;min-height:132px;padding:.8rem .5rem;border:1px solid #dfe6ed;border-radius:13px;background:#fff;color:var(--primary);cursor:pointer;font:inherit;box-shadow:var(--card-shadow);transition:transform .18s,border-color .18s,background .18s}
+        .fisc-profile:hover{transform:translateY(-2px);border-color:var(--secondary)}.fisc-profile.active{border:2px solid var(--secondary);background:#f2f8fc;box-shadow:0 5px 18px rgba(0,0,0,.08)}.fisc-profile>span{font-size:1.8rem}.fisc-profile strong{text-align:center;font-size:.92rem;line-height:1.2}.fisc-profile small{text-align:center;color:#65717d;font-size:.73rem;line-height:1.3}.fisc-disability{border-style:dashed}
+        .fisc-result{padding:1.35rem;margin:1rem 0;background:#fff;border:1px solid #e2e8ee;border-radius:15px;box-shadow:var(--card-shadow)}.fisc-result-heading{display:flex;justify-content:space-between;align-items:center;gap:1rem}.fisc-result-heading small{font-size:.7rem;letter-spacing:.08em;color:#75818d;font-weight:700}.fisc-result-heading h3{margin:.2rem 0;color:var(--primary);font-size:1.35rem}.fisc-year{font-size:.78rem;color:#687583;background:#f1f3f5;border-radius:30px;padding:.4rem .7rem;white-space:nowrap}.fisc-subtitle{margin:.4rem 0 1rem;color:#65717d;font-size:.9rem}
+        .fisc-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.75rem}.fisc-metric{padding:1rem;border-radius:12px;display:flex;flex-direction:column;gap:.25rem;min-width:0}.fisc-tax{background:#fff1ef}.fisc-benefit{background:#eef8f2}.fisc-net{background:#f1f4fa}.fisc-metric small{font-size:.68rem;font-weight:800;letter-spacing:.04em;color:#52606d}.fisc-metric strong{font-size:clamp(1.35rem,3vw,2rem);line-height:1.2;color:#25364a}.fisc-metric span{font-size:.75rem;color:#637080;line-height:1.35}
+        .fisc-bars-title{font-weight:700;color:var(--primary);margin:1.2rem 0 .6rem}.fisc-bar-row{display:grid;grid-template-columns:minmax(145px,1.2fr) minmax(90px,3fr) 58px;gap:.7rem;align-items:center;margin:.65rem 0;font-size:.85rem}.fisc-bar-row>strong{text-align:right;color:#34495e}.fisc-bar-track{height:12px;background:#edf0f3;border-radius:20px;overflow:hidden}.fisc-bar{height:100%;border-radius:20px;min-width:2px}.fisc-bar-tax{background:#d96b62}.fisc-bar-cash{background:#4c9b73}.fisc-bar-kind{background:#73a7ce}.fisc-netline{display:flex;justify-content:space-between;gap:1rem;padding:.8rem 0;margin-top:.7rem;border-top:1px solid #e8edf1;color:#39495a}.fisc-netline strong{color:#b34d48}.fisc-caveat{padding:.8rem 1rem;background:#fff8e8;border-radius:9px;color:#665638;font-size:.85rem;line-height:1.45;margin-top:.6rem}
+        .fisc-collective{padding:1.2rem;margin:1.2rem 0;background:#f8fafc;border:1px solid #e3e9ef;border-radius:15px}.fisc-collective-head{display:flex;gap:.8rem;align-items:center}.fisc-collective-head>span{font-size:2rem}.fisc-collective-head h3{margin:0;color:var(--primary);font-size:1.12rem}.fisc-collective-head p{margin:.2rem 0 0;color:#65717d;font-size:.85rem}.fisc-collective-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.65rem;margin:1rem 0}.fisc-collective-grid>div{display:flex;flex-direction:column;gap:.2rem;padding:.75rem;background:#fff;border:1px solid #e9edf1;border-radius:10px}.fisc-collective-grid span{font-size:1.35rem}.fisc-collective-grid strong{font-size:.86rem;color:var(--primary)}.fisc-collective-grid small{font-size:.73rem;color:#687583;line-height:1.35}.fisc-collective-note{font-size:.82rem;color:#596777;line-height:1.5;margin:.6rem 0 0}.fisc-method{margin:1rem 0;padding:1rem 1.2rem;border:1px solid #e1e7ed;border-radius:12px;background:#fff}.fisc-method summary{cursor:pointer;font-weight:700;color:var(--primary)}.fisc-method-body{padding-top:.7rem;color:#596777;font-size:.86rem;line-height:1.55}.fisc-method-body p{margin:.55rem 0}
+        .fisc-no-data{padding:1rem;background:#fff8e8;border:1px solid #f0dfb8;border-radius:12px;color:#655638;line-height:1.5}.fisc-no-data strong{display:block;margin-bottom:.35rem;color:#5c4924}.fisc-reference{margin-top:.8rem;padding:.8rem 1rem;background:#f4f7fa;border-radius:9px;color:#536170;font-size:.85rem}
+        @media(max-width:900px){.fisc-profile-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.fisc-collective-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+        @media(max-width:600px){.fisc-profile-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem}.fisc-profile{min-height:118px}.fisc-metrics{grid-template-columns:1fr}.fisc-metric{padding:.8rem}.fisc-bar-row{grid-template-columns:1fr 2fr 48px;gap:.45rem;font-size:.76rem}.fisc-result{padding:1rem}.fisc-result-heading{align-items:flex-start}.fisc-netline{font-size:.86rem}.fisc-collective-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+        .fisc-income-control{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:1rem 1.2rem;margin:1rem 0;background:#fff;border:1px solid #e1e7ed;border-radius:12px;box-shadow:var(--card-shadow)}
+        .fisc-income-control label{display:flex;flex-direction:column;gap:.2rem;color:var(--primary)}.fisc-income-control label small{font-size:.78rem;color:#687583;font-weight:400;line-height:1.35}.fisc-income-control>div{display:flex;align-items:center;gap:.45rem;white-space:nowrap}.fisc-income-control input{width:135px;padding:.65rem .7rem;border:1px solid #ccd5df;border-radius:8px;font:inherit;font-weight:700;color:var(--primary)}.fisc-income-control>div span{font-size:.8rem;color:#687583}
+        .fisc-metric-collective{background:#eef4fb}.fisc-metric-collective strong{font-size:clamp(1.2rem,2.7vw,1.7rem)}.fisc-extra-field{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin:.8rem 0;padding:.8rem 1rem;background:#f8fafc;border:1px solid #e5eaf0;border-radius:9px}.fisc-extra-field label{font-size:.84rem;color:#536170}.fisc-extra-field input{width:140px;padding:.55rem;border:1px solid #ccd5df;border-radius:7px;font:inherit}.fisc-extra-field small{display:block;color:#77828e;font-size:.73rem;margin-top:.2rem}
+        @media(max-width:600px){.fisc-income-control{align-items:stretch;flex-direction:column}.fisc-income-control>div{justify-content:flex-start}.fisc-income-control input{width:150px}}
+
+        .fisc-total-received{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin:.9rem 0;padding:.8rem 1rem;background:#eef8f2;border-radius:9px;color:#315e45}.fisc-total-received strong{font-size:1.2rem}.fisc-net-result{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:1rem 1.1rem;border-radius:12px;margin:.8rem 0}.fisc-net-result>div{display:flex;flex-direction:column;gap:.2rem}.fisc-net-result small{font-size:.68rem;font-weight:800;letter-spacing:.06em}.fisc-net-result strong{font-size:clamp(1.5rem,3vw,2.2rem);line-height:1.15}.fisc-net-result>span{max-width:48%;font-size:.83rem;line-height:1.4}.fisc-net-result.positive{background:#eaf6ee;color:#28603d}.fisc-net-result.negative{background:#fff0ed;color:#9a3e37}
+        @media(max-width:600px){.fisc-net-result{align-items:flex-start;flex-direction:column}.fisc-net-result>span{max-width:100%}.fisc-extra-field{align-items:stretch;flex-direction:column}.fisc-extra-field input{width:100%}}
+</style>
 </head>
 <body>
 
@@ -333,6 +419,7 @@
         <button class="nav-btn" onclick="showTab('income')">Ingresos</button>
         <button class="nav-btn" onclick="showTab('quiz')">DataQuiz</button>
         <button class="nav-btn" onclick="showTab('myths')">Mitos</button>
+        <button class="nav-btn" onclick="showTab('balance')">Balance fiscal</button>
     </nav>
 
     <main>
@@ -460,6 +547,57 @@
             <div class="myths-grid" id="myths-container"></div>
         </section>
 
+        <!-- MÓDULO: BALANCE FISCAL NETO POR MODELOS DE HOGAR -->
+        <section id="balance" class="section">
+            <h2>¿Qué aporta cada hogar y qué recibe del Estado?</h2>
+            <p class="lead">Compara cinco modelos y descubre cómo se distribuyen las aportaciones fiscales y las prestaciones públicas. Los datos comparables se expresan como porcentaje de la renta bruta del hogar.</p>
+
+            <div class="fisc-intro-strip">
+                <div class="fisc-intro-icon">⚖️</div>
+                <div><strong>El balance no es solo lo que pagamos ni solo lo que usamos.</strong><span>Incluye impuestos y cotizaciones, prestaciones monetarias y servicios públicos. Además, todos compartimos bienes colectivos como carreteras, seguridad, justicia, alumbrado y protección del medio ambiente.</span></div>
+            </div>
+
+            <div class="fisc-income-control">
+                <label for="fisc-income"><strong>Renta bruta anual del hogar para la simulación</strong><small>Modifica este importe para ver cómo cambia el balance. Es un supuesto de ejemplo, no una renta media atribuida a todas las familias.</small></label>
+                <div><input id="fisc-income" type="number" min="0" max="250000" step="1000" value="30000" oninput="renderFiscalProfile(currentFiscalProfile)"><span>€ / año</span></div>
+            </div>
+
+            <div class="fisc-profile-grid" role="group" aria-label="Selecciona un modelo de hogar">
+                <button class="fisc-profile active" type="button" onclick="selectFiscalProfile('individual',this)"><span>🧍</span><strong>Ciudadano</strong><small>Una persona adulta (30–64 años)</small></button>
+                <button class="fisc-profile" type="button" onclick="selectFiscalProfile('pareja',this)"><span>👫</span><strong>Familia sin hijos</strong><small>Pareja; ambos menores de 65 años</small></button>
+                <button class="fisc-profile" type="button" onclick="selectFiscalProfile('hijos',this)"><span>👨‍👩‍👧‍👦</span><strong>Familia con hijos</strong><small>Pareja con dos hijos dependientes</small></button>
+                <button class="fisc-profile fisc-disability" type="button" onclick="selectFiscalProfile('discapacidad',this)"><span>♿</span><strong>Persona con discapacidad</strong><small>Grado oficialmente reconocido ≥ 65%</small></button>
+                <button class="fisc-profile fisc-disability" type="button" onclick="selectFiscalProfile('familiaDiscapacidad',this)"><span>🏠</span><strong>Familia con discapacidad</strong><small>Al menos un miembro con grado ≥ 65%</small></button>
+            </div>
+
+<div class="fisc-result" id="fiscal-profile-result" aria-live="polite"></div>
+
+            <div class="fisc-collective">
+                <div class="fisc-collective-head"><span>🏙️</span><div><h3>Y también recibimos servicios públicos colectivos</h3><p>No aparecen como una transferencia individual, pero forman parte de lo que recibimos del Estado.</p></div></div>
+                <div class="fisc-collective-grid">
+                    <div><span>🛣️</span><strong>Infraestructuras</strong><small>Carreteras, transporte y obras públicas</small></div>
+                    <div><span>🚓</span><strong>Seguridad y justicia</strong><small>Policía, bomberos, juzgados y protección civil</small></div>
+                    <div><span>💡</span><strong>Servicios urbanos</strong><small>Alumbrado, limpieza y espacios públicos</small></div>
+                    <div><span>🌳</span><strong>Bienes comunes</strong><small>Medio ambiente, cultura y administración</small></div>
+                </div>
+                <p class="fisc-collective-note">Para esta simulación se añade una imputación común aproximada de <strong>4.486 € por persona y año</strong>, calculada con el gasto público de 2023 en estas funciones y el criterio de FEDEA: gasto por persona en servicios generales, defensa, seguridad, medio ambiente, vivienda y servicios comunitarios, ocio y cultura, más dos tercios de asuntos económicos. El tercio restante de asuntos económicos se asigna a perceptores de rentas del trabajo y del capital y no se añade aquí para evitar inventar una distribución por hogar. La cantidad es una imputación estadística, no un servicio que cada persona consuma por ese valor.</p>
+                <p class="fisc-collective-note">Como referencia del alcance de estos gastos, FEDEA estima que su incorporación eleva la reducción de la desigualdad atribuible a la intervención pública del 31,9% al 41%. Ese 9,1% adicional es un efecto sobre la desigualdad, no una cantidad que se sume al saldo individual.</p>
+            </div>
+
+            <div class="fisc-method">
+                <details>
+                    <summary>Cómo se han calculado los porcentajes y qué límites tienen</summary>
+                    <div class="fisc-method-body">
+                        <p>Los porcentajes proceden del Anexo I del Décimo Informe del Observatorio de FEDEA (datos de 2023). El tipo medio efectivo del sistema fiscal incluye IRPF, impuestos indirectos, cotizaciones sociales de trabajadores y empresas y otros tributos incluidos en el estudio. Las prestaciones monetarias incluyen pensiones, desempleo, invalidez, enfermedad, asistencia social y ayudas. Las prestaciones en especie del cuadro son sanidad y educación.</p>
+                        <p>La simulación convierte los tipos medios efectivos de FEDEA en euros aplicándolos a la renta bruta anual que introduzcas. Después añade la imputación colectiva aproximada de 4.486 € por persona. El saldo mostrado se calcula como <strong>prestaciones monetarias + sanidad y educación + gasto colectivo imputado − impuestos</strong>. No es un promedio observado de saldo en euros: depende de la renta de ejemplo que se introduzca.</p>
+                        <p>Los perfiles con discapacidad reconocida igual o superior al 65% se identifican expresamente. Sin embargo, el anexo publicado por FEDEA no ofrece una media fiscal separada para hogares según grado de discapacidad. Por rigor, en esos dos perfiles se muestra la referencia general de composición más cercana, claramente identificada, y no se inventa un supuesto “saldo medio de discapacidad”. Las prestaciones, beneficios fiscales y apoyos concretos dependen además de ingresos, edad, situación laboral, dependencia y prestaciones reconocidas.</p>
+                        <p>El gasto colectivo se aproxima con la clasificación funcional COFOG de IGAE para 2023 y la población residente a 1 de julio de 2023 (INE). Se distribuye por persona según el criterio descrito por FEDEA. No se añade el tercio de asuntos económicos asignado a perceptores de rentas del trabajo y del capital ni la pequeña imputación adicional de prestaciones en especie de protección social, porque no se dispone aquí de una distribución monetaria homogénea por estos cinco modelos.</p>
+                        <p><strong>Fuentes:</strong> <a href="https://documentos.fedea.net/documento/eee2026-13/texto" target="_blank" rel="noopener noreferrer">FEDEA (2026), Décimo informe del Observatorio, Anexo I y apartado 7.3</a>; <a href="https://www.igae.pap.hacienda.gob.es/sitios/igae/es-ES/Contabilidad/ContabilidadNacional/Publicaciones/Documents/AAPP_A/Funcional%202020-2024.pdf" target="_blank" rel="noopener noreferrer">IGAE, gasto público por funciones COFOG 2020–2024, tabla 2023</a>; <a href="https://www.ine.es/prensa/ecp_prensa.htm" target="_blank" rel="noopener noreferrer">INE, Estadística Continua de Población (población a 1 de julio de 2023)</a>.</p>
+                    </div>
+                </details>
+            </div>
+        </section>
+
     </main>
 
     <!-- FOOTER -->
@@ -579,15 +717,16 @@
             { id: 's9', cat: 'Sanidad', title: 'Tratamiento de Leucemia Aguda (€)', cost: 16846, unit: '€', icon: '💉', hint: 'Coste medio 16.846€. Quimioterapia, hospitalizaciones prolongadas y fármacos oncológicos. Equivale a ~53% de un salario anual medio. Datos: Ministerio de Sanidad 2023.' },
             { id: 's10', cat: 'Sanidad', title: 'Atención reacción alérgica grave (€)', cost: 2528, unit: '€', icon: '🤧', hint: 'Coste medio 2.528€. Urgencias, medicación y periodo de observación. Equivale a ~0,96 salarios mensuales medios (12 pagas). Datos: Ministerio de Sanidad 2023.' },
             { id: 's11', cat: 'Sanidad', title: 'Operación quirúrgica media (€)', cost: 9593, unit: '€', icon: '⚕️', hint: 'Coste medio general 9.593€. Incluye quirófano, anestesia, personal sanitario y recuperación. Datos: Ministerio de Sanidad 2023.' },
-            { id: 's12', cat: 'Sanidad', title: 'Gasto sanitario por habitante/año (€)', cost: 2021, unit: '€', icon: '🏥', hint: 'El Estado gasta 2.021€ por persona al año en sanidad pública (~77% de un salario mensual medio, con 12 pagas). Datos: Ministerio de Sanidad 2023.' },
+            { id: 's12', cat: 'Sanidad', title: 'Gasto sanitario por habitante/año (€)', cost: 2020, unit: '€', icon: '🏥', hint: 'Gasto sanitario público consolidado: 2.020€ por habitante en 2023. Es un promedio poblacional, no el coste individual de cada paciente. Fuente: Ministerio de Sanidad, Estadística de Gasto Sanitario Público 2024.' },
 
-            // EDUCACIÓN (Datos 2022 - MEFD)
-            { id: 'e1', cat: 'Educación', title: 'Alumno/a Educación Infantil - año (€)', cost: 6115, unit: '€', icon: '🧸', hint: 'Coste 6.115€/año (0-6 años). Ratio alta de profesorado por aula. Datos: Ministerio de Educación 2022.' },
-            { id: 'e2', cat: 'Educación', title: 'Alumno/a Educación Primaria - año (€)', cost: 6225, unit: '€', icon: '✏️', hint: 'Coste 6.225€/año (6-12 años). Incluye profesorado, material y comedor. Datos: Ministerio de Educación 2022.' },
-            { id: 'e3', cat: 'Educación', title: 'Alumno/a Educación Secundaria - año (€)', cost: 7603, unit: '€', icon: '📚', hint: 'Coste 7.603€/año (12-16 años). Mayor coste por laboratorios, talleres y especialidades. Datos: Ministerio de Educación 2022.' },
-            { id: 'e4', cat: 'Educación', title: 'Alumno/a Bachillerato/FP - año (€)', cost: 7298, unit: '€', icon: '🎓', hint: 'Coste 7.298€/año. Educación no universitaria post-obligatoria. Datos: Ministerio de Educación 2022.' },
-            { id: 'e5', cat: 'Educación', title: 'Alumno/a Universidad - año (€)', cost: 10434, unit: '€', icon: '🏛️', hint: 'Coste 10.434€/año. Educación superior pública. Equivale a ~33% de un salario anual medio. Datos: Ministerio de Educación 2022.' },
-            { id: 'e6', cat: 'Educación', title: 'Vida educativa completa (€)', cost: 100000, unit: '€', icon: '🎓', hint: '¡Aproximadamente 100.000€! Inversión total desde Infantil hasta Universidad. Equivale a ~3,15 salarios anuales medios. Datos: Ministerio de Educación 2022.' },
+            // EDUCACIÓN: gasto por alumno en instituciones educativas públicas (2022). No incluye gasto de hogares ni centros privados.
+            { id: 'e1', cat: 'Educación', title: 'Alumno/a de Educación Infantil · año (€)', cost: 7145, unit: '€', icon: '🧸', hint: '7.145 € por alumno/año en instituciones educativas públicas (2022). Fuente: Ministerio de Educación, Datos y cifras 2025-2026, p. 12; datos Eurostat.' },
+            { id: 'e2', cat: 'Educación', title: 'Alumno/a de Educación Primaria · año (€)', cost: 6919, unit: '€', icon: '✏️', hint: '6.919 € por alumno/año en instituciones educativas públicas (2022). Fuente: Ministerio de Educación, Datos y cifras 2025-2026, p. 12; datos Eurostat.' },
+            { id: 'e3', cat: 'Educación', title: 'Alumno/a de ESO · año (€)', cost: 8158, unit: '€', icon: '📚', hint: '8.158 € por alumno/año en instituciones educativas públicas (Secundaria, primera etapa, 2022). Fuente: Ministerio de Educación, Datos y cifras 2025-2026, p. 12; datos Eurostat.' },
+            { id: 'e4', cat: 'Educación', title: 'Alumno/a de Bachillerato · año (€)', cost: 7762, unit: '€', icon: '🎓', hint: '7.762 € por alumno/año en instituciones educativas públicas (Secundaria, segunda etapa general, 2022). Fuente: Ministerio de Educación, Datos y cifras 2025-2026, p. 12; datos Eurostat.' },
+            { id: 'e5', cat: 'Educación', title: 'Alumno/a de FP de Grado Medio · año (€)', cost: 11359, unit: '€', icon: '🛠️', hint: '11.359 € por alumno/año en instituciones educativas públicas (Secundaria, segunda etapa vocacional, 2022). Fuente: Ministerio de Educación, Datos y cifras 2025-2026, p. 12; datos Eurostat.' },
+            { id: 'e6', cat: 'Educación', title: 'Alumno/a de FP de Grado Superior · año (€)', cost: 8485, unit: '€', icon: '🧰', hint: '8.485 € por alumno/año en instituciones educativas públicas (Educación Superior, nivel CINE 5 vocacional, 2022). Fuente: Ministerio de Educación, Datos y cifras 2025-2026, p. 12; datos Eurostat.' },
+            { id: 'e7', cat: 'Educación', title: 'Alumno/a de Universidad · año (€)', cost: 11428, unit: '€', icon: '🏛️', hint: '11.428 € por alumno/año en instituciones educativas públicas (Educación Superior, niveles CINE 6–8, 2022). Fuente: Ministerio de Educación, Datos y cifras 2025-2026, p. 12; datos Eurostat.' },
 
             // PENSIONES (Datos julio 2025 - Seguridad Social) - NÚMEROS DE PERSONAS
             { id: 'p1', cat: 'Pensiones', title: 'Total Pensionistas en España (personas)', cost: 10357872, unit: 'personas', icon: '👴', hint: 'Son 10.357.872 personas las que reciben pensiones en España (contributivas + no contributivas). Dato: INSS julio 2025.' },
@@ -660,10 +799,10 @@
                 info: "Las Cotizaciones Sociales (aportaciones de trabajadores y empresas) representan más de la mitad de los ingresos, superando al IRPF (27,6%) y al IVA. (Fuente: Ministerio de Hacienda 2024)"
             },
             {
-                q: "¿Cuánto cuesta aproximadamente formar a una persona desde infantil hasta finalizar la universidad pública?",
-                options: ["10.000€", "30.000€", "100.000€", "700.000€"],
+                q: "¿Cuál fue el gasto público medio por alumno/a en centros públicos no universitarios en 2022?",
+                options: ["2.020€", "5.779€", "7.384€", "10.434€"],
                 correct: 2,
-                info: "Aproximadamente 100.000€ por persona durante toda su vida educativa. Esto equivale a unos 3,15 años del salario medio español. (Fuente: Ministerio de Educación 2022)"
+                info: "7.384 € por alumno/año. Es el gasto público en centros públicos de enseñanzas no universitarias; el indicador excluye la FP acreditable y no ofrece en este apartado un desglose por etapas. Fuente: Ministerio de Educación, Sistema Estatal de Indicadores de la Educación 2025, indicador F2."
             },
             {
                 q: "¿Cuánto le cuesta al Ayuntamiento de Zaragoza limpiar el vandalismo urbano al año (grafitis, botellones, chicles, excrementos...)?",
@@ -726,7 +865,7 @@
             {
                 title: "Gasto público = Despilfarro",
                 myth: "Todo el gasto público es despilfarro e ineficiencia.",
-                truth: "FALSO. El gasto público financia servicios esenciales: sanidad (2.021€ por persona/año), educación (vida educativa ~100.000€), pensiones (10,3M de pensionistas), infraestructuras, seguridad... Son inversiones en el Estado del Bienestar. Piensa en los días que te costaría llegar a financiar cada una de estas cosas que das por hecho.",
+                truth: "FALSO. El gasto público financia servicios esenciales: sanidad (2.021€ por persona/año), educación pública (7.384 € por alumno/año en centros públicos no universitarios, dato de 2022), pensiones (10,3M de pensionistas), infraestructuras, seguridad... Son inversiones en el Estado del Bienestar. Piensa en los días que te costaría llegar a financiar cada una de estas cosas que das por hecho.",
                 icon: "💶",
                 type: "Mito"
             },
@@ -735,6 +874,13 @@
                 myth: "Pagar impuestos no tiene ningún beneficio directo para mí.",
                 truth: "FALSO. Los impuestos financian tu sanidad pública, tu educación, las carreteras que usas, los servicios de tu ciudad, las pensiones de tus mayores, la seguridad... De cada euro recaudado: 40 céntimos van a Protección Social, 15 a Sanidad, 9 a Educación...",
                 icon: "🏥",
+                type: "Mito"
+            },
+            {
+                title: "Trabajar significa aportar más de lo que recibes",
+                myth: "Si trabajas y pagas impuestos, necesariamente recibes del Estado menos de lo que aportas.",
+                truth: "NO NECESARIAMENTE. Trabajar no convierte automáticamente a una persona en contribuyente neta. El resultado depende de los impuestos y cotizaciones aportados, la composición familiar, las prestaciones recibidas y el uso de servicios públicos. Una familia trabajadora puede recibir educación, sanidad, ayudas o deducciones cuyo valor supere sus aportaciones directas. Además, el IRPF por sí solo no mide el balance fiscal total.",
+                icon: "⚖️",
                 type: "Mito"
             }
         ];
@@ -760,19 +906,15 @@
 
         function showTab(id) {
             document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            const btns = document.querySelectorAll('.nav-btn');
-            if(id === 'prices') btns[0].classList.add('active');
-            if(id === 'budget') btns[1].classList.add('active');
-            if(id === 'income') btns[2].classList.add('active');
-            if(id === 'quiz') btns[3].classList.add('active');
-            if(id === 'myths') btns[4].classList.add('active');
+            const section = document.getElementById(id);
+            if (!section) return;
+            section.classList.add('active');
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('onclick') === `showTab('${id}')`);
+            });
         }
 
-        // --- PRICES GAME ---
-        function filterPrices(cat, btn) {
+                function filterPrices(cat, btn) {
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             renderPrices(cat);
@@ -1107,6 +1249,65 @@
             });
         }
 
+        // MÓDULO: balance fiscal por modelos de hogar. Datos medios FEDEA 2023 + imputación per cápita de gasto colectivo.
+        let currentFiscalProfile = 'individual';
+        let fiscalExtraDisability = 0;
+        const fiscalCollectivePerPerson = 4486; // € aprox. 2023; IGAE COFOG + criterio de reparto FEDEA.
+        const fiscalProfiles = {
+            individual: { title:'Ciudadano', icon:'🧍', subtitle:'Una persona adulta de 30 a 64 años.', members:1, tax:40.7, cash:8.1, kind:4.5, source:'Hogar formado por una persona de 30 a 64 años.', disability:false },
+            pareja: { title:'Familia sin hijos', icon:'👫', subtitle:'Pareja sin descendientes dependientes; ambos miembros menores de 65 años.', members:2, tax:41.0, cash:7.5, kind:5.4, source:'Pareja sin hijos dependientes; ambos menores de 65 años.', disability:false },
+            hijos: { title:'Familia con hijos', icon:'👨‍👩‍👧‍👦', subtitle:'Pareja con dos descendientes dependientes.', members:4, tax:40.1, cash:4.8, kind:22.0, source:'Pareja con dos descendientes dependientes.', disability:false },
+            discapacidad: { title:'Persona con discapacidad', icon:'♿', subtitle:'Persona con grado de discapacidad oficialmente reconocido igual o superior al 65%.', members:1, tax:40.7, cash:8.1, kind:4.5, source:'Referencia general: una persona de 30 a 64 años.', disability:true, note:'FEDEA no publica una media fiscal específica para personas con discapacidad por grado reconocido. Se utiliza como punto de partida la referencia general de una persona adulta de 30–64 años. Puedes introducir manualmente las prestaciones públicas específicas que quieras simular; el valor inicial es 0 €.' },
+            familiaDiscapacidad: { title:'Familia con discapacidad', icon:'🏠', subtitle:'Modelo de tres miembros: dos adultos y una persona dependiente con grado de discapacidad oficialmente reconocido igual o superior al 65%.', members:3, tax:40.2, cash:7.1, kind:14.9, source:'Referencia general: pareja con un descendiente dependiente.', disability:true, note:'FEDEA no publica una media fiscal específica para hogares con una persona con discapacidad por grado reconocido. Se utiliza como punto de partida la referencia general de una pareja con un descendiente dependiente. Puedes introducir manualmente prestaciones públicas específicas; el valor inicial es 0 €.' }
+        };
+        function selectFiscalProfile(type, button) {
+            currentFiscalProfile = type;
+            document.querySelectorAll('.fisc-profile').forEach(b => b.classList.remove('active'));
+            if (button) button.classList.add('active');
+            renderFiscalProfile(type);
+        }
+        function updateFiscalExtra(value) {
+            fiscalExtraDisability = Math.max(0, Number(value) || 0);
+            renderFiscalProfile(currentFiscalProfile);
+        }
+        function renderFiscalProfile(type) {
+            if (type) currentFiscalProfile = type;
+            const p = fiscalProfiles[currentFiscalProfile];
+            const container = document.getElementById('fiscal-profile-result');
+            if (!p || !container) return;
+            const incomeEl = document.getElementById('fisc-income');
+            const income = Math.max(0, Math.min(250000, Number(incomeEl && incomeEl.value) || 0));
+            const fmt = n => new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(n);
+            const fmtPct = n => n.toLocaleString('es-ES',{minimumFractionDigits:1,maximumFractionDigits:1});
+            const tax = income * p.tax / 100;
+            const cash = income * p.cash / 100;
+            const kind = income * p.kind / 100;
+            const collective = p.members * fiscalCollectivePerPerson;
+            const extra = p.disability ? fiscalExtraDisability : 0;
+            const totalReceived = cash + kind + collective + extra;
+            const net = totalReceived - tax;
+            const maxPct = 45;
+            const bar = n => Math.max(1,Math.min(100,n/maxPct*100));
+            container.innerHTML = `
+                <div class="fisc-result-heading"><div><small>MODELO SELECCIONADO</small><h3>${p.icon} ${p.title}</h3></div><span class="fisc-year">Datos base · 2023</span></div>
+                <p class="fisc-subtitle">${p.subtitle} Simulación con una renta bruta anual de <strong>${fmt(income)}</strong>.</p>
+                ${p.note ? `<div class="fisc-no-data"><strong>⚠️ Perfil sin media fiscal específica publicada</strong>${p.note}<div class="fisc-extra-field"><label for="fisc-extra">Prestaciones públicas específicas que quieres añadir<small>Introduce el importe anual estimado; no se presupone una cuantía media.</small></label><input id="fisc-extra" type="number" min="0" step="100" value="${fiscalExtraDisability}" onchange="updateFiscalExtra(this.value)"></div></div>` : ''}
+                <div class="fisc-metrics">
+                    <div class="fisc-metric fisc-tax"><small>APORTA EN IMPUESTOS</small><strong>${fmt(tax)}</strong><span>${fmtPct(p.tax)}% de la renta bruta</span></div>
+                    <div class="fisc-metric fisc-benefit"><small>PRESTACIONES INDIVIDUALES</small><strong>${fmt(cash+kind+extra)}</strong><span>${fmt(cash)} monetarias + ${fmt(kind)} sanidad y educación${extra?` + ${fmt(extra)} específicas`:''}</span></div>
+                    <div class="fisc-metric fisc-metric-collective"><small>BIENES COLECTIVOS</small><strong>${fmt(collective)}</strong><span>${p.members} personas × ${fmt(fiscalCollectivePerPerson)} por persona</span></div>
+                </div>
+                <div class="fisc-total-received"><span>Total de recursos públicos imputados</span><strong>${fmt(totalReceived)}</strong></div>
+                <div class="fisc-net-result ${net>=0?'positive':'negative'}"><div><small>BALANCE FISCAL NETO ESTIMADO</small><strong>${net>=0?'+':'−'}${fmt(Math.abs(net))}</strong></div><span>${net>=0?'Recibe más recursos públicos que los impuestos imputados':'Aporta más en impuestos que los recursos públicos imputados'}</span></div>
+                <div class="fisc-bars-title">Así se compone el cálculo (por cada 100 € de renta bruta)</div>
+                <div class="fisc-bar-row"><span>Impuestos y cotizaciones</span><div class="fisc-bar-track"><div class="fisc-bar fisc-bar-tax" style="width:${bar(p.tax)}%"></div></div><strong>${fmtPct(p.tax)}%</strong></div>
+                <div class="fisc-bar-row"><span>Prestaciones monetarias</span><div class="fisc-bar-track"><div class="fisc-bar fisc-bar-cash" style="width:${bar(p.cash)}%"></div></div><strong>${fmtPct(p.cash)}%</strong></div>
+                <div class="fisc-bar-row"><span>Sanidad y educación</span><div class="fisc-bar-track"><div class="fisc-bar fisc-bar-kind" style="width:${bar(p.kind)}%"></div></div><strong>${fmtPct(p.kind)}%</strong></div>
+                <div class="fisc-reference">Categoría estadística de referencia: <strong>${p.source}</strong> · ${p.members} miembro${p.members===1?'':'s'} en el modelo para repartir el gasto colectivo.</div>
+                <div class="fisc-caveat"><strong>Interpretación:</strong> resultado de una simulación, no un saldo oficial observado para cada hogar. Se aplican porcentajes medios de FEDEA a la renta que se introduce y se añade un reparto colectivo por persona. En los perfiles con discapacidad, las tasas de partida son las de la composición familiar de referencia, no una media específica por discapacidad.</div>`;
+        }
+
+
         // INIT ALL
         document.addEventListener('DOMContentLoaded', () => {
             renderPrices('all');
@@ -1114,6 +1315,7 @@
             initIncome();
             initQuiz();
             initMyths();
+            renderFiscalProfile('individual');
         });
 
     </script>

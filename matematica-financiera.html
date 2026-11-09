@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Matemática financiera paso a paso</title>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f2f6f4;--card:#fff;--ink:#12263a;--mut:#51657a;--acc:#0f766e;--lcd:#cfe3b4;--lcdt:#1f2e12;--key:#e3eaf0;--bd:#cfd9e2;--ok:#17803d;--ko:#b42318;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1923;--card:#16252f;--ink:#e6eef5;--mut:#9fb2c3;--acc:#5eead4;--lcd:#27361b;--lcdt:#cfe3b4;--key:#243846;--bd:#2c4252;--ok:#4ade80;--ko:#f87171;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0e1923;--card:#16252f;--ink:#e6eef5;--mut:#9fb2c3;--acc:#5eead4;--lcd:#27361b;--lcdt:#cfe3b4;--key:#243846;--bd:#2c4252;--ok:#4ade80;--ko:#f87171;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 Lexend,system-ui,sans-serif}
+h1,h2,h3{font-family:Lexend,system-ui,sans-serif;line-height:1.15;margin:0 0 .5em}
+header{padding:28px 32px 8px}
+h1{font-size:2rem;font-weight:800}
+header p{color:var(--mut);margin:0}
+nav{display:flex;gap:8px;overflow-x:auto;padding:14px 32px;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:5}
+nav button{flex:none;border:1px solid var(--bd);background:var(--card);color:var(--ink);border-radius:20px;padding:7px 14px;font:inherit;font-size:.9rem;cursor:pointer}
+nav button[aria-current="true"]{background:var(--acc);color:var(--bg);border-color:var(--acc);font-weight:700}
+main{padding:0 32px 48px}
+section{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:20px;margin-bottom:16px}
+h2{font-size:1.45rem}h3{font-size:1.1rem;margin-top:1.2em}
+.f{font-size:1.15rem;background:var(--bg);border-left:4px solid var(--acc);padding:10px 14px;margin:12px 0;overflow-x:auto;white-space:nowrap}
+.tip{border:1px dashed var(--acc);border-radius:10px;padding:10px 14px;margin:12px 0;color:var(--mut)}
+.modes{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.modes button{border:1px solid var(--bd);background:var(--key);color:var(--ink);border-radius:8px;padding:6px 10px;font:inherit;font-size:.88rem;cursor:pointer}
+.modes button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.fld{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+label{font-size:.85rem;color:var(--mut);display:block}
+input,select{width:100%;font:inherit;padding:8px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--ink)}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.lcd{background:var(--lcd);color:var(--lcdt);border-radius:10px;padding:14px;margin-top:14px;font-family:ui-monospace,Menlo,Consolas,monospace}
+.lcd .r{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:1.05rem}
+.lcd .r b{font-size:1.25rem}
+.keys{margin-top:12px;font-family:inherit;color:var(--ink)}
+.keys small{display:block;color:var(--lcdt);opacity:.8;margin-bottom:4px}
+.key{display:inline-block;background:var(--key);color:var(--ink);border:1px solid var(--bd);border-bottom-width:3px;border-radius:6px;padding:1px 8px;margin:2px;font-size:.92rem;font-weight:700;font-family:ui-monospace,Menlo,monospace}
+.steps{margin-top:10px;font-size:.92rem;opacity:.9}
+table{border-collapse:collapse;width:100%;font-size:.85rem;margin-top:10px}
+.tw{overflow-x:auto}
+td,th{padding:4px 8px;text-align:right;border-bottom:1px solid var(--bd)}
+.opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 12px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit;cursor:pointer}
+.opt.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 18%,var(--bg))}
+.opt.ko{border-color:var(--ko);background:color-mix(in srgb,var(--ko) 18%,var(--bg))}
+.go{background:var(--acc);color:var(--bg);border:0;border-radius:8px;padding:9px 16px;font:inherit;font-weight:700;cursor:pointer;margin-top:10px}
+.bar{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.bar button{border:1px solid var(--bd);background:var(--card);color:var(--ink);border-radius:8px;padding:7px 14px;font:inherit;font-size:.9rem;cursor:pointer}
+dialog{max-width:680px;width:calc(100% - 32px);max-height:85vh;overflow:auto;border:1px solid var(--bd);border-radius:14px;background:var(--card);color:var(--ink);padding:24px;font:inherit}
+dialog::backdrop{background:rgba(0,0,0,.55)}
+dialog h2{margin-top:0}dialog h3{margin-top:1em}
+.tx{max-width:75ch}
+.pf{margin-top:16px;border:1px solid var(--acc);border-radius:10px;padding:0 14px}
+.pf summary{cursor:pointer;font-weight:600;padding:12px 0;color:var(--acc)}
+.pf[open] summary{border-bottom:1px solid var(--bd);margin-bottom:8px}
+.pf h4{margin:14px 0 4px;font-family:Lexend,system-ui,sans-serif;font-size:1rem}
+.pf .ex{background:var(--lcd);color:var(--lcdt);border-radius:8px;padding:10px 14px;margin:10px 0 14px}
+.pf .f{white-space:normal}
+.wd{margin-top:14px;border:1px solid var(--bd);border-radius:10px;padding:12px 14px;background:var(--bg)}
+.chip{border:1px solid var(--acc);background:var(--card);color:var(--ink);border-radius:16px;padding:3px 12px;margin:6px 6px 0 0;font:inherit;cursor:pointer}
+.wdx{margin-top:10px;color:var(--mut);min-height:1.5em}
+.qx{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
+.qx input{width:120px}.qx .go{margin:0}
+.fb{width:100%;font-weight:700}
+.fb.ok{color:var(--ok)}.fb.ko{color:var(--ko)}
+.rw{display:flex;gap:10px;align-items:center;margin:8px 0}.rw span{width:180px;flex:none}.bar2{flex:1;height:12px;background:var(--key);border-radius:6px;overflow:hidden}.bar2 i{display:block;height:100%;background:var(--acc)}
+.kg{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:12px 0;max-width:400px}.kg .key{padding:12px 0;font-size:1.05rem;cursor:pointer;text-align:center;margin:0}
+.ch td,.ch th{text-align:left;vertical-align:top}
+.gt{padding:9px 0;border-bottom:1px solid var(--bd)}
+#gq{margin:10px 0 6px}
+:root{--c0:#2563eb;--c1:#0f766e;--c2:#c2410c;--c3:#7c3aed;--onc:#fff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--c0:#7aa7ff;--c1:#5eead4;--c2:#fdba74;--c3:#c4b5fd;--onc:#0e1923}}
+:root[data-theme="dark"]{--c0:#7aa7ff;--c1:#5eead4;--c2:#fdba74;--c3:#c4b5fd;--onc:#0e1923}
+body[data-g="0"]{--g:var(--c0)}body[data-g="1"]{--g:var(--c1)}body[data-g="2"]{--g:var(--c2)}body[data-g="3"]{--g:var(--c3)}
+header{background:linear-gradient(120deg,#0b3b4a,#1e40af);color:#fff;padding:26px 32px 22px;border-radius:0 0 22px 22px;margin-bottom:6px}
+header h1{color:#fff;margin:0 0 4px}header p{color:#dbeafe;max-width:62ch}
+.logo{display:inline-block;margin-right:6px}
+header .bar button{background:rgba(255,255,255,.14);color:#fff;border-color:rgba(255,255,255,.5)}
+nav{display:flex;flex-wrap:wrap;gap:10px;overflow:visible;padding:14px 32px;position:static}
+@media(min-width:900px){nav{position:sticky}}
+.grp{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:7px 10px;border-radius:14px;background:color-mix(in srgb,var(--g) 10%,var(--card));border:1px solid color-mix(in srgb,var(--g) 45%,transparent)}
+.grp[data-g="0"]{--g:var(--c0)}.grp[data-g="1"]{--g:var(--c1)}.grp[data-g="2"]{--g:var(--c2)}.grp[data-g="3"]{--g:var(--c3)}
+.gl{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;font-weight:800;color:var(--g);margin-right:4px}
+nav button{border-color:var(--g);padding:6px 12px}
+nav button[aria-current="true"]{background:var(--g);color:var(--onc);border-color:var(--g)}
+section{border-radius:16px;border-top:6px solid var(--g,var(--acc));box-shadow:0 2px 14px rgba(0,0,0,.07)}
+section h2{color:var(--g,var(--acc))}
+.go{background:var(--g,var(--acc));color:var(--onc)}
+.f{border-left-color:var(--g,var(--acc))}.tip{border-color:var(--g,var(--acc))}
+.modes button[aria-pressed="true"]{background:var(--g,var(--ink));color:var(--onc)}
+.chip{border-color:var(--g,var(--acc))}.pf{border-color:var(--g,var(--acc))}.pf summary{color:var(--g,var(--acc))}
+.pn{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:24px}.pn .go{margin-top:0}
+@media(max-width:700px){.grp{width:100%}nav,header,main{padding-left:16px;padding-right:16px}}
+.tx{max-width:none}
+.lg{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:20px;margin-top:8px}
+.lc{border:1px solid var(--bd);border-radius:12px;padding:4px 18px 14px;background:var(--bg)}
+.lc h3{margin-top:.8em}
+.gcol{columns:2 380px;column-gap:40px}.gt{break-inside:avoid}
+.cols .tx{columns:2 440px;column-gap:44px}.cols h2{column-span:all}.cols .tip,.cols .f{break-inside:avoid}
+.og{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:10px}.og .opt{margin:0}
+.vcg{display:grid;grid-template-columns:minmax(300px,420px) 1fr;gap:32px;align-items:start}
+@media(max-width:800px){.vcg{grid-template-columns:1fr}}
+#vg{max-height:440px}
+#pz{display:none}
+@media print{body>*:not(#pz){display:none!important}#pz{display:block;background:#fff;color:#000;padding:10mm;font-size:12pt}#pz *{color:#000}#pz td,#pz th{border:1px solid #888;padding:6px}}
+@media(min-width:900px){section.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;align-items:start}section.two .tx{max-width:none}}
+</style></head><body>
+<header><h1><span class="logo">🧮</span> Matemática financiera paso a paso</h1>
+<p>Pensada para entenderla sin ser de mates: explicación corta, calculadora que enseña qué teclas pulsar, y test final.</p>
+<div class="bar"><button id="th" type="button">Modo claro</button><button id="hb" type="button">Ayuda</button></div></header>
+<nav id="nav" aria-label="Módulos"></nav>
+<div id="pz"></div>
+<main id="main"></main>
+<dialog id="hp" aria-labelledby="hpt"><form method="dialog"><h2 id="hpt">Ayuda</h2>
+<h3>Cómo usar la app</h3>
+<p>Elige un módulo en la barra superior. Léete la explicación, cambia los números de la calculadora y fíjate en la pantalla verde: arriba el resultado y debajo las teclas que debes pulsar en tu calculadora científica.</p>
+<p>Algunos módulos tienen varias opciones (por ejemplo, calcular capital final, tipo o tiempo): elige la que necesites con los botones oscuros.</p>
+<h3>Qué significa cada letra</h3>
+<p><b>C₀</b> capital inicial · <b>Cₙ</b> capital final · <b>i</b> tipo de interés · <b>d</b> tipo de descuento · <b>n</b> número de periodos · <b>a</b> cuota · <b>m</b> veces que se liquidan intereses al año · <b>N</b> nominal.</p>
+<h3>Vocabulario</h3>
+<p>Si no entiendes una palabra, busca en la pestaña Glosario. Además, bajo la explicación de cada módulo hay botones con el vocabulario de ese apartado: tócalos para ver qué significan.</p>
+<h3>Demostraciones</h3>
+<p>En cada módulo con fórmulas encontrarás el desplegable "Ver demostración y ejemplo": explica de dónde sale la fórmula paso a paso y la aplica con números que puedes comprobar a mano.</p>
+<h3>Reglas que evitan errores</h3>
+<p>1. Tipo y tiempo deben ir en la misma unidad: tipo anual con años, tipo mensual con meses.<br>2. Introduce los números con coma o con punto; en tu calculadora usa siempre el punto.<br>3. Los tipos se escriben en % en la app, pero en la calculadora conviene usarlos en decimal (5 % = 0.05).<br>4. Descuento por días: se usa año de 365 días.</p>
+<h3>Visualización</h3>
+<p>El botón de arriba cambia entre modo claro y oscuro. La app se adapta a todo el ancho de la pantalla: en monitores grandes verás la explicación a la izquierda y la calculadora a la derecha.</p>
+<button class="go" value="close">Cerrar</button></form></dialog>
+<script>
+const $=s=>document.querySelector(s);
+const fmt=(x,d=2)=>isFinite(x)?x.toLocaleString("es-ES",{minimumFractionDigits:d,maximumFractionDigits:d}):"—";
+const pc=x=>fmt(x*100,4)+" %";
+const n6=x=>String(+(+x).toFixed(6));
+const K=s=>s.split(" ").map(t=>`<b class="key">${t}</b>`).join("");
+const num=v=>parseFloat(String(v).replace(",","."));
+const U={a:1,m:1/12,d:1/365};
+const UK={a:"",m:" ÷ 12",d:" ÷ 365"};
+const pwr=(i,n)=>Math.pow(1+i,n);
+
+const M=[
+{id:"base",t:"Mates desde cero",html:baseHtml()},
+{id:"inicio",t:"Idea clave",cols:1,html:`<h2>El dinero tiene fecha</h2>
+<p>100 € hoy no valen lo mismo que 100 € dentro de un año, porque hoy puedes invertirlos. Por ejemplo, si prestas 100 € y dentro de un año te devuelven 105 €, esos 5 € son el <b>interés</b> y el 5 % es el <b>tipo de interés</b>. Por eso en finanzas un capital se describe con dos datos: <b>cuánto</b> y <b>cuándo</b>.</p>
+<p>Una <b>operación financiera</b> es un intercambio de capitales con vencimientos no simultáneos. Tiene: principal (lo que se entrega), contraprestación (lo que se devuelve), origen, final y duración.</p>
+<h3>Dos familias de leyes</h3>
+<p><b>Simple:</b> los intereses no se suman al capital, así que cada periodo genera los mismos intereses. Se usa a corto plazo (hasta un año).<br><b>Compuesta:</b> los intereses se acumulan y generan nuevos intereses. Se usa a largo plazo, en préstamos e inversiones.</p>
+<div class="tip">Si te pierdes con una palabra, abre el Glosario o toca los botones de vocabulario de cada módulo. Ruta recomendada: Mates desde cero → Ver crecer → Simple → Descuento → Compuesta → TAE → Rentas → Préstamo → Test. Cada módulo tiene una calculadora: cambia los números y mira qué teclas pulsar en tu científica.</div>`},
+{id:"glos",t:"Glosario",html:glosHtml()},
+{id:"ver",t:"Ver crecer",html:verHtml(),viz:1},
+{id:"arbol",t:"¿Qué fórmula uso?",html:"",tree:1},
+{id:"simple",t:"Interés simple",html:`<h2>Capitalización simple</h2>
+<p>Cada periodo se gana lo mismo: capital × tipo. Si dura n periodos, los intereses se multiplican por n.</p>
+<div class="f">I = C₀ · i · n &nbsp;&nbsp; Cₙ = C₀ · (1 + i · n)</div>
+<div class="tip">Cuidado con las unidades: si i es anual, n va en años. Para 4 meses, n = 4 ÷ 12. Para días, n = días ÷ 365.</div>`,
+modes:[{l:"Interés y capital final",f:[["C","Capital inicial (€)","500000"],["i","Tipo anual (%)","8"],["n","Tiempo","4"],["u","Unidad","a",[["a","años"],["m","meses"],["d","días"]]]],
+run:v=>{const t=v.n*U[v.u],i=v.i/100,I=v.C*i*t;return{r:[["Intereses",fmt(I)+" €"],["Capital final",fmt(v.C+I)+" €"]],k:`${n6(v.C)} × ${n6(i)} × ( ${n6(v.n)}${UK[v.u]} ) =`,s:`I = ${fmt(v.C)} × ${n6(i)} × ${n6(t)} = ${fmt(I)} €`}}},
+{l:"Calcular el tipo",f:[["C","Capital inicial (€)","1000"],["F","Capital final (€)","1060"],["n","Años","1.5"]],
+run:v=>{const i=(v.F-v.C)/(v.C*v.n);return{r:[["Tipo anual",pc(i)]],k:`( ${n6(v.F)} − ${n6(v.C)} ) ÷ ( ${n6(v.C)} × ${n6(v.n)} ) =`,s:"i = (Cₙ − C₀) ÷ (C₀ · n). Multiplica por 100 para pasarlo a %."}}}]},
+{id:"desc",t:"Descuento",html:`<h2>Descuento: adelantar un cobro</h2>
+<p>Tienes un pagaré que vence dentro de n días y el banco te lo paga hoy, quedándose una parte. Es la operación inversa a capitalizar.</p>
+<div class="f">Comercial: C₀ = N · (1 − d · n) &nbsp;&nbsp; Racional: C₀ = N ÷ (1 + i · n)</div>
+<p>El <b>comercial</b> calcula el descuento sobre el nominal (es el que usan los bancos con letras y pagarés). El <b>racional</b> lo calcula sobre el efectivo, y es reversible con la capitalización simple. El comercial siempre descuenta más.</p>`,
+modes:[{l:"Comercial y racional",f:[["N","Nominal (€)","10000"],["d","Tipo (%)","3.5"],["t","Días hasta el vencimiento","210"]],
+run:v=>{const n=v.t/365,d=v.d/100,c=v.N*(1-d*n),r=v.N/(1+d*n);return{r:[["Efectivo comercial",fmt(c)+" €"],["Descuento comercial",fmt(v.N-c)+" €"],["Efectivo racional",fmt(r)+" €"],["Descuento racional",fmt(v.N-r)+" €"]],k:`${n6(v.N)} × ( 1 − ${n6(d)} × ${n6(v.t)} ÷ 365 ) =`,s:"Para el racional: nominal ÷ ( 1 + tipo × días ÷ 365 )."}}}]},
+{id:"comp",t:"Interés compuesto",html:`<h2>Capitalización compuesta</h2>
+<p>Los intereses de cada año se suman al capital y el año siguiente también generan intereses. Esta fórmula es la base de casi todo lo demás.</p>
+<div class="f">Cₙ = C₀ · (1 + i)ⁿ</div>
+<p>Elige qué incógnita quieres despejar. Para sacar <b>n</b> necesitas logaritmos (tecla <b>ln</b> o <b>log</b>); para sacar <b>i</b>, una raíz, que se teclea como potencia de 1 ÷ n.</p>`,
+modes:[
+{l:"Capital final",f:[["C","Capital inicial (€)","1000000"],["i","Tipo anual (%)","4.5"],["n","Años","10"]],run:v=>{const i=v.i/100;return{r:[["Capital final",fmt(v.C*pwr(i,v.n))+" €"],["Intereses",fmt(v.C*(pwr(i,v.n)-1))+" €"]],k:`${n6(v.C)} × ( 1 + ${n6(i)} ) ^ ${n6(v.n)} =`,s:"Cₙ = C₀ · (1+i)ⁿ"}}},
+{l:"Capital inicial",f:[["F","Capital final (€)","1000000"],["i","Tipo anual (%)","8"],["n","Años","10"]],run:v=>{const i=v.i/100;return{r:[["Capital inicial",fmt(v.F/pwr(i,v.n))+" €"]],k:`${n6(v.F)} ÷ ( 1 + ${n6(i)} ) ^ ${n6(v.n)} =`,s:"C₀ = Cₙ ÷ (1+i)ⁿ"}}},
+{l:"Tipo de interés",f:[["C","Capital inicial (€)","500000"],["F","Capital final (€)","625000"],["n","Años","5"]],run:v=>{const i=Math.pow(v.F/v.C,1/v.n)-1;return{r:[["Tipo anual",pc(i)]],k:`( ${n6(v.F)} ÷ ${n6(v.C)} ) ^ ( 1 ÷ ${n6(v.n)} ) − 1 =`,s:"i = (Cₙ ÷ C₀)^(1/n) − 1. Multiplica por 100 para ver el %."}}},
+{l:"Tiempo",f:[["C","Capital inicial (€)","1000"],["F","Capital final (€)","2000"],["i","Tipo anual (%)","7"]],run:v=>{const i=v.i/100,n=Math.log(v.F/v.C)/Math.log(1+i);return{r:[["Años necesarios",fmt(n,3)]],k:`ln ( ${n6(v.F)} ÷ ${n6(v.C)} ) ÷ ln ( 1 + ${n6(i)} ) =`,s:"n = ln(Cₙ ÷ C₀) ÷ ln(1+i). Con 7 %, el dinero se duplica en unos 10 años."}}}]},
+{id:"tae",t:"TAE y tipos",html:`<h2>Tipos equivalentes y TAE</h2>
+<p>Dos tipos son equivalentes si, aplicados al mismo capital durante el mismo tiempo, dan el mismo resultado final. En compuesta, el 1 % trimestral <b>no</b> equivale al 4 % anual: equivale a un 4,06 %.</p>
+<div class="f">TAE = (1 + iₘ)ᵐ − 1 &nbsp;&nbsp; iₘ = (1 + TAE)^(1/m) − 1</div>
+<p>m es cuántas veces al año se liquidan intereses (mensual 12, trimestral 4, semestral 2). El prepagable (intereses al principio) y el pospagable (al final) también se convierten entre sí: i* = i ÷ (1 + i).</p>`,
+modes:[
+{l:"Periodo → TAE",f:[["p","Tipo del periodo (%)","1"],["m","Periodos por año (m)","4"]],run:v=>{const p=v.p/100,t=pwr(p,v.m)-1;return{r:[["TAE",pc(t)],["Nominal (proporcional)",pc(p*v.m)]],k:`( 1 + ${n6(p)} ) ^ ${n6(v.m)} − 1 =`,s:"El nominal es simplemente iₘ · m; la TAE incluye el efecto de capitalizar."}}},
+{l:"TAE → periodo",f:[["T","TAE (%)","5"],["m","Periodos por año (m)","12"]],run:v=>{const T=v.T/100,p=Math.pow(1+T,1/v.m)-1;return{r:[["Tipo del periodo",pc(p)],["Nominal anual",pc(p*v.m)]],k:`( 1 + ${n6(T)} ) ^ ( 1 ÷ ${n6(v.m)} ) − 1 =`,s:"Es la raíz m-ésima de (1+TAE), menos 1."}}},
+{l:"Prepagable ↔ pospagable",f:[["i","Tipo pospagable i (%)","10"]],run:v=>{const i=v.i/100;return{r:[["Prepagable equivalente i*",pc(i/(1+i))]],k:`${n6(i)} ÷ ( 1 + ${n6(i)} ) =`,s:"i* = i ÷ (1+i). Y al revés: i = i* ÷ (1 − i*)."}}}]},
+{id:"rentas",t:"Rentas",html:`<h2>Rentas: pagos repetidos</h2>
+<p>Una renta es una serie de pagos iguales a intervalos regulares (alquiler, cuotas...). Su <b>valor actual</b> es lo que valen hoy todos esos pagos juntos.</p>
+<div class="f">VA = a · [1 − (1+i)⁻ⁿ] ÷ i &nbsp;&nbsp; VF = VA · (1+i)ⁿ</div>
+<p><b>Pospagable</b>: se paga al final de cada periodo. <b>Prepagable</b>: al principio, así que cada pago gana un periodo más y el resultado se multiplica por (1+i). Si la renta fuera <b>perpetua</b> (infinita), el VA es simplemente a ÷ i. Ojo: el tipo i y n deben ir en el mismo periodo que los pagos (semestral con semestres).</p>`,
+modes:[{l:"Renta finita",f:[["a","Cuota (€)","10000"],["i","Tipo por periodo (%)","5"],["n","Número de periodos","5"],["p","Pago","pos",[["pos","pospagable (final)"],["pre","prepagable (inicio)"]]]],
+run:v=>{const i=v.i/100,f=v.p==="pre"?1+i:1,va=v.a*(1-pwr(i,-v.n))/i*f;return{r:[["Valor actual",fmt(va)+" €"],["Valor final",fmt(va*pwr(i,v.n))+" €"]],k:`${n6(v.a)} × ( 1 − ( 1 + ${n6(i)} ) ^ ( − ${n6(v.n)} ) ) ÷ ${n6(i)} ${v.p==="pre"?"× ( 1 + "+n6(i)+" )":""} =`,s:"Con prepagable el resultado se multiplica por (1+i)."}}},
+{l:"Renta perpetua",f:[["a","Cuota (€)","1000"],["i","Tipo por periodo (%)","4"]],run:v=>({r:[["Valor actual",fmt(v.a/(v.i/100))+" €"]],k:`${n6(v.a)} ÷ ${n6(v.i/100)} =`,s:"VA = a ÷ i (pospagable)."})}]},
+{id:"prest",t:"Préstamo",html:`<h2>Préstamo francés</h2>
+<p>Es el más habitual: una cuota constante. Al principio la cuota es sobre todo intereses; con el tiempo va pesando más la amortización. La cuota es la renta cuyo valor actual es el préstamo.</p>
+<div class="f">a = C₀ · i ÷ [1 − (1+i)⁻ᴺ]</div>
+<p>Aquí i es el tipo del periodo (nominal anual ÷ pagos al año) y N el total de cuotas. Mira la tabla: los intereses de cada cuota son el tipo por la deuda pendiente.</p>`,
+modes:[{l:"Cuota y cuadro",f:[["C","Importe (€)","84000"],["i","Tipo nominal anual (%)","6"],["y","Años","5"],["m","Cuotas al año","12"]],
+run:v=>{const N=v.y*v.m,i=v.i/100/v.m,a=v.C*i/(1-pwr(i,-N));let d=v.C,rows="";for(let k=1;k<=Math.min(N,12);k++){const it=d*i,am=a-it;d-=am;rows+=`<tr><td>${k}</td><td>${fmt(a)}</td><td>${fmt(it)}</td><td>${fmt(am)}</td><td>${fmt(Math.max(d,0))}</td></tr>`}
+return{r:[["Cuota",fmt(a)+" €"],["Intereses totales",fmt(a*N-v.C)+" €"],["TAE (sin comisiones)",pc(pwr(i,v.m)-1)]],k:`${n6(v.C)} × ${n6(i)} ÷ ( 1 − ( 1 + ${n6(i)} ) ^ ( − ${N} ) ) =`,s:"Tipo del periodo = nominal ÷ cuotas al año. Primeras cuotas:",tb:`<div class="tw"><table><tr><th>Cuota</th><th>Pago</th><th>Intereses</th><th>Amortiz.</th><th>Pendiente</th></tr>${rows}</table></div>`}}}]},
+{id:"calc",t:"Tu calculadora",cols:1,html:`<h2>Domina la científica</h2>
+<p>Con cuatro teclas resuelves todo el temario. Los nombres cambian según el modelo, pero casi siempre están.</p>
+<h3>Las teclas que importan</h3>
+<p>${K("^")} o ${K("xʸ")}: potencia. Para (1,05)¹⁰ teclea ${K("1.05 ^ 10 =")}.<br>
+${K("(")} ${K(")")}: úsalos siempre en exponentes y denominadores.<br>
+${K("ln")} o ${K("log")}: logaritmo, para despejar el tiempo.<br>
+${K("(−)")}: signo negativo, distinto de ${K("−")} (resta). Para exponentes negativos.<br>
+${K("Ans")}: reutiliza el último resultado sin reescribirlo.</p>
+<h3>Trucos de examen</h3>
+<p>1. Escribe el tipo en decimal (5 % = 0.05); evita errores con la tecla %.<br>
+2. No redondees pasos intermedios: usa Ans o memoria y redondea solo el resultado final.<br>
+3. Raíz n-ésima: ${K("^ ( 1 ÷ n )")}. Por ejemplo, raíz quinta es ^ ( 1 ÷ 5 ).<br>
+4. Comprueba el orden de magnitud: si el interés compuesto te da menos que el simple, algo falló.<br>
+5. Las calculadoras no suelen aceptar la coma decimal: usa el punto.</p>
+<div class="tip">Practica: en la pestaña Interés compuesto, copia la secuencia de teclas que te muestra la pantalla verde en tu calculadora y comprueba que obtienes el mismo resultado.</div>`},
+{id:"vcalc",t:"Calculadora virtual",html:"",vc:1},
+{id:"prob",t:"Problemas guiados",html:probHtml()},
+{id:"test",t:"Test",html:"",quiz:1},
+{id:"prog",t:"Mi progreso",html:"",prog:1},
+{id:"mat",t:"Material para clase",html:matHtml()}];
+
+const Q=[
+["2.000 € al 5 % anual de interés simple durante 3 años. ¿Capital final?",["2.300 €","2.315,25 €","2.150 €","2.100 €"],0,"Simple: 2.000 · (1 + 0,05 · 3) = 2.300."],
+["1.000 € al 4 % compuesto anual durante 2 años:",["1.080,00 €","1.081,60 €","1.040,00 €","1.160,00 €"],1,"1.000 · 1,04² = 1.081,60. El segundo año gana intereses sobre los intereses."],
+["Pagaré de 10.000 € a un año, descuento comercial del 3,5 %. ¿Efectivo?",["9.650 €","10.350 €","9.662,31 €","9.500 €"],0,"C₀ = 10.000 · (1 − 0,035) = 9.650."],
+["Un tipo del 1 % trimestral equivale en TAE a:",["4 %","4,06 %","4,5 %","3,94 %"],1,"(1,01)⁴ − 1 = 4,06 %. En compuesta no basta con multiplicar por 4."],
+["En capitalización simple, los intereses de cada periodo son:",["Crecientes","Decrecientes","Iguales entre sí","Dependen del periodo anterior"],2,"No se acumulan al capital, por eso siempre son C₀ · i."],
+["Para despejar el tiempo n en Cₙ = C₀(1+i)ⁿ se usa:",["Una raíz","Logaritmos","Una suma","Una derivada"],1,"n = ln(Cₙ ÷ C₀) ÷ ln(1+i)."],
+["Valor actual de una renta pospagable de 10.000 €/año, 5 años, al 5 %:",["50.000 €","43.294,77 €","45.459,51 €","38.000 €"],1,"10.000 · (1 − 1,05⁻⁵) ÷ 0,05 = 43.294,77. Si fuera prepagable: 45.459,51."],
+["Cuota anual de un préstamo francés de 100.000 € al 5 % a 10 años:",["10.000 €","12.950,46 €","15.000 €","11.500 €"],1,"100.000 · 0,05 ÷ (1 − 1,05⁻¹⁰) = 12.950,46."],
+["Tipo prepagable equivalente a un 10 % pospagable:",["10 %","9,09 %","11 %","9 %"],1,"i* = i ÷ (1+i) = 0,10 ÷ 1,10 = 9,09 %."]];
+
+function baseHtml(){const L=[
+["1. Porcentajes","<b>5 %</b> significa 5 de cada 100: 5 ÷ 100 = <b>0,05</b>. Subir un 5 % es multiplicar por <b>1,05</b>; bajar un 20 % es multiplicar por <b>0,80</b>. Todo el tema de intereses es esto.",[["¿Qué número decimal es el 8 %?",0.08,"divide 8 entre 100"],["Sube 200 € un 5 %. ¿Cuánto es?",210,"200 × 1,05"],["Un precio de 50 € baja un 20 %. ¿Cuánto queda?",40,"50 × 0,80"]]],
+["2. Potencias","1,05³ = 1,05 × 1,05 × 1,05. El exponente dice <b>cuántas veces multiplicas</b>. En la calculadora: <b>1.05 ^ 3 =</b>. Así crece el interés compuesto: una multiplicación por año.",[["Calcula 2⁵",32,"2×2×2×2×2"],["Calcula 1,1²",1.21,"1,1 × 1,1"],["¿Cuánto es 1.000 × 1,05²?",1102.5,"primero 1,05 × 1,05 y luego por 1.000"]]],
+["3. Despejar una incógnita","Despejar es dejar sola la letra que buscas haciendo la operación contraria <b>en los dos lados</b>. Si 3 × x = 12, divides entre 3 y x = 4. Es lo que hacemos para pasar de C₀ a Cₙ y viceversa.",[["Si 3 × x = 12, ¿cuánto vale x?",4,"divide entre 3"],["Si x ÷ 1,05 = 100, ¿cuánto vale x?",105,"multiplica por 1,05"],["Si 1.000 × (1 + i) = 1.060, ¿cuánto vale i (en decimal)?",0.06,"1.060 ÷ 1.000 = 1,06; resta 1"]]],
+["4. Raíces y logaritmos","La raíz n-ésima se escribe como potencia: <b>x^(1 ÷ n)</b>. El <b>logaritmo</b> responde a «qué exponente necesito», por eso sirve para despejar el tiempo. Solo necesitas la tecla <b>ln</b>.",[["¿Cuánto es 100^(1 ÷ 2)? (la raíz cuadrada)",10,"raiz de 100"],["¿Cuánto es 8^(1 ÷ 3)? (la raíz cúbica)",2,"2×2×2 = 8"],["Calcula ln(2) ÷ ln(1,07) con 2 decimales: años para duplicar al 7 %",10.24,"teclea ln ( 2 ) ÷ ln ( 1.07 ) ="]]]];
+return `<h2>Mates desde cero</h2><p>Lo mínimo que necesitas para este temario, con ejercicios cortos. Si algo ya lo dominas, salta al siguiente.</p>`+`<div class="lg">`+L.map(l=>`<div class="lc"><h3>${l[0]}</h3><p>${l[1]}</p>`+l[2].map(q=>`<div class="qx"><span>${q[0]}</span><input inputmode="decimal" aria-label="Respuesta"><button type="button" class="go ck" data-a="${q[1]}" data-h="${q[2]}">Comprobar</button><span class="fb"></span></div>`).join("")+`</div>`).join("")+`</div>`}
+function verHtml(){return `<h2>Mira cómo crece el dinero</h2><p>Mueve los controles. En <b style="color:#5b9cf5">azul</b> el interés simple: sube siempre lo mismo cada año. En <b style="color:var(--acc)">verde</b> el compuesto: cada año gana también sobre lo ya ganado, y se separa cada vez más. Cada barra es el capital total de ese año: la parte gris es el capital inicial y la de color son los intereses acumulados. En el año 1 las dos barras son idénticas; la diferencia nace en el año 2.</p><div class="fld"><div><label for="rc">Capital: <b id="vc"></b></label><input type="range" id="rc" min="1000" max="50000" step="1000" value="10000"></div><div><label for="ri">Tipo anual: <b id="vi"></b></label><input type="range" id="ri" min="1" max="12" step="0.5" value="5"></div><div><label for="rn">Tiempo: <b id="vn"></b></label><input type="range" id="rn" min="2" max="30" step="1" value="20"></div></div><svg id="vg" viewBox="0 0 700 270" style="width:100%;height:auto;color:var(--ink);margin-top:14px" role="img" aria-label="Barras de capital por año: simple frente a compuesto"></svg><div id="vo"></div><div class="tip"><b>¿Qué es la regla del 72?</b> Es un atajo mental para saber en cuántos años se duplica un capital con interés compuesto: <b>años ≈ 72 ÷ tipo anual (en %)</b>. Al 6 % tarda unos 72 ÷ 6 = 12 años; al 9 %, unos 8. Sirve para estimar sin calculadora y para comprobar que un resultado tiene sentido. ¿Por qué 72? El cálculo exacto es ln 2 ÷ ln(1+i), que da aproximadamente 69,3 ÷ tipo; se usa 72 porque tiene muchos divisores (2, 3, 4, 6, 8, 9, 12) y ajusta bien para tipos de entre el 6 % y el 10 %. Es solo una aproximación. En interés simple el capital se duplica en 100 ÷ tipo años, bastante más despacio.</div>`}
+function viz(){const g=id=>document.getElementById(id);const d=()=>{const C=+g("rc").value,i=+g("ri").value/100,n=+g("rn").value,W=700,H=240,bw=W/n,mx=C*pwr(i,n);let s="";
+g("vc").textContent=fmt(C,0)+" €";g("vi").textContent=fmt(i*100,1)+" %";g("vn").textContent=n+" años";
+for(let k=1;k<=n;k++){const a=C*(1+i*k)/mx*H,b=C*pwr(i,k)/mx*H,x=(k-1)*bw+bw*.1,w=bw*.4;const c0=C/mx*H;s+=`<rect x="${x}" y="${H-c0}" width="${w}" height="${c0}" fill="currentColor" opacity=".22"/><rect x="${x}" y="${H-a}" width="${w}" height="${a-c0}" fill="#5b9cf5"/><rect x="${x+w}" y="${H-c0}" width="${w}" height="${c0}" fill="currentColor" opacity=".22"/><rect x="${x+w}" y="${H-b}" width="${w}" height="${b-c0}" fill="var(--acc)"/>`}
+g("vg").innerHTML=`<line x1="0" y1="${H}" x2="${W}" y2="${H}" stroke="currentColor" opacity=".5"/><text x="2" y="12" fill="currentColor" font-size="13">máx. ${fmt(mx,0)} € (el eje parte de 0)</text>`+s+`<text x="0" y="${H+22}" fill="currentColor" font-size="14">año 1</text><text x="${W}" y="${H+22}" fill="currentColor" font-size="14" text-anchor="end">año ${n}</text>`;
+const S=C*(1+i*n),P=C*pwr(i,n);g("vo").innerHTML=`<div class="lcd"><div class="r"><span>Simple</span><b>${fmt(S)} €</b></div><div class="r"><span>Compuesto</span><b>${fmt(P)} €</b></div><div class="r"><span>Diferencia</span><b>${fmt(P-S)} €</b></div><div class="steps">Año 1: simple ${fmt(C*(1+i))} €, compuesto ${fmt(C*(1+i))} € (iguales). Año 2: simple ${fmt(C*(1+2*i))} €, compuesto ${fmt(C*pwr(i,2))} €.</div><div class="steps">La diferencia son los intereses que generan los propios intereses. Regla del 72 (explicada más abajo): al ${fmt(i*100,1)} % el capital se duplica en compuesta en unos ${fmt(72/(i*100),1)} años.</div></div>`};
+["rc","ri","rn"].forEach(x=>g(x).oninput=d);d()}
+const WD={
+simple:["Lo que tendré = lo que meto × (1 + el tipo × los años). Cada año gano lo mismo, así que sumo n veces el mismo interés.",[["Cₙ","Capital final: lo que tendré al terminar."],["C₀","Capital inicial: lo que meto hoy."],["i","Tipo de interés: lo que gano por cada euro en un año. 5 % se escribe 0,05."],["n","Tiempo en años. 6 meses = 0,5 años; 90 días = 90 ÷ 365."]]],
+desc:["Lo que me pagan hoy = nominal × (1 − tipo × tiempo). Al nominal le quito lo que cobra el banco por adelantarme el dinero.",[["N","Nominal: lo que pone en el pagaré y se cobraría al vencimiento."],["C₀","Efectivo: lo que recibo hoy."],["d","Tipo de descuento: lo que cobra el banco por cada euro y año."],["n","Tiempo que falta hasta el vencimiento, en años."]]],
+comp:["Lo que tendré = lo que meto × (1 + tipo), repetido una vez por cada año.",[["(1+i)","Factor de crecimiento anual: con un 5 % es 1,05. Multiplicar por 1,05 es sumar un 5 %."],["ⁿ","Exponente: cuántas veces repito la multiplicación, una por periodo."],["C₀","Capital inicial."],["Cₙ","Capital final, con los intereses ya sumados."]]],
+tae:["TAE = lo que de verdad gano en un año cuando los intereses se suman varias veces.",[["m","Veces al año que se liquidan intereses: mensual 12, trimestral 4, semestral 2."],["iₘ","Tipo de cada periodo: el del mes, trimestre o semestre."],["TAE","Tipo anual equivalente: permite comparar productos distintos con la misma vara."]]],
+rentas:["Lo que valen hoy todos los pagos = cada pago traído a hoy y sumado. El bloque [1 − (1+i)⁻ⁿ] ÷ i es un número que convierte un pago repetido en su valor actual.",[["a","Cuota: el pago que se repite."],["i","Tipo por periodo, en el mismo periodo que los pagos."],["n","Número de pagos."],["VA","Valor actual: lo que valen hoy todos los pagos juntos."]]],
+prest:["Cuota = lo que debo × tipo, ajustado para que tras N cuotas la deuda llegue justo a cero.",[["C₀","Importe del préstamo."],["i","Tipo del periodo: nominal anual dividido entre las cuotas al año."],["N","Número total de cuotas."],["a","Cuota constante que pagas cada periodo."]]]};
+const TOP=['simple','comp','desc','tae','simple','comp','rentas','prest','tae'];
+let ST={};try{ST=JSON.parse(localStorage.getItem('mf-st')||'{}')}catch(e){}
+function rec(t,ok){const r=ST[t]||(ST[t]=[0,0]);r[1]++;if(ok)r[0]++;try{localStorage.setItem('mf-st',JSON.stringify(ST))}catch(e){}}
+function pb(){return[
+['Depositas 12.000 € al 3 % anual de interés simple durante 9 meses. ¿Qué intereses cobras? (€)',270,'C₀ = 12.000 · i = 0,03 · n = 9 ÷ 12 = 0,75 años','I = C₀ · i · n','12000 × 0.03 × ( 9 ÷ 12 ) =','Usar n = 9 sin pasar los meses a años: el tipo es anual.','simple'],
+['Inviertes 5.000 € al 6 % anual compuesto durante 4 años. ¿Capital final? (€)',6312.38,'C₀ = 5.000 · i = 0,06 · n = 4','Cₙ = C₀·(1+i)ⁿ','5000 × ( 1 + 0.06 ) ^ 4 =','Calcularlo como simple (6.200 €): olvidas que los intereses generan intereses.','comp'],
+['Descuentas en el banco una letra de 20.000 € que vence dentro de 90 días. Descuento comercial del 4 % anual, año de 365 días. ¿Qué efectivo recibes? (€)',19802.74,'N = 20.000 · d = 0,04 · n = 90 ÷ 365','C₀ = N·(1 − d·n)','20000 × ( 1 − 0.04 × 90 ÷ 365 ) =','Restar un 4 % entero: el tipo es anual y solo faltan 90 días.','desc'],
+['¿Cuánto debes invertir hoy al 5 % anual compuesto para tener 10.000 € dentro de 3 años? (€)',8638.38,'Cₙ = 10.000 · i = 0,05 · n = 3','C₀ = Cₙ ÷ (1+i)ⁿ','10000 ÷ ( 1 + 0.05 ) ^ 3 =','Multiplicar por (1+i)ⁿ en lugar de dividir: vas hacia atrás en el tiempo.','comp'],
+['Un capital de 2.000 € se convierte en 2.500 € en 4 años a interés compuesto. ¿Qué tipo anual es? (en %, 2 decimales)',5.74,'C₀ = 2.000 · Cₙ = 2.500 · n = 4','i = (Cₙ ÷ C₀)^(1 ÷ n) − 1 (luego × 100 para pasarlo a %)','( 2500 ÷ 2000 ) ^ ( 1 ÷ 4 ) − 1 =','Dividir el 25 % total entre 4 años (6,25 %): eso es simple, no compuesto.','comp'],
+['Un préstamo cobra un 0,5 % mensual. ¿Cuál es la TAE? (en %, 2 decimales)',6.17,'iₘ = 0,005 · m = 12','TAE = (1+iₘ)ᵐ − 1 (luego × 100)','( 1 + 0.005 ) ^ 12 − 1 =','Multiplicar 0,5 × 12 = 6 %: eso es el nominal, no la TAE.','tae'],
+['Alquilas un local por 800 € al mes, pagaderos a final de mes, durante 12 meses. Tipo mensual del 0,5 %. ¿Valor actual de todos los pagos? (€)',9295.14,'a = 800 · i = 0,005 (mensual) · n = 12 meses','VA = a·[1 − (1+i)⁻ⁿ] ÷ i','800 × ( 1 − ( 1 + 0.005 ) ^ ( − 12 ) ) ÷ 0.005 =','Usar un tipo anual con pagos mensuales: tipo y periodo deben coincidir.','rentas'],
+['Préstamo de 10.000 € a 2 años con cuotas mensuales y tipo nominal anual del 12 % (1 % mensual). ¿Cuota mensual? (€)',470.73,'C₀ = 10.000 · i = 0,01 · N = 24 cuotas','a = C₀·i ÷ [1 − (1+i)⁻ᴺ]','10000 × 0.01 ÷ ( 1 − ( 1 + 0.01 ) ^ ( − 24 ) ) =','Dividir 10.000 ÷ 24 = 416,67: así se olvidan los intereses.','prest']]}
+function probHtml(){return `<h2>Problemas guiados</h2><p>Intenta resolverlos primero sin ayuda. Si te atascas, abre las pistas en orden: datos, fórmula y resolución. Si fallas, te digo el error más típico.</p>`+`<div class='lg'>`+pb().map((p,i)=>`<div class='lc'><h3>Problema ${i+1}</h3><p>${p[0]}</p><details><summary>Pista 1: ¿qué datos tengo?</summary><p>${p[2]}</p></details><details><summary>Pista 2: ¿qué fórmula uso?</summary><div class='f'>${p[3]}</div></details><details><summary>Pista 3: resolución con la calculadora</summary><p>${K(p[4])}</p></details><div class='qx'><input inputmode='decimal' aria-label='Respuesta'><button type='button' class='go pk' data-i='${i}'>Comprobar</button><span class='fb'></span></div></div>`).join('')+`</div>`}
+function frm(){return[['Interés simple','Cₙ = C₀·(1 + i·n)','Un año o menos. n en años.'],['Descuento comercial','C₀ = N·(1 − d·n)','Letras y pagarés adelantados al banco.'],['Descuento racional','C₀ = N ÷ (1 + i·n)','Inverso exacto del interés simple.'],['Interés compuesto','Cₙ = C₀·(1+i)ⁿ  ·  C₀ = Cₙ·(1+i)⁻ⁿ','Más de un año: los intereses se acumulan.'],['Tipo y tiempo','i = (Cₙ÷C₀)^(1÷n) − 1  ·  n = ln(Cₙ÷C₀) ÷ ln(1+i)','Despejes de la compuesta.'],['TAE','TAE = (1+iₘ)ᵐ − 1','Comparar tipos de distinta periodicidad.'],['Prepagable','i* = i ÷ (1+i)','Intereses pagados al principio.'],['Renta pospagable','VA = a·[1 − (1+i)⁻ⁿ] ÷ i  ·  prepagable × (1+i)  ·  perpetua a ÷ i','Cuotas iguales y repetidas.'],['Préstamo francés','a = C₀·i ÷ [1 − (1+i)⁻ᴺ]','Cuota constante.']]}
+function chuleta(){return `<table class='ch'><tr><th>Operación</th><th>Fórmula</th><th>Cuándo</th></tr>${frm().map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('')}</table>`}
+function matHtml(){return `<h2>Material para clase</h2><p>Chuleta de fórmulas y fichas de problemas para imprimir. En el cuadro de impresión elige 'Guardar como PDF' si lo prefieres digital.</p><button type='button' class='go pr' data-p='ch'>Imprimir chuleta</button> <button type='button' class='go pr' data-p='fi'>Ficha de problemas (alumnos)</button> <button type='button' class='go pr' data-p='so'>Ficha con soluciones</button><h3>Vista previa de la chuleta</h3><div class='tw'>${chuleta()}</div>`}
+function printMat(p){const z=document.getElementById('pz');z.innerHTML=p==='ch'?'<h1>Chuleta de matemática financiera</h1>'+chuleta():'<h1>Problemas de matemática financiera'+(p==='so'?' (soluciones)':'')+'</h1>'+pb().map((q,i)=>`<h3>${i+1}. ${q[0]}</h3>`+(p==='so'?`<p><b>Resultado: ${fmt(q[1])}</b><br>Datos: ${q[2]}<br>Fórmula: ${q[3]}<br>Teclas: ${q[4]}</p>`:'<p>&nbsp;</p><p>&nbsp;</p>')).join('');try{window.print()}catch(x){}}
+function tree(){const TR={s:['¿Cuántos pagos hay?',[['Uno solo: un capital en una fecha','a'],['Varios, iguales y repetidos (cuotas, alquileres)','b'],['Quiero comparar tipos de distinta periodicidad (mensual, trimestral...)','L:tae']]],a:['¿Qué quieres saber?',[['Cuánto tendré en el futuro','a1'],['Cuánto vale hoy un cobro futuro','a2'],['El tipo de interés o el tiempo','L:comp']]],a1:['¿Cuánto dura la operación?',[['Un año o menos','L:simple'],['Más de un año (los intereses se acumulan)','L:comp']]],a2:['¿De qué se trata?',[['Una letra o pagaré que quiero cobrar antes en el banco','L:desc'],['Un capital a largo plazo que quiero traer a hoy','L:comp']]],b:['¿Qué te piden?',[['La cuota de un préstamo','L:prest'],['Lo que valen hoy (o al final) todas las cuotas','L:rentas']]]};
+const LF={simple:'Cₙ = C₀·(1 + i·n)',desc:'C₀ = N·(1 − d·n)  (comercial)',comp:'Cₙ = C₀·(1+i)ⁿ  ·  para el tipo o el tiempo, despeja con raíz o logaritmos',tae:'TAE = (1+iₘ)ᵐ − 1',prest:'a = C₀·i ÷ [1 − (1+i)⁻ᴺ]',rentas:'VA = a·[1 − (1+i)⁻ⁿ] ÷ i'};
+const s=st.tree||(st.tree=['s']),k=s[s.length-1],sec=$('#main section');
+if(k.startsWith('L:')){const id=k.slice(2);sec.innerHTML=`<h2>Te sirve: ${M.find(x=>x.id===id).t}</h2><div class='f'>${LF[id]}</div><button type='button' class='go gm' data-g='${id}'>Ir al módulo</button> <button type='button' class='go tr' data-n='s'>Empezar de nuevo</button>`;return}
+const q=TR[k];sec.innerHTML=`<h2>¿Qué fórmula uso?</h2><p>Responde paso a paso y te llevo a la fórmula correcta.</p><p><b>${q[0]}</b></p>`+`<div class='og'>`+q[1].map(o=>`<button type='button' class='opt tr' data-n='${o[1]}'>${o[0]}</button>`).join('')+`</div>`+(s.length>1?`<button type='button' class='go tr' data-n='back'>Atrás</button>`:'')}
+function progress(){const sec=$('#main section'),ks=Object.keys(ST);
+if(!ks.length){sec.innerHTML=`<h2>Mi progreso</h2><p>Aún no hay datos. Haz los ejercicios, los problemas guiados o el test y aquí verás tus aciertos por tema.</p>`;return}
+const rows=ks.map(k=>{const m=M.find(x=>x.id===k);return{k,n:m?m.t:k,a:ST[k][0],t:ST[k][1],p:ST[k][0]/ST[k][1]}}).sort((x,y)=>x.p-y.p),weak=rows.filter(r=>r.p<.7);
+sec.innerHTML=`<h2>Mi progreso</h2>`+rows.map(r=>`<div class='rw'><span>${r.n}</span><div class='bar2'><i style='width:${Math.round(r.p*100)}%'></i></div><b>${r.a}/${r.t}</b></div>`).join('')+`<h3>Te recomiendo repasar</h3>`+(weak.length?`<div class='og'>`+weak.map(r=>`<button type='button' class='opt gm' data-g='${r.k}'>${r.n} (${Math.round(r.p*100)} % de aciertos)</button>`).join('')+`</div>`:`<p>Vas bien en todos los temas. Sigue practicando con otros números.</p>`)+`<button type='button' class='go clr'>Borrar mi progreso</button>`}
+let VC={r:0,d:[],a:0,res:''};
+function vkeys(){return[['ln','Math.log'],['('],[')'],['^','**'],['DEL'],['7'],['8'],['9'],['÷','/'],['AC'],['4'],['5'],['6'],['×','*'],['Ans'],['1'],['2'],['3'],['−','-'],['(−)','-'],['0'],['.'],['+'],['=']]}
+function vcR(){return[['Capital final de 5.000 € al 6 % compuesto durante 4 años',6312.38,'5000 × ( 1 + 0.06 ) ^ 4 ='],['Capital inicial para tener 10.000 € dentro de 3 años al 5 %',8638.38,'10000 ÷ ( 1 + 0.05 ) ^ 3 ='],['Tipo anual (en decimal): de 2.000 € a 2.500 € en 4 años',0.057371,'( 2500 ÷ 2000 ) ^ ( 1 ÷ 4 ) − 1 ='],['Años para duplicar un capital al 7 %',10.2448,'ln ( 2 ) ÷ ln ( 1 + 0.07 ) ='],['TAE (en decimal) de un 1 % trimestral',0.040604,'( 1 + 0.01 ) ^ 4 − 1 =']]}
+function vcalc(){VC.d=[];VC.res='';vcDraw()}
+function vcDraw(){const R=vcR()[VC.r];$('#main section').innerHTML=`<h2>Calculadora de práctica</h2><p>Teclea el reto como lo harías en tu científica. Usa paréntesis en exponentes y denominadores; la tecla ln se pulsa y luego se abre paréntesis.</p><p><b>Reto ${VC.r+1} de ${vcR().length}:</b> ${R[0]}</p><div class='vcg'><div><div class='lcd'><div id='vdp' style='min-height:1.6em'></div><div class='r'><b id='vrs'></b></div></div><div class='kg'>${vkeys().map(k=>`<button type='button' class='key kk' data-k='${k[0]}'>${k[0]}</button>`).join('')}</div></div><div><div id='vfb' class='fb'></div><button type='button' class='go vn' data-v='show'>Ver las teclas</button> <button type='button' class='go vn' data-v='next'>Otro reto</button></div></div>`}
+function vcKey(k){const K0=vkeys().find(x=>x[0]===k),fb=document.getElementById('vfb');
+if(k==='AC')VC.d=[];else if(k==='DEL')VC.d.pop();
+else if(k==='='){try{const v=new Function('Ans','return '+VC.d.map(x=>x[1]).join(''))(VC.a);if(!isFinite(v))throw 0;VC.a=v;VC.res=String(+v.toPrecision(10));const R=vcR()[VC.r],ok=Math.abs(v-R[1])<=Math.max(1e-4,Math.abs(R[1])*1e-4);fb.className='fb '+(ok?'ok':'ko');fb.textContent=ok?'Bien tecleado.':'No coincide con lo esperado: revisa paréntesis y orden.'}catch(x){VC.res='Error'}}
+else VC.d.push([k,(K0&&K0[1])||k]);
+if(k!=='=')VC.res='';
+document.getElementById('vdp').textContent=VC.d.map(x=>x[0]).join(' ');document.getElementById('vrs').textContent=VC.res}
+document.addEventListener('click',e=>{const t=e.target;let b;
+if(b=t.closest('.tr')){const n=b.dataset.n;if(n==='s')st.tree=['s'];else if(n==='back')st.tree.pop();else st.tree.push(n);tree();return}
+if(b=t.closest('.gm')){go(b.dataset.g);return}
+if(b=t.closest('.pk')){const p=pb()[+b.dataset.i],v=num(b.previousElementSibling.value),ok=Math.abs(v-p[1])<=Math.max(.01,Math.abs(p[1])*.001),o=b.nextElementSibling;rec(p[6],ok);o.className='fb '+(ok?'ok':'ko');o.textContent=ok?'Correcto.':'No es esa. Revisa las pistas. Error típico: '+p[5];return}
+if(b=t.closest('.kk')){vcKey(b.dataset.k);return}
+if(b=t.closest('.vn')){const R=vcR();if(b.dataset.v==='next'){VC.r=(VC.r+1)%R.length;VC.d=[];VC.res='';vcDraw()}else{const f=document.getElementById('vfb');f.className='fb';f.innerHTML='Teclas: '+K(R[VC.r][2])}return}
+if(b=t.closest('.clr')){ST={};try{localStorage.removeItem('mf-st')}catch(x){}progress();return}
+if(b=t.closest('.pr')){printMat(b.dataset.p)}});
+function gl(){return[
+['Actualizar (descontar)','Traer a hoy un dinero que se cobrará en el futuro, quitándole los intereses. Es lo contrario de capitalizar. Ejemplo: 105 € dentro de un año, al 5 %, valen hoy 100 €.',['inicio','desc','comp','rentas']],
+['Amortizar','Devolver poco a poco un préstamo: una parte de cada cuota paga intereses y otra reduce la deuda.',['prest']],
+['Año de 365 días','Cuando el plazo viene en días, se pasa a años dividiendo entre 365 (n = días ÷ 365). Algunos enunciados usan 360: fíjate en lo que indique el problema.',['simple','desc','prob']],
+['Capital','Una cantidad de dinero junto con su fecha. 1.000 € hoy y 1.000 € dentro de un año son capitales distintos.',['inicio']],
+['Capital inicial y final','Inicial (C₀): lo que tienes o inviertes hoy. Final (Cₙ): lo que tendrás al terminar, con los intereses sumados.',['inicio','ver']],
+['Capitalizar','Llevar un dinero hacia el futuro sumándole sus intereses. Es lo contrario de actualizar.',['inicio','simple','comp']],
+['Comisión de apertura','Cobro único que hace el banco por conceder un préstamo. Encarece el coste real: la TAE la incluye y el tipo nominal no.',['prest','prob']],
+['Cuota','Cada pago repetido de una renta o de un préstamo, normalmente de importe constante.',['rentas','prest','prob']],
+['Descuento','Lo que cobra el banco por adelantarte hoy un dinero que vence más adelante. Se resta del nominal.',['desc','prob']],
+['Deuda pendiente','Lo que todavía debes del préstamo tras pagar una cuota. En el cuadro va bajando hasta llegar a cero.',['prest']],
+['Despejar','Dejar sola la incógnita aplicando la operación contraria en los dos lados de la igualdad.',[]],
+['Efectivo','Dinero que recibes realmente hoy. En un descuento, el efectivo es el nominal menos el descuento.',['desc','prob']],
+['Equivalencia financiera','Dos capitales de fechas distintas son equivalentes si, a un tipo dado, valen lo mismo. Ejemplo: 100 € hoy y 105 € dentro de un año al 5 %.',['inicio','tae']],
+['Factor de crecimiento','Número por el que se multiplica el capital en un periodo: (1+i). Con un 5 % es 1,05.',[]],
+['Inducción (demostración)','Forma de demostrar una fórmula: compruebas que vale para el año 1 y que, si vale para el año k, también para el k+1. Entonces vale siempre.',['comp']],
+['Interés','Precio del dinero en el tiempo: lo que se paga por usar dinero ajeno o se gana por prestar el propio. Si prestas 100 € y te devuelven 105 €, el interés son 5 €.',['inicio','simple','ver']],
+['Interés simple y compuesto','Simple: los intereses no se suman al capital y ganas lo mismo cada año. Compuesto: se suman y generan nuevos intereses. El simple se usa a corto plazo y el compuesto a largo.',['inicio','ver']],
+['Letra de cambio y pagaré','Documentos en los que alguien promete pagar una cantidad en una fecha futura. Puedes cobrarlos antes si el banco te los descuenta.',['desc','prob']],
+['Logaritmo (ln)','Operación que responde a: ¿a qué exponente elevo este número para obtener aquel? Sirve para despejar el tiempo. En la calculadora, la tecla ln.',['comp']],
+['Nominal (dos significados)','En descuento, el nominal es el importe que figura en el pagaré. En préstamos, el tipo nominal anual (TIN) es el tipo del periodo multiplicado por el número de periodos: un 1 % mensual es un 12 % nominal, sin contar que los intereses se acumulan.',['desc','tae','prest','prob']],
+['Periodo','Intervalo entre dos liquidaciones de intereses o dos cuotas: un mes, un trimestre, un año. El tipo y el tiempo deben ir siempre en el mismo periodo.',['inicio','rentas','tae']],
+['Perpetua','Renta que no termina nunca. Su valor actual es a ÷ i: 1.000 € al año al 4 % valen hoy 25.000 €.',['rentas']],
+['Pospagable y prepagable','Pospagable: se paga al final de cada periodo. Prepagable: al principio. Lo anticipado vale más, por eso el prepagable se multiplica por (1+i).',['rentas','tae','prob']],
+['Progresión geométrica','Lista de números en la que cada uno es el anterior multiplicado por una cifra fija. Los pagos de una renta, llevados a hoy, forman una, y existe una fórmula para sumarla.',['rentas']],
+['Proporcional y equivalente','Proporcional: se reparte el tipo anual entre los periodos (12 % anual = 1 % mensual). Equivalente: el que da el mismo resultado final al capitalizar. En compuesta no coinciden: un 1 % mensual equivale a un 12,68 % anual, no a un 12 %.',['tae']],
+['Raíz n-ésima','Operación inversa a elevar a n. La raíz cuarta de 16 es 2, porque 2⁴ = 16. En la calculadora se teclea como ^ ( 1 ÷ n ).',['comp']],
+['Regla del 72','Atajo mental para saber en cuántos años se duplica un capital con interés compuesto: años ≈ 72 ÷ tipo anual (en %). Al 6 % tarda unos 12 años. Sirve para estimar y comprobar un resultado.',['ver','comp']],
+['Renta','Serie de pagos o cobros iguales a intervalos regulares: un alquiler, unas cuotas, una pensión.',['rentas','prob']],
+['Sistema francés','Nombre del método de préstamo con cuota constante. Es el más habitual en hipotecas y préstamos personales.',['prest']],
+['TAE y TIN','TIN: tipo de interés nominal anual, el que anuncia el banco sin contar la capitalización. TAE: tipo anual equivalente, el coste o rendimiento real en un año; permite comparar productos distintos.',['tae','prest','prob']],
+['Tipo de interés','Porcentaje que se paga o se gana por cada euro en un periodo, normalmente un año. Con el 5 %, 100 € generan 5 € al año.',['inicio','simple']],
+['Valor actual y valor final','Valor actual: lo que valen hoy unos pagos futuros. Valor final: lo que valdrán al terminar el plazo si se capitalizan.',['rentas']],
+['Vencimiento','Fecha en la que hay que cobrar o pagar un capital: el día en que vence el pagaré o se paga la cuota.',['inicio','desc']]]}
+(function(){gl().forEach(g=>g[2].forEach(m=>{const w=WD[m]||(WD[m]=['',[]]);w[1].push([g[0],g[1]])}))})();
+function glosHtml(){return `<h2>Glosario</h2><p>Todas las palabras del temario explicadas con sencillez. Escribe para buscar. Cada módulo también tiene su vocabulario en botones bajo la explicación.</p><input id='gq' placeholder='Buscar una palabra...' aria-label='Buscar una palabra'>`+`<div class='gcol'>`+gl().slice().sort((a,b)=>a[0].localeCompare(b[0],'es')).map(g=>`<div class='gt'><b>${g[0]}</b>: ${g[1]}</div>`).join('')+`</div>`}
+document.addEventListener('input',e=>{if(e.target.id==='gq'){const q=e.target.value.toLowerCase();document.querySelectorAll('.gt').forEach(d=>{d.style.display=d.textContent.toLowerCase().includes(q)?'':'none'})}});
+function wd(id){const w=WD[id];return w?`<div class="wd">${w[0]?'<b>En palabras:</b> '+w[0]:'<b>Vocabulario de este apartado</b>'}<div>${w[1].map(c=>`<button type="button" class="chip" data-t="${c[1]}">${c[0]}</button>`).join("")}</div><div class="wdx" id="wdx">Toca una letra o una palabra para ver qué significa.</div></div>`:""}
+const PF={
+simple:`<h4>Demostración</h4>
+<p>En la ley simple los intereses no se añaden al capital, así que cada periodo genera lo mismo:</p>
+<div class="f">I₁ = C₀·i, I₂ = C₀·i, …, Iₙ = C₀·i</div>
+<p>Sumando los n periodos:</p>
+<div class="f">I = I₁ + I₂ + … + Iₙ = n · C₀ · i</div>
+<p>El capital final es el inicial más los intereses:</p>
+<div class="f">Cₙ = C₀ + C₀·i·n = C₀ · (1 + i·n)</div>
+<p>Despejando: C₀ = Cₙ ÷ (1 + i·n); i = (Cₙ − C₀) ÷ (C₀·n); n = (Cₙ − C₀) ÷ (C₀·i).</p>
+<h4>Ejemplo</h4>
+<div class="ex">500.000 € al 8 % anual durante 4 meses. Como i es anual, n = 4 ÷ 12 = 1/3 de año.<br>I = 500.000 · 0,08 · 1/3 = <b>13.333,33 €</b><br>Cₙ = 500.000 + 13.333,33 = <b>513.333,33 €</b><br>Comprobación con la fórmula: 500.000 · (1 + 0,08/3) = 513.333,33 €.</div>`,
+desc:`<h4>Descuento comercial</h4>
+<p>Se calcula sobre el nominal N durante el tiempo que falta (n). El descuento es el interés de N al tipo d:</p>
+<div class="f">Dc = N·d·n &nbsp;→&nbsp; C₀ = N − N·d·n = N · (1 − d·n)</div>
+<h4>Descuento racional (simple)</h4>
+<p>Es la inversa de capitalizar. Si C₀ se capitaliza hasta N, N = C₀(1 + i·n), luego:</p>
+<div class="f">C₀ = N ÷ (1 + i·n) &nbsp;→&nbsp; Dr = N − C₀ = N·i·n ÷ (1 + i·n)</div>
+<h4>Relación entre d e i</h4>
+<p>Dos tipos son equivalentes si dan el mismo efectivo: N(1 − d·n) = N ÷ (1 + i·n). Multiplicando: (1 − d·n)(1 + i·n) = 1, es decir i·n − d·n − d·i·n² = 0. Dividiendo por n: i − d = d·i·n, luego:</p>
+<div class="f">i = d ÷ (1 − d·n) &nbsp;&nbsp; d = i ÷ (1 + i·n)</div>
+<p>Por eso a igual tipo el descuento comercial siempre es mayor que el racional.</p>
+<h4>Ejemplo</h4>
+<div class="ex">Pagaré de 10.000 € a 210 días, tipo 3,5 %. n = 210 ÷ 365 = 0,575342.<br>Comercial: 10.000 · (1 − 0,035 · 0,575342) = 10.000 · 0,979863 = <b>9.798,63 €</b><br>Racional: 10.000 ÷ (1 + 0,020137) ≈ <b>9.802,60 €</b><br>Tipo de interés equivalente al descuento del 3,5 %: i = 0,035 ÷ 0,979863 ≈ <b>3,572 %</b>.</div>`,
+comp:`<h4>Demostración</h4>
+<p>Cada año, el capital se multiplica por (1 + i), porque se le suman sus intereses:</p>
+<div class="f">C₁ = C₀ + C₀·i = C₀(1+i)<br>C₂ = C₁ + C₁·i = C₁(1+i) = C₀(1+i)²<br>C₃ = C₂(1+i) = C₀(1+i)³</div>
+<p>Por inducción: si Cₖ = C₀(1+i)ᵏ, entonces Cₖ₊₁ = Cₖ(1+i) = C₀(1+i)ᵏ⁺¹. Por tanto:</p>
+<div class="f">Cₙ = C₀ · (1+i)ⁿ</div>
+<p>Despejes: C₀ = Cₙ·(1+i)⁻ⁿ. Para el tipo, i = (Cₙ/C₀)^(1/n) − 1. Para el tiempo, se toman logaritmos en Cₙ/C₀ = (1+i)ⁿ y queda ln(Cₙ/C₀) = n·ln(1+i), luego n = ln(Cₙ/C₀) ÷ ln(1+i).</p>
+<h4>Ejemplo</h4>
+<div class="ex">1.000 € al 4 % durante 2 años.<br>Año 1: 1.000 · 1,04 = 1.040,00 €<br>Año 2: 1.040 · 1,04 = <b>1.081,60 €</b> (los 40 € del primer año también generan interés)<br>Con la fórmula: 1.000 · 1,04² = 1.081,60 €.<br><br>¿Cuánto tarda en duplicarse al 7 %? n = ln 2 ÷ ln 1,07 = 0,693147 ÷ 0,067659 ≈ <b>10,24 años</b>.</div>`,
+tae:`<h4>TAE</h4>
+<p>Un euro a un año al tipo anual i da 1 + i. Ese euro con m capitalizaciones al año al tipo iₘ da (1 + iₘ)ᵐ. Son equivalentes si dan lo mismo:</p>
+<div class="f">1 + TAE = (1 + iₘ)ᵐ &nbsp;→&nbsp; TAE = (1+iₘ)ᵐ − 1 &nbsp;&nbsp; iₘ = (1+TAE)^(1/m) − 1</div>
+<h4>Prepagable y pospagable</h4>
+<p>Un interés i* pagado al principio del periodo, capitalizado hasta el final, vale i*(1+i). Para ser equivalente al interés i pagado al final:</p>
+<div class="f">i*·(1+i) = i &nbsp;→&nbsp; i* = i ÷ (1+i) &nbsp;&nbsp; i = i* ÷ (1 − i*)</div>
+<p>(la segunda sale de i* = i − i*·i = i(1 − i*)).</p>
+<h4>Ejemplo</h4>
+<div class="ex">Un 1 % trimestral: (1,01)⁴ = 1,040604, así que la TAE es <b>4,0604 %</b>, no un 4 %.<br>Un 10 % pospagable equivale a i* = 0,10 ÷ 1,10 = <b>9,0909 %</b> prepagable. Comprobación: 0,090909 · 1,10 = 0,10.</div>`,
+rentas:`<h4>Demostración del valor actual</h4>
+<p>Es la suma de cada pago llevado a hoy. Con v = (1+i)⁻¹:</p>
+<div class="f">VA = a·v + a·v² + … + a·vⁿ</div>
+<p>Es una progresión geométrica de razón v, cuya suma es a·v·(1 − vⁿ) ÷ (1 − v). Como 1 − v = i ÷ (1+i), resulta v ÷ (1 − v) = 1 ÷ i, y:</p>
+<div class="f">VA = a · [1 − (1+i)⁻ⁿ] ÷ i</div>
+<p><b>Valor final:</b> VF = VA·(1+i)ⁿ. <b>Prepagable:</b> cada pago se adelanta un periodo, así que todo se multiplica por (1+i). <b>Perpetua:</b> si n → ∞, (1+i)⁻ⁿ → 0 y VA = a ÷ i.</p>
+<h4>Ejemplo</h4>
+<div class="ex">10.000 € anuales pospagables durante 5 años al 5 %. v = 0,952381.<br>Pago a pago: 9.523,81 + 9.070,29 + 8.638,38 + 8.227,02 + 7.835,26 = 43.294,76 €<br>Fórmula: 10.000 · (1 − 1,05⁻⁵) ÷ 0,05 = <b>43.294,77 €</b> (un céntimo de diferencia por redondeo).<br>Prepagable: 43.294,77 · 1,05 = <b>45.459,51 €</b>.<br>Si fuera perpetua: 10.000 ÷ 0,05 = <b>200.000 €</b>.</div>`,
+prest:`<h4>Demostración de la cuota</h4>
+<p>El préstamo es el valor actual de las cuotas, que son una renta pospagable de término a:</p>
+<div class="f">C₀ = a · [1 − (1+i)⁻ᴺ] ÷ i &nbsp;→&nbsp; a = C₀ · i ÷ [1 − (1+i)⁻ᴺ]</div>
+<p>Cada cuota se reparte así: intereses Iₖ = Dₖ₋₁·i, amortización Aₖ = a − Iₖ, deuda Dₖ = Dₖ₋₁ − Aₖ.</p>
+<h4>Las amortizaciones crecen un (1+i) cada vez</h4>
+<div class="f">A₂ = a − i·D₁ = a − i(C₀ − A₁) = (a − i·C₀) + i·A₁ = A₁ + i·A₁ = A₁(1+i)</div>
+<p>Por eso al principio se pagan sobre todo intereses y al final casi todo es capital.</p>
+<h4>Ejemplo</h4>
+<div class="ex">1.000 € al 12 % nominal anual en 3 cuotas mensuales. i = 12 % ÷ 12 = 1 %.<br>a = 1.000 · 0,01 ÷ (1 − 1,01⁻³) = 10 ÷ 0,02941 = <b>340,02 €</b><br>Cuota 1: intereses 10,00 · amortización 330,02 · deuda 669,98<br>Cuota 2: intereses 6,70 · amortización 333,32 (= 330,02 · 1,01) · deuda 336,66<br>Cuota 3: intereses 3,37 · amortización 336,65 · deuda ≈ 0 (1 céntimo por redondeo)</div>`};
+let cur="inicio",st={};
+const GR=[['🚀 Empezar',['base','inicio','glos','ver','arbol']],['📘 Aprender',['simple','desc','comp','tae','rentas','prest']],['✏️ Practicar',['calc','vcalc','prob','test']],['📊 Mi espacio',['prog','mat']]];
+function gof(id){return GR.findIndex(g=>g[1].includes(id))}
+function pn(){const o=GR.flatMap(g=>g[1]),i=o.indexOf(cur),b=(j,a,z)=>(j<0||j>=o.length)?'<span></span>':`<button type='button' class='go gm' data-g='${o[j]}'>${a}${M.find(x=>x.id===o[j]).t}${z}</button>`;return `<div class='pn'>${b(i-1,'← ','')}${b(i+1,'',' →')}</div>`}
+function nav(){$('#nav').innerHTML=GR.map((g,i)=>`<div class='grp' data-g='${i}'><span class='gl'>${g[0]}</span>`+g[1].map(id=>`<button data-id='${id}' aria-current='${id===cur}'>${M.find(x=>x.id===id).t}</button>`).join('')+`</div>`).join('');
+$("#nav").onclick=e=>{const b=e.target.closest("button");if(b){go(b.dataset.id)}}}
+function go(id){cur=id;nav();render();window.scrollTo(0,0);try{location.hash=id}catch(e){}}
+function render(){const m=M.find(x=>x.id===cur);document.body.dataset.g=gof(cur);let h=`<section class="${m.modes?'two':m.cols?'cols':''}"><div class="tx">${m.html}${wd(m.id)}${PF[m.id]?`<details class="pf"><summary>Ver demostración y ejemplo</summary>${PF[m.id]}</details>`:""}</div>`;
+if(m.modes){const s=st[cur]||(st[cur]={mode:0,vals:{}});const md=m.modes[s.mode];h+=`<div class="cl">`;
+if(m.modes.length>1)h+=`<div class="modes">${m.modes.map((x,i)=>`<button data-mode="${i}" aria-pressed="${i===s.mode}">${x.l}</button>`).join("")}</div>`;
+h+=`<div class="fld">${md.f.map(f=>{const v=s.vals[s.mode+f[0]]??f[2];return `<div><label for="f_${f[0]}">${f[1]}</label>${f[3]?`<select id="f_${f[0]}" data-k="${f[0]}">${f[3].map(o=>`<option value="${o[0]}"${o[0]===v?" selected":""}>${o[1]}</option>`).join("")}</select>`:`<input id="f_${f[0]}" data-k="${f[0]}" inputmode="decimal" value="${v}">`}</div>`}).join("")}</div><div class="lcd" id="out" aria-live="polite"></div></div>`}
+h+=`</section>`+pn();$("#main").innerHTML=h;$("#main").oninput=null;$("#main").onclick=null;
+if(m.viz){viz();return}if(m.tree){tree();return}if(m.vc){vcalc();return}if(m.prog){progress();return}
+if(m.quiz)return quiz();
+if(m.modes){$("#main").onclick=e=>{const b=e.target.closest("[data-mode]");if(b){st[cur].mode=+b.dataset.mode;render()}};$("#main").oninput=calc;calc()}else $("#main").onclick=null}
+function calc(){const m=M.find(x=>x.id===cur),s=st[cur],md=m.modes[s.mode],v={};
+md.f.forEach(f=>{const el=$("#f_"+f[0]);s.vals[s.mode+f[0]]=el.value;v[f[0]]=f[3]?el.value:num(el.value)});
+const ok=md.f.every(f=>f[3]||isFinite(v[f[0]]));const o=$("#out");
+if(!ok){o.textContent="Escribe un número en cada casilla.";return}
+const r=md.run(v);
+o.innerHTML=r.r.map(x=>`<div class="r"><span>${x[0]}</span><b>${x[1]}</b></div>`).join("")+`<div class="keys"><small>Teclea en tu calculadora:</small>${K(r.k)}</div><div class="steps">${r.s}</div>${r.tb||""}`}
+function quiz(){const s=st.quiz||(st.quiz={i:0,p:0,a:null});const sec=$("#main section");
+if(s.i>=Q.length){sec.innerHTML=`<h2>Resultado: ${s.p} de ${Q.length}</h2><p>${s.p>=7?"Muy bien. Ya dominas lo esencial; repasa los fallos y practica con otros números.":"Vas por buen camino. Vuelve a los módulos donde fallaste y prueba otra vez."}</p><button class="go" id="rs">Repetir test</button>`;$("#rs").onclick=()=>{st.quiz=null;quiz()};return}
+const q=Q[s.i];sec.innerHTML=`<h2>Test (${s.i+1}/${Q.length})</h2><p>${q[0]}</p><div class="og">${q[1].map((o,j)=>`<button class="opt${s.a!==null?(j===q[2]?" ok":j===s.a?" ko":""):""}" data-j="${j}">${o}</button>`).join("")}</div>${s.a!==null?`<p><b>${s.a===q[2]?"Correcto.":"No es esa."}</b> ${q[3]}</p><button class="go" id="nx">${s.i===Q.length-1?"Ver resultado":"Siguiente"}</button>`:""}`;
+sec.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{if(s.a!==null)return;s.a=+b.dataset.j;if(s.a===q[2])s.p++;rec(TOP[s.i],s.a===q[2]);quiz()});
+const nx=$("#nx");if(nx)nx.onclick=()=>{s.i++;s.a=null;quiz()}}
+const h0=(location.hash||"").slice(1);if(M.some(m=>m.id===h0))cur=h0;
+const root=document.documentElement;
+const dark=()=>(root.dataset.theme||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"))==="dark";
+const lab=()=>{$("#th").textContent=dark()?"Cambiar a modo claro":"Cambiar a modo oscuro"};
+try{const t=localStorage.getItem("mf-theme");if(t)root.dataset.theme=t}catch(e){}
+$("#th").onclick=()=>{const n=dark()?"light":"dark";root.dataset.theme=n;try{localStorage.setItem("mf-theme",n)}catch(e){}lab()};
+$("#hb").onclick=()=>$("#hp").showModal();
+lab();
+document.addEventListener("click",e=>{const c=e.target.closest(".chip");if(c){const x=document.getElementById("wdx");if(x)x.textContent=c.dataset.t;return}
+const b=e.target.closest(".ck");if(b){const v=num(b.previousElementSibling.value),a=+b.dataset.a,o=b.nextElementSibling,ok=Math.abs(v-a)<=Math.max(.01,Math.abs(a)*.001);rec('base',ok);o.className="fb "+(ok?"ok":"ko");o.textContent=ok?"Correcto":"Todavía no. Pista: "+b.dataset.h}});
+nav();render();
+</script></body></html>

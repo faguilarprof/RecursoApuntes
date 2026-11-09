@@ -1,0 +1,2845 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>Suite Empresarial Didáctica FP Superior 2026</title>
+<style>
+/* =============================================
+   ESTILOS DIDÁCTICOS FP SUPERIOR - SUITE 2026
+   Paleta: ERP profesional + superposiciones
+   WCAG 2.2 AAA | Responsive | Print/PDF ready
+   ============================================= */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+:root {
+  --primary-blue: #1e40af;
+  --primary-blue-light: #3b82f6;
+  --success-green: #16a34a;
+  --danger-red: #dc2626;
+  --warning-amber: #d97706;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+  --simulacion-red: #ef4444;
+  --sem-verde: #10b981;
+  --sem-ambar: #f59e0b;
+  --sem-rojo: #ef4444;
+  --font-mono: 'Consolas','Monaco','Lucida Console',monospace;
+  --font-sans: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --spacing-xs: 0.25rem; --spacing-sm: 0.5rem; --spacing-md: 1rem;
+  --spacing-lg: 1.5rem; --spacing-xl: 2rem;
+  --border-radius: 0.5rem;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0/0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0/0.1),0 2px 4px -2px rgb(0 0 0/0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0/0.1),0 4px 6px -4px rgb(0 0 0/0.1);
+}
+
+* { margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--gray-900);
+  background: linear-gradient(135deg, var(--gray-50) 0%, #e5e7eb 100%);
+  min-height: 100vh;
+}
+
+/* === HEADER SIMULACIÓN === */
+.header-simulacion {
+  position: fixed; top: 0; left: 0; right: 0;
+  background: linear-gradient(90deg, var(--simulacion-red), #b91c1c);
+  color: white; padding: 0.35rem 1rem;
+  font-weight: 700; font-size: 11px; text-align: center;
+  z-index: 10000; box-shadow: 0 2px 10px rgb(239 68 68/0.4);
+  animation: pulse-warning 3s infinite;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  display: flex; align-items: center; justify-content: center; gap: 1rem;
+}
+@keyframes pulse-warning {
+  0%,100% { opacity:1; } 50% { opacity:0.88; }
+}
+
+/* === MÓDULO NAV === */
+.modulo-nav {
+  position: fixed; top: 1.65rem; left: 0; right: 0;
+  background: white; z-index: 9999;
+  box-shadow: 0 2px 12px rgb(0 0 0/0.1);
+  display: flex; align-items: center;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.modulo-nav .nav-brand {
+  padding: 0.5rem 1.25rem;
+  font-weight: 800; font-size: 0.9rem;
+  color: var(--primary-blue);
+  border-right: 2px solid #e5e7eb;
+  white-space: nowrap;
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
+}
+
+.modulo-nav .nav-tabs {
+  display: flex; flex: 1;
+}
+
+.nav-tab {
+  flex: 1; padding: 0.6rem 1rem;
+  background: none; border: none;
+  font-weight: 600; font-size: 0.82rem;
+  color: #6b7280; cursor: pointer;
+  transition: all 0.2s ease;
+  border-bottom: 3px solid transparent;
+  position: relative;
+}
+.nav-tab:hover { color: var(--primary-blue); background: #eff6ff; }
+.nav-tab.active {
+  color: var(--primary-blue);
+  border-bottom-color: var(--primary-blue);
+  background: #eff6ff;
+}
+
+/* === LAYOUT PRINCIPAL === */
+.app-body { padding-top: 5.5rem; }
+
+.modulo { display: none; }
+.modulo.active { display: block; }
+
+.main-container {
+  display: flex; gap: var(--spacing-lg);
+  padding: var(--spacing-xl);
+  max-width: 1600px; margin: 0 auto;
+}
+
+.panel-trabajo {
+  flex: 2; background: white;
+  border-radius: var(--border-radius);
+  padding: var(--spacing-xl);
+  box-shadow: var(--shadow-lg);
+  overflow-y: auto; max-height: 83vh;
+}
+
+.panel-ayuda {
+  flex: 1; background: var(--gray-50);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-md);
+  position: sticky; top: 5.8rem;
+  height: fit-content; max-height: 83vh;
+  overflow-y: auto;
+}
+
+.panel-ayuda h3 {
+  color: var(--gray-900); margin-bottom: var(--spacing-md);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 3px solid var(--primary-blue);
+  font-size: 1rem; font-weight: 700;
+}
+
+/* === TABS INTERNOS === */
+.tabs {
+  display: flex; background: #f8fafc;
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
+  overflow: hidden;
+  margin: -1.5rem -1.5rem 1.5rem -1.5rem;
+  box-shadow: 0 -2px 10px rgb(0 0 0/0.05);
+}
+
+.tab-btn {
+  flex: 1; padding: 0.75rem 1rem;
+  background: none; border: none;
+  font-weight: 600; cursor: pointer;
+  transition: all 0.3s ease; font-size: 0.82rem;
+  color: #6b7280; border-bottom: 3px solid transparent;
+}
+.tab-btn:hover { background: rgba(59,130,246,0.1); }
+.tab-btn.active { background: var(--primary-blue); color: white; border-bottom-color: #60a5fa; }
+
+.tab-content { display: none; animation: fadeIn 0.3s ease; }
+.tab-content.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity:0; transform:translateY(8px); }
+  to { opacity:1; transform:translateY(0); }
+}
+
+/* === TABLA EDITABLE === */
+.tabla-editable {
+  width: 100%; border-collapse: collapse;
+  margin-bottom: var(--spacing-xl);
+  font-family: var(--font-mono); font-size: 12px;
+  box-shadow: var(--shadow-md);
+  border-radius: var(--border-radius); overflow: hidden;
+}
+
+.tabla-editable th {
+  background: linear-gradient(135deg, #1f2937, #374151);
+  color: white; padding: 0.75rem 0.6rem;
+  text-align: left; font-weight: 600;
+  font-size: 0.75rem; text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.tabla-editable td {
+  padding: 0.6rem 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  vertical-align: middle;
+}
+
+.tabla-editable tr:hover td { background: #f0f9ff; }
+
+.tabla-editable input, .tabla-editable select {
+  width: 100%; border: 1.5px solid #e5e7eb;
+  padding: 0.35rem 0.3rem;
+  border-radius: 0.25rem;
+  font-family: inherit; font-size: inherit;
+  transition: all 0.2s ease; background: white;
+}
+.tabla-editable input:focus, .tabla-editable select:focus {
+  outline: none;
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 2px rgb(59 130 246/0.15);
+}
+
+.tabla-editable .calc-cell {
+  background: #f0fdf4; color: #15803d;
+  font-weight: 700; text-align: right;
+  font-family: var(--font-mono);
+}
+
+/* === SEMÁFOROS === */
+.semaforo {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 1.1rem; height: 1.1rem;
+  border-radius: 50%; margin-left: 0.4rem;
+  font-size: 0.65rem; font-weight: bold; flex-shrink: 0;
+}
+.semaforo.verde { background: #10b981; color: white; box-shadow: 0 0 0 2px #059669; }
+.semaforo.ambar {
+  background: linear-gradient(135deg,#f59e0b,#d97706); color: white;
+  animation: pulse-ambar 2s infinite; box-shadow: 0 0 0 2px #b45309;
+}
+.semaforo.rojo {
+  background: #ef4444; color: white;
+  animation: shake 0.6s infinite; box-shadow: 0 0 0 2px #dc2626;
+}
+@keyframes pulse-ambar { 0%,100%{transform:scale(1);}50%{transform:scale(1.1);} }
+@keyframes shake { 0%,100%{transform:translateX(0);}25%{transform:translateX(-2px);}75%{transform:translateX(2px);} }
+
+/* === TOOLTIPS === */
+.tooltip-normativo {
+  position: relative; display: inline-block;
+  background: var(--primary-blue); color: white;
+  padding: 0.15rem 0.45rem;
+  border-radius: 9999px; font-size: 0.7rem;
+  font-weight: 500; cursor: help; margin-left: 0.3rem;
+  transition: all 0.2s ease;
+}
+.tooltip-normativo:hover { background: #1d4ed8; transform: scale(1.05); }
+.tooltip-normativo::after {
+  content: attr(data-norma);
+  position: absolute; bottom: 125%; left: 50%;
+  transform: translateX(-50%);
+  background: var(--gray-900); color: white;
+  padding: 0.4rem 0.6rem;
+  border-radius: 0.375rem; font-size: 0.8rem;
+  white-space: nowrap; opacity: 0; visibility: hidden;
+  transition: all 0.2s ease; z-index: 1000;
+  box-shadow: var(--shadow-lg);
+}
+.tooltip-normativo:hover::after { opacity:1; visibility:visible; bottom:115%; }
+
+/* === FORMULARIOS === */
+.form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md); margin-bottom: var(--spacing-md); }
+.form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--spacing-md); margin-bottom: var(--spacing-md); }
+.form-group { margin-bottom: var(--spacing-md); }
+.label {
+  display: block; font-weight: 600; margin-bottom: 0.3rem;
+  color: var(--gray-800); font-size: 0.82rem;
+}
+.input-text, .input-number, .select-field {
+  width: 100%; padding: 0.55rem 0.7rem;
+  border: 2px solid #e5e7eb;
+  border-radius: var(--border-radius);
+  font-size: 0.9rem; transition: all 0.2s ease; background: white;
+  font-family: var(--font-sans);
+}
+.input-text:focus, .input-number:focus, .select-field:focus {
+  outline: none; border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgb(59 130 246/0.15);
+}
+
+/* === SWITCHES === */
+.switch-container { display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem; }
+.switch { position:relative; width:3rem; height:1.5rem; flex-shrink:0; }
+.switch input { opacity:0; width:0; height:0; }
+.slider-switch {
+  position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0;
+  background-color:#d1d5db; transition:0.3s; border-radius:1.5rem;
+}
+.slider-switch:before {
+  position:absolute; content:"";
+  height:1.125rem; width:1.125rem;
+  left:0.2rem; bottom:0.2rem;
+  background-color:white; transition:0.3s; border-radius:50%;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+input:checked + .slider-switch { background-color: var(--success-green); }
+input:checked + .slider-switch:before { transform:translateX(1.5rem); }
+.switch-label { font-size:0.82rem; font-weight:500; }
+
+/* === BOTONES === */
+.btn {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.6rem 1.2rem;
+  border: none; border-radius: var(--border-radius);
+  font-weight: 600; font-size: 0.85rem;
+  cursor: pointer; transition: all 0.2s ease;
+  text-decoration: none; position: relative; overflow: hidden;
+}
+.btn::before {
+  content:''; position:absolute; top:0; left:-100%;
+  width:100%; height:100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+  transition: left 0.5s;
+}
+.btn:hover::before { left:100%; }
+.btn-primary { background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-light)); color:white; }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: var(--shadow-lg); }
+.btn-success { background: linear-gradient(135deg, var(--success-green), #059669); color:white; }
+.btn-success:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+.btn-danger { background: linear-gradient(135deg, var(--danger-red), #b91c1c); color:white; }
+.btn-warning { background: linear-gradient(135deg, var(--warning-amber), #b45309); color:white; }
+.btn-outline {
+  background: white; color: var(--primary-blue);
+  border: 2px solid var(--primary-blue);
+}
+.btn-outline:hover { background: var(--primary-blue); color: white; }
+.btn-sm { padding:0.35rem 0.75rem; font-size:0.75rem; }
+.btn:disabled { background:#9ca3af; cursor:not-allowed; transform:none; box-shadow:none; }
+.btn-group { display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:var(--spacing-md); }
+
+/* === KPI CARDS === */
+.kpi-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:var(--spacing-md); margin-bottom:var(--spacing-lg); }
+.kpi-card {
+  background:white; padding:var(--spacing-md);
+  border-radius:var(--border-radius);
+  box-shadow:var(--shadow-md); text-align:center;
+  border-top:4px solid transparent; transition:all 0.3s ease;
+}
+.kpi-card.verde { border-top-color:var(--success-green); }
+.kpi-card.rojo { border-top-color:var(--danger-red); }
+.kpi-card.ambar { border-top-color:var(--warning-amber); }
+.kpi-card.azul { border-top-color:var(--primary-blue); }
+.kpi-titulo { color:#6b7280; font-size:0.72rem; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.25rem; }
+.kpi-numero { font-size:1.8rem; font-weight:800; font-family:var(--font-mono); line-height:1; margin-bottom:0.15rem; }
+.kpi-unidades { font-size:0.75rem; color:#6b7280; font-weight:500; }
+
+/* === CHECKLIST === */
+.checklist { list-style:none; margin-bottom:var(--spacing-md); }
+.checklist-item {
+  display:flex; align-items:flex-start; gap:0.5rem;
+  padding:0.4rem 0; border-bottom:1px solid #f3f4f6;
+  font-size:0.82rem; line-height:1.4;
+  transition:background-color 0.2s ease;
+}
+.checklist-item:hover { background:rgba(59,130,246,0.05); border-radius:4px; padding-left:4px; }
+.check-mark {
+  width:1.25rem; height:1.25rem; border:2px solid #d1d5db;
+  border-radius:0.25rem; display:flex;
+  align-items:center; justify-content:center;
+  font-weight:bold; font-size:0.65rem; flex-shrink:0; margin-top:1px;
+}
+.check-verde { background:var(--success-green); color:white; border-color:var(--success-green); }
+.check-ambar { background:var(--warning-amber); color:white; border-color:var(--warning-amber); }
+.check-rojo { background:var(--danger-red); color:white; border-color:var(--danger-red); }
+
+/* === ALERTAS === */
+.alerta {
+  padding:0.6rem 0.85rem; border-radius:var(--border-radius);
+  margin-bottom:0.6rem; font-size:0.8rem; line-height:1.4;
+  display:flex; align-items:flex-start; gap:0.4rem;
+}
+.alerta-info { background:#eff6ff; border-left:3px solid var(--primary-blue); color:#1e40af; }
+.alerta-warning { background:#fffbeb; border-left:3px solid var(--warning-amber); color:#92400e; }
+.alerta-danger { background:#fef2f2; border-left:3px solid var(--danger-red); color:#991b1b; }
+.alerta-success { background:#f0fdf4; border-left:3px solid var(--success-green); color:#14532d; }
+
+/* === AUDITORIA === */
+.auditoria {
+  background:linear-gradient(90deg,#fef3c7,#fde68a);
+  border-left:4px solid var(--warning-amber);
+  padding:0.75rem; margin-top:var(--spacing-md);
+  border-radius:0 var(--border-radius) var(--border-radius) 0;
+  font-size:0.8rem;
+}
+.auditoria strong { color:var(--warning-amber); }
+
+/* === SECCIÓN TÍTULO === */
+.seccion-titulo {
+  display:flex; align-items:center; gap:0.5rem;
+  font-size:1rem; font-weight:700; color:var(--gray-800);
+  margin-bottom:var(--spacing-md);
+  padding-bottom:0.4rem; border-bottom:2px solid #e5e7eb;
+}
+.seccion-badge {
+  background: var(--primary-blue); color:white;
+  padding:0.15rem 0.5rem; border-radius:9999px;
+  font-size:0.7rem; font-weight:700;
+}
+
+/* === PANEL VERIFACTU === */
+.verifactu-panel {
+  background:linear-gradient(135deg,#0f172a,#1e293b);
+  color:#e2e8f0; border-radius:var(--border-radius);
+  padding:var(--spacing-md); margin-bottom:var(--spacing-md);
+}
+.verifactu-panel h4 { color:#60a5fa; font-size:0.85rem; margin-bottom:0.5rem; font-weight:700; }
+.hash-display {
+  font-family:var(--font-mono); font-size:0.65rem;
+  background:#0f172a; padding:0.5rem; border-radius:4px;
+  color:#34d399; word-break:break-all; line-height:1.6;
+  margin-bottom:0.5rem;
+}
+.qr-placeholder {
+  width:100px; height:100px; background:#fff;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:4px; margin:0.5rem 0;
+  font-size:0.65rem; color:#374151; text-align:center;
+}
+
+/* === LIBRO IVA === */
+.libro-iva-row {
+  display:grid;
+  grid-template-columns:auto 1fr 80px 80px 80px;
+  gap:0.4rem; padding:0.35rem 0.5rem;
+  border-bottom:1px solid #e5e7eb; font-size:0.75rem;
+  font-family:var(--font-mono); align-items:center;
+}
+.libro-iva-row.header { background:#1f2937; color:white; font-weight:700; border-radius:4px 4px 0 0; }
+
+/* === SCROLL TABLA LOG === */
+.log-container {
+  max-height:150px; overflow-y:auto;
+  background:#0f172a; border-radius:4px;
+  padding:0.5rem; margin-bottom:0.5rem;
+}
+.log-entry {
+  font-family:var(--font-mono); font-size:0.65rem;
+  color:#94a3b8; line-height:1.8; border-bottom:1px solid #1e293b;
+}
+.log-entry.log-ok { color:#34d399; }
+.log-entry.log-err { color:#f87171; }
+.log-entry.log-warn { color:#fbbf24; }
+
+/* === SEPARADOR === */
+.divider { border:none; border-top:2px solid #e5e7eb; margin:var(--spacing-md) 0; }
+
+/* === BADGE === */
+.badge {
+  display:inline-flex; align-items:center;
+  padding:0.15rem 0.5rem; border-radius:9999px;
+  font-size:0.7rem; font-weight:700;
+}
+.badge-green { background:#dcfce7; color:#15803d; }
+.badge-red { background:#fee2e2; color:#dc2626; }
+.badge-amber { background:#fef3c7; color:#d97706; }
+.badge-blue { background:#dbeafe; color:#1d4ed8; }
+
+/* === CANVAS CHART === */
+.chart-container { position:relative; height:120px; margin-bottom:var(--spacing-md); }
+
+/* === RESPONSIVE === */
+@media (max-width:1024px) {
+  .main-container { flex-direction:column; padding:var(--spacing-md); }
+  .panel-ayuda { position:static; max-height:none; order:2; }
+  .kpi-grid { grid-template-columns:repeat(2,1fr); }
+  .form-grid-3 { grid-template-columns:1fr 1fr; }
+}
+@media (max-width:768px) {
+  .tabs { flex-direction:column; }
+  .tab-btn { border-bottom:none; border-right:3px solid transparent; }
+  .tab-btn.active { border-right-color:var(--primary-blue); }
+  .kpi-grid { grid-template-columns:1fr; }
+  .form-grid-2, .form-grid-3 { grid-template-columns:1fr; }
+  .kpi-numero { font-size:1.4rem; }
+  .modulo-nav .nav-tab { font-size:0.72rem; padding:0.5rem 0.4rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration:0.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:0.2s !important;
+  }
+}
+
+:focus-visible {
+  outline:3px solid var(--primary-blue);
+  outline-offset:2px; border-radius:var(--border-radius);
+}
+
+/* === PRINT === */
+@media print {
+  .header-simulacion { position:relative !important; font-size:9px; }
+  .modulo-nav, .tabs, .btn-group, .panel-ayuda { display:none !important; }
+  .main-container { flex-direction:column; padding:0; }
+  .panel-trabajo { box-shadow:none; max-height:none; }
+  .tabla-editable { font-size:10px; }
+}
+
+/* === MISC === */
+.text-center { text-align:center; }
+.text-right { text-align:right; }
+.text-mono { font-family:var(--font-mono); }
+.mb-sm { margin-bottom:var(--spacing-sm); }
+.mb-md { margin-bottom:var(--spacing-md); }
+.mt-md { margin-top:var(--spacing-md); }
+.mt-lg { margin-top:var(--spacing-lg); }
+.flex-between { display:flex; justify-content:space-between; align-items:center; }
+.flex-gap { display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap; }
+.w-full { width:100%; }
+.italic { font-style:italic; }
+.text-sm { font-size:0.8rem; }
+.text-xs { font-size:0.72rem; }
+.text-muted { color:#6b7280; }
+.font-bold { font-weight:700; }
+.clausulado {
+  background:#f8fafc; border:1px solid #e2e8f0;
+  border-radius:var(--border-radius); padding:var(--spacing-md);
+  font-size:0.78rem; line-height:1.7; color:#374151;
+  font-style:italic;
+}
+.clausulado strong { color:var(--gray-800); font-style:normal; }
+.numero-factura-badge {
+  font-family:var(--font-mono); font-size:1.2rem;
+  font-weight:800; color:var(--primary-blue);
+  background:#eff6ff; padding:0.3rem 1rem;
+  border-radius:var(--border-radius); border:2px solid #bfdbfe;
+}
+.serie-rota { border-color:#fecaca !important; background:#fef2f2 !important; }
+.nif-ok { border-color:#bbf7d0 !important; background:#f0fdf4 !important; }
+.nif-ko { border-color:#fecaca !important; background:#fef2f2 !important; }
+
+/* Slider custom */
+input[type="range"] {
+  -webkit-appearance:none; width:100%; height:6px;
+  border-radius:3px; background:#e5e7eb; outline:none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance:none; width:18px; height:18px;
+  border-radius:50%; background:var(--primary-blue); cursor:pointer;
+  box-shadow:0 1px 4px rgba(0,0,0,0.2);
+}
+
+/* Progreso */
+.progress-bar {
+  height:8px; background:#e5e7eb; border-radius:4px;
+  overflow:hidden; margin-top:0.25rem;
+}
+.progress-fill {
+  height:100%; border-radius:4px;
+  background: linear-gradient(90deg, var(--primary-blue), var(--primary-blue-light));
+  transition: width 0.5s ease;
+}
+
+/* === CENTRO DE AYUDA DIDÁCTICO === */
+.help-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.72);z-index:20000;padding:2vh 2vw;overflow:auto}
+.help-overlay.open{display:flex;align-items:flex-start;justify-content:center}
+.help-dialog{background:#fff;width:min(1180px,100%);min-height:80vh;border-radius:14px;box-shadow:0 20px 70px #0005;display:grid;grid-template-columns:260px 1fr;overflow:hidden}
+.help-side{background:#eff6ff;padding:1.1rem;border-right:1px solid #dbeafe}
+.help-side h2{font-size:1.1rem;color:#1e3a8a;margin-bottom:.8rem}
+.help-side button{display:block;width:100%;text-align:left;border:0;background:transparent;padding:.65rem .7rem;border-radius:7px;margin:.15rem 0;color:#1f2937;cursor:pointer;font-weight:600}
+.help-side button:hover,.help-side button.active{background:#dbeafe;color:#1e40af}
+.help-main{padding:1.5rem;max-height:92vh;overflow:auto}
+.help-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;border-bottom:2px solid #e5e7eb;padding-bottom:.8rem;margin-bottom:1rem}
+.help-head h2{font-size:1.35rem;color:#1e3a8a}
+.help-close{border:0;background:#fee2e2;color:#991b1b;border-radius:8px;padding:.5rem .8rem;font-weight:700;cursor:pointer}
+.help-topic{display:none;line-height:1.7;font-size:.94rem;color:#273449}
+.help-topic.active{display:block}
+.help-topic h3{font-size:1.05rem;color:#1e40af;margin:1.1rem 0 .35rem}
+.help-topic h4{font-size:.95rem;margin:.8rem 0 .25rem;color:#111827}
+.help-topic p,.help-topic ul,.help-topic ol{margin:.45rem 0 .75rem}
+.help-topic li{margin:.25rem 0 0 1.2rem}
+.help-callout{padding:.8rem 1rem;border-left:4px solid #2563eb;background:#eff6ff;border-radius:7px;margin:.8rem 0}
+.help-warn{border-left-color:#d97706;background:#fffbeb}
+.help-good{border-left-color:#16a34a;background:#f0fdf4}
+.help-table{width:100%;border-collapse:collapse;margin:.7rem 0;font-size:.88rem}
+.help-table th,.help-table td{border:1px solid #dbe2ea;padding:.5rem;text-align:left;vertical-align:top}
+.help-table th{background:#eff6ff}
+.help-progress{background:#f8fafc;border:1px solid #dbe2ea;border-radius:9px;padding:.8rem;margin:.8rem 0}
+.help-topic code{background:#f1f5f9;padding:.1rem .3rem;border-radius:4px}
+.help-topic details{border:1px solid #dbe2ea;border-radius:8px;padding:.6rem .8rem;margin:.6rem 0}
+.help-topic summary{cursor:pointer;font-weight:700;color:#1e40af}
+.help-topic .mini-exercise{border:1px dashed #93c5fd;background:#f8fbff;padding:.8rem;border-radius:8px;margin:.8rem 0}
+.help-topic .answer{display:none;background:#f0fdf4;padding:.7rem;border-radius:6px;margin-top:.5rem}
+.help-topic .answer.show{display:block}
+.didactic-note{background:#f8fafc;border:1px solid #cbd5e1;border-radius:8px;padding:.8rem;margin:.8rem 0;font-size:.85rem}
+@media(max-width:760px){.help-dialog{grid-template-columns:1fr}.help-side{display:grid;grid-template-columns:1fr 1fr;gap:.2rem}.help-main{max-height:none;padding:1rem}.help-overlay{padding:0}.help-dialog{border-radius:0}}
+@media print{.help-overlay{display:none!important}}
+
+
+/* =============================================
+   AJUSTES V2: Lexend, maquetación sin cortes, negritas moderadas
+   ============================================= */
+:root{
+  --font-sans:'Lexend','Segoe UI',system-ui,-apple-system,sans-serif;
+  --font-mono:'Lexend','Segoe UI',system-ui,sans-serif;
+  --font-code:'Consolas','Monaco','Lucida Console',monospace;
+  --banner-h:2rem; --sticky-top:6.5rem;
+}
+body,button,input,select,textarea,table{font-family:var(--font-sans)}
+body{font-weight:400;line-height:1.65;overflow-x:hidden}
+.hash-display,.log-entry,.help-topic code{font-family:var(--font-code)}
+.text-mono,.kpi-numero,.calc-cell,.libro-iva-row,.numero-factura-badge{font-variant-numeric:tabular-nums}
+
+h1,h2,h3,h4,h5,h6,strong,b,th{font-weight:500}
+.font-bold{font-weight:500!important}
+.nav-brand,.seccion-titulo,.panel-ayuda h3,.help-side h2,.help-head h2,.kpi-numero,.numero-factura-badge{font-weight:600}
+.nav-tab,.tab-btn,.btn,.label,.seccion-badge,.badge,.tooltip-normativo,.kpi-titulo,.header-simulacion,
+.tabla-editable th,.tabla-editable .calc-cell,.libro-iva-row.header,.help-topic summary,.help-close,
+.help-table th,.panel-ayuda .alerta strong,.help-callout strong,.auditoria strong{font-weight:500}
+.switch-label,.help-side button{font-weight:400}
+.help-side button.active,.help-side button:hover{font-weight:500}
+.help-topic h3,.help-topic h4{font-weight:500}
+.help-topic strong,.alerta strong,.didactic-note strong{font-weight:500}
+#mod303-devengado,#mod303-soportado,#mod303-resultado{font-weight:600!important;font-size:clamp(1rem,2vw,1.3rem)!important;overflow-wrap:anywhere}
+.libro-iva-row,.tabla-editable{font-size:12px}
+
+.header-simulacion{position:sticky;top:0;flex-wrap:wrap;gap:.15rem 1rem;padding:.4rem 1rem;line-height:1.35;font-size:11px}
+.modulo-nav{position:sticky;top:var(--banner-h);flex-wrap:wrap}
+.modulo-nav .nav-brand{order:1;flex:0 0 auto}
+.modulo-nav .nav-tabs{order:2;flex:1 1 420px;min-width:0}
+.modulo-nav > .nav-tab{order:3;flex:0 0 auto;white-space:nowrap;border-left:2px solid #e5e7eb}
+.nav-tab{white-space:normal;line-height:1.3;font-size:.8rem}
+.app-body{padding-top:.75rem}
+
+.main-container{padding:1.25rem;gap:1.25rem;align-items:flex-start}
+.panel-trabajo{flex:1 1 0;min-width:0;padding:1.5rem;max-height:none;overflow:visible}
+.panel-ayuda{flex:0 0 min(320px,32%);min-width:0;top:var(--sticky-top);max-height:calc(100vh - var(--sticky-top) - 1rem);overflow-wrap:anywhere}
+.panel-trabajo>.alerta:first-child{margin-bottom:1.1rem}
+.tabs{margin:0 -1.5rem 1.5rem -1.5rem;border-radius:0}
+.tab-btn{white-space:normal;min-width:0;line-height:1.3;padding:.7rem .5rem;font-size:.8rem}
+.form-grid-2{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.form-grid-3{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.form-grid-2>*,.form-grid-3>*{min-width:0}
+.kpi-grid{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.kpi-numero{font-size:clamp(1.1rem,2.2vw,1.6rem);overflow-wrap:anywhere}
+.kpi-card{min-width:0}
+.alerta{display:block;overflow-wrap:anywhere;line-height:1.55}
+.switch-container{align-items:flex-start}
+.switch-container .switch-label{flex:1;min-width:0}
+.select-field{font-size:.85rem;text-overflow:ellipsis}
+.input-text,.input-number,.select-field{min-width:0}
+.btn{white-space:normal;text-align:left}
+.clausulado,.auditoria{overflow-wrap:anywhere}
+
+.tabla-editable{min-width:880px;margin-bottom:var(--spacing-md)}
+.tabla-editable th{white-space:nowrap;padding:.65rem .5rem}
+.tabla-editable td{padding:.45rem .4rem}
+.tabla-editable .calc-cell{white-space:nowrap;min-width:6.5rem}
+.tabla-editable td input,.tabla-editable td select{width:100%!important;min-width:4.6rem;font-size:12px}
+.tabla-editable td:nth-child(2) input{min-width:12rem}
+.tabla-editable td input[type=number]{-moz-appearance:textfield;appearance:textfield}
+.tabla-editable td input[type=number]::-webkit-inner-spin-button,
+.tabla-editable td input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.tabla-editable td select{min-width:6.2rem}
+#libro-rows,.libro-iva-row.header{min-width:720px}
+#chart-margen{width:100%;height:110px;display:block}
+
+.tooltip-normativo{white-space:nowrap}
+.tooltip-normativo::after{white-space:normal;width:max-content;max-width:min(280px,70vw);left:0;transform:none;line-height:1.4;font-weight:400;text-align:left}
+.form-grid-2>*:nth-child(even) .tooltip-normativo::after,.form-grid-3>*:nth-child(3n) .tooltip-normativo::after{left:auto;right:0}
+
+.help-overlay.open{align-items:center}
+.help-dialog{height:min(92vh,940px);min-height:0}
+.help-side{overflow-y:auto}
+.help-main{max-height:none;min-height:0;overflow-y:auto}
+.help-topic{font-weight:400;line-height:1.75}
+.help-table td,.help-table th{overflow-wrap:anywhere}
+.help-side button{white-space:normal;line-height:1.35}
+
+@media (max-width:1024px){
+  .panel-ayuda{flex:1 1 auto;max-height:none;position:static}
+}
+@media (max-width:760px){
+  .help-dialog{height:100dvh;grid-template-rows:auto minmax(0,1fr);border-radius:0}
+  .help-side{max-height:34vh}
+}
+@media (max-width:700px){
+  .modulo-nav{position:static}
+  .modulo-nav .nav-tabs{flex:1 1 100%;flex-direction:column}
+  .modulo-nav .nav-brand{border-right:none}
+  .modulo-nav > .nav-tab{border-left:none;flex:1 1 100%}
+  .main-container{padding:.75rem}
+  .panel-trabajo{padding:1rem}
+  .tabs{margin:0 -1rem 1rem -1rem}
+}
+@media print{
+  .header-simulacion{position:static!important}
+  .app-body{padding-top:0}
+  .tabla-editable{min-width:0}
+}
+</style>
+</head>
+<body>
+
+<!-- BANNER SIMULACIÓN -->
+<div class="header-simulacion" role="banner" aria-live="polite">
+  <span>⚠️ ENTORNO DE SIMULACIÓN DOCENTE — Los datos son ficticios. No válido fiscalmente. Uso exclusivo formativo.</span>
+  <span>FP Superior · Administración y Finanzas · Aula de simulación</span>
+</div>
+
+<!-- NAVEGACIÓN MÓDULOS -->
+<nav class="modulo-nav" role="navigation" aria-label="Módulos de la suite">
+  <div class="nav-brand">📊 Suite Empresarial FP</div>
+  <button class="nav-tab" type="button" onclick="abrirAyuda()" aria-haspopup="dialog">❔ Ayuda y guía de aprendizaje</button>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchModulo('presupuestos',this)" aria-selected="true">
+      📋 Módulo 1 — Simulador de Presupuestos
+    </button>
+    <button class="nav-tab" onclick="switchModulo('facturas',this)" aria-selected="false">
+      🧾 Módulo 2 — Generador de Facturas (VeriFactu)
+    </button>
+  </div>
+</nav>
+
+<div class="app-body">
+
+<!-- ═══════════════════════════════════════════════════
+     MÓDULO 1: SIMULADOR DE PRESUPUESTOS COMERCIALES
+     ═══════════════════════════════════════════════════ -->
+<div id="modulo-presupuestos" class="modulo active">
+  <div class="main-container">
+
+    <!-- PANEL TRABAJO -->
+    <main class="panel-trabajo" role="main" aria-label="Simulador de presupuestos">
+      <div class="alerta alerta-info"><strong>Objetivo de aprendizaje:</strong> construir una oferta comercial y comprender cómo se forma su precio. Pulsa «Ayuda y guía de aprendizaje» para consultar el manual paso a paso.</div>
+
+      <!-- TABS INTERNOS -->
+      <div class="tabs" role="tablist">
+        <button class="tab-btn active" onclick="switchTab('p','datos',this)" role="tab" aria-selected="true">1 · Datos Base</button>
+        <button class="tab-btn" onclick="switchTab('p','lineas',this)" role="tab">2 · Líneas / Costes</button>
+        <button class="tab-btn" onclick="switchTab('p','fiscal',this)" role="tab">3 · Fiscalidad</button>
+        <button class="tab-btn" onclick="switchTab('p','resultado',this)" role="tab">4 · Resultado</button>
+      </div>
+
+      <!-- TAB DATOS BASE -->
+      <div id="p-tab-datos" class="tab-content active">
+        <div class="seccion-titulo">
+          <span class="seccion-badge">Art. 1262 CC</span>
+          Datos Generales del Presupuesto
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="label">Nº Presupuesto</label>
+            <input type="text" id="p-numero" class="input-text text-mono font-bold" value="PRES-2026-001" onchange="actualizarResumen()">
+          </div>
+          <div class="form-group">
+            <label class="label">Fecha Emisión</label>
+            <input type="date" id="p-fecha" class="input-text">
+          </div>
+          <div class="form-group">
+            <label class="label">Cliente / Destinatario
+              <span class="tooltip-normativo" data-norma="Art. 13 RGPD: Informar al interesado sobre tratamiento de datos">RGPD</span>
+            </label>
+            <input type="text" id="p-cliente" class="input-text" placeholder="Nombre/Empresa (anonimizar en práctica)" oninput="actualizarResumen()">
+          </div>
+          <div class="form-group">
+            <label class="label">Tipo de Cliente
+              <span class="tooltip-normativo" data-norma="TRLGDCU art.3: consumidor = persona física que actúa fuera de actividad profesional">TRLGDCU</span>
+            </label>
+            <select id="p-tipo-cliente" class="select-field" onchange="checkTipoCliente()">
+              <option value="particular">Particular (Consumidor)</option>
+              <option value="empresa">Empresa / Autónomo</option>
+              <option value="aapp">Administración Pública (AAPP)</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="alerta-consumidor" class="alerta alerta-warning" style="display:none">
+          ⚖️ <strong>Consumidor:</strong> La validez del presupuesto la fija la oferta: no existe una regla general que imponga 30 días. Antes de contratar a distancia o fuera del establecimiento, informa sobre precio total, características, duración y, cuando proceda, desistimiento. El plazo general de desistimiento de 14 días tiene excepciones.
+        </div>
+        <div id="alerta-aapp" class="alerta alerta-info" style="display:none">
+          🏛️ <strong>AAPP:</strong> En contratación pública se aplican reglas específicas de la LCSP y de facturación electrónica. El plazo de pago y las retenciones dependen del supuesto; no se aplican automáticamente a todo presupuesto.
+        </div>
+
+        <div class="form-grid-3">
+          <div class="form-group">
+            <label class="label">Validez del Presupuesto (días)
+              <span class="tooltip-normativo" data-norma="Art. 1262 CC: La oferta caduca según plazo fijado. Sin plazo, cesa al cruzarse en las partes.">CC</span>
+            </label>
+            <input type="range" id="p-validez" min="7" max="180" value="30" oninput="updateValidez(this.value)">
+            <div class="flex-between mt-md">
+              <span class="text-xs text-muted">7 días</span>
+              <strong id="validez-display" class="text-mono">30 días</strong>
+              <span class="text-xs text-muted">180 días</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" id="validez-bar" style="width:14%"></div></div>
+            <div id="alerta-validez-corta" class="alerta alerta-danger mt-md" style="display:none">
+              🚨 El plazo de validez lo decide quien oferta; debe indicarse con claridad y no confundirse con el derecho de desistimiento.
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="label">Condiciones de Pago</label>
+            <select id="p-pago" class="select-field">
+              <option value="contado">Contado</option>
+              <option value="30d">30 días fecha factura</option>
+              <option value="60d">60 días (Ley 3/2004)</option>
+              <option value="anticipo50">50% anticipo + 50% entrega</option>
+              <option value="obra">Certificaciones de obra</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="label">Portes / Transporte</label>
+            <select id="p-portes" class="select-field">
+              <option value="franco">Transporte incluido en el precio</option>
+              <option value="excl">Transporte excluido (acordar quién lo paga)</option>
+              <option value="cargo">A cargo del comprador</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="label">Objeto del presupuesto / Descripción general</label>
+          <input type="text" id="p-objeto" class="input-text" placeholder="Ej: Suministro e instalación de equipamiento informático" oninput="actualizarResumen()">
+        </div>
+
+        <div class="btn-group">
+          <button class="btn btn-primary" onclick="switchTab('p','lineas',this)">Continuar → Líneas de Coste</button>
+          <button class="btn btn-outline" onclick="resetPresupuesto()">🔄 Nuevo presupuesto</button>
+        </div>
+      </div>
+
+      <!-- TAB LÍNEAS -->
+      <div id="p-tab-lineas" class="tab-content">
+        <div class="seccion-titulo">
+          <span class="seccion-badge">PVP = Coste/(1 − margen)</span>
+          Líneas de Detalle — Editor de Costes y Márgenes
+        </div>
+
+        <div class="alerta alerta-info mb-md">
+          💡 <strong>Fórmula PVP:</strong> Si el margen se expresa como porcentaje sobre el precio de venta: PVP = coste unitario ÷ (1 − margen). Después se aplica el descuento. Ojo: margen sobre venta y recargo sobre coste no son lo mismo.
+        </div>
+
+        <div style="overflow-x:auto;">
+          <table class="tabla-editable" id="tabla-lineas" aria-label="Líneas del presupuesto">
+            <thead>
+              <tr>
+                <th>Ref.</th>
+                <th>Descripción</th>
+                <th>Uds.</th>
+                <th>Coste Mat.</th>
+                <th>Coste M.O.</th>
+                <th>%Margen</th>
+                <th>%Dto.</th>
+                <th>PVP Unit.</th>
+                <th>PVP Dto.</th>
+                <th>Total</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="lineas-body">
+              <!-- Filas generadas por JS -->
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="9" style="text-align:right;font-weight:700;padding:0.75rem;">SUBTOTAL (sin IVA)</td>
+                <td class="calc-cell" id="p-subtotal" style="font-size:1rem;padding:0.75rem;">0,00 €</td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <button class="btn btn-outline btn-sm mt-md" onclick="agregarLinea()">➕ Añadir línea</button>
+
+        <div class="chart-container mt-md">
+          <canvas id="chart-margen" aria-label="Gráfico de impacto del descuento en margen"></canvas>
+        </div>
+        <p class="text-xs text-muted text-center">Impacto del % descuento sobre el margen neto por línea</p>
+
+        <div class="btn-group">
+          <button class="btn btn-primary" onclick="switchTab('p','fiscal',this)">Continuar → Fiscalidad</button>
+          <button class="btn btn-outline" onclick="switchTab('p','datos',this)">← Volver</button>
+        </div>
+      </div>
+
+      <!-- TAB FISCAL -->
+      <div id="p-tab-fiscal" class="tab-content">
+        <div class="seccion-titulo">
+          <span class="seccion-badge">LIVA / TRLGDCU</span>
+          Fiscalidad Estimada del Presupuesto
+        </div>
+
+        <div class="alerta alerta-warning mb-md">
+          📜 <strong>RD 1619/2012:</strong> El presupuesto NO sustituye a la factura. Al aceptarse, debe emitirse factura en los plazos reglamentarios. El IVA aquí es orientativo.
+        </div>
+
+        <div class="form-grid-2">
+          <div>
+            <div class="form-group">
+              <label class="label">Tipo de IVA aplicable
+                <span class="tooltip-normativo" data-norma="Ley 37/1992 LIVA: Art.90 (21% general), Art.91 (10%/4% reducidos), Art.20 (exenciones)">LIVA</span>
+              </label>
+              <select id="p-tipo-iva" class="select-field" onchange="calcularFiscal()">
+                <option value="0.21">21% — General</option>
+                <option value="0.10">10% — Reducido (hostelería, transporte…)</option>
+                <option value="0.04">4% — Superreducido (PAN, libros, fármacos…)</option>
+                <option value="0">Exento art. 20 LIVA</option>
+                <option value="isp">ISP — Inversión Sujeto Pasivo (art. 84 LIVA)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="label">Régimen del emisor / IRPF retención
+                <span class="tooltip-normativo" data-norma="LIRPF art.99: Retención 15% actividades profesionales (7% primeros 3 años)">LIRPF</span>
+              </label>
+              <select id="p-irpf" class="select-field" onchange="calcularFiscal()">
+                <option value="0">Empresa/Sociedad (sin retención IRPF)</option>
+                <option value="0.15">Autónomo profesional — 15% IRPF</option>
+                <option value="0.07">Autónomo nuevo (1er año o &lt;3 años) — 7%</option>
+                <option value="aapp">AAPP / Ente público — Retención a consultar</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <div class="form-group">
+              <label class="label">Controles fiscales</label>
+              <div class="switch-container">
+                <label class="switch"><input type="checkbox" id="sw-recargo" onchange="calcularFiscal()"><span class="slider-switch"></span></label>
+                <span class="switch-label">Recargo de Equivalencia
+                  <span class="tooltip-normativo" data-norma="Art. 154 LIVA: Solo para minoristas en régimen especial. Incompatible con exención. Tasa: IVA 21%→5,2% | IVA 10%→1,4% | IVA 4%→0,5%">LIVA 154</span>
+                  <span id="re-tasa-badge" class="badge badge-blue" style="margin-left:4px;display:none"></span>
+                </span>
+              </div>
+              <div id="alerta-re" class="alerta alerta-danger" style="display:none">
+                🚨 <strong>Ilegal:</strong> Recargo de equivalencia + exención art.20 es incompatible (art. 154.3 LIVA).
+              </div>
+              <div class="switch-container mt-md">
+                <label class="switch"><input type="checkbox" id="sw-isp" onchange="checkISP()"><span class="slider-switch"></span></label>
+                <span class="switch-label">Inversión Sujeto Pasivo
+                  <span class="tooltip-normativo" data-norma="Art. 84.1.2º LIVA: ISP en construcción, metales, emisiones CO2, etc.">LIVA 84</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resumen fiscal -->
+        <div class="kpi-grid" id="kpi-fiscal">
+          <div class="kpi-card azul">
+            <div class="kpi-titulo">Base Imponible</div>
+            <div class="kpi-numero" id="kpi-base">0,00 €</div>
+            <div class="kpi-unidades">Sin impuestos</div>
+          </div>
+          <div class="kpi-card ambar">
+            <div class="kpi-titulo">Cuota IVA</div>
+            <div class="kpi-numero" id="kpi-iva">0,00 €</div>
+            <div class="kpi-unidades" id="kpi-iva-label">21%</div>
+          </div>
+          <div class="kpi-card verde">
+            <div class="kpi-titulo">Total Presupuesto</div>
+            <div class="kpi-numero" id="kpi-total">0,00 €</div>
+            <div class="kpi-unidades">Bruto (con IVA)</div>
+          </div>
+        </div>
+
+        <div id="kpi-irpf-container" style="display:none">
+          <div class="alerta alerta-info">
+            ℹ️ <strong>Retención IRPF informativa:</strong> <span id="irpf-info">—</span> (para el pagador: obligado a retener e ingresar en Hacienda)
+          </div>
+        </div>
+
+        <div class="btn-group">
+          <button class="btn btn-primary" onclick="switchTab('p','resultado',this)">Continuar → Resultado Final</button>
+          <button class="btn btn-outline" onclick="switchTab('p','lineas',this)">← Volver</button>
+        </div>
+      </div>
+
+      <!-- TAB RESULTADO -->
+      <div id="p-tab-resultado" class="tab-content">
+        <div class="seccion-titulo">
+          <span class="seccion-badge">Oferta vinculante</span>
+          Presupuesto Final — Vista Previa
+        </div>
+
+        <div style="background:#f8fafc;border:2px solid #e2e8f0;border-radius:var(--border-radius);padding:var(--spacing-lg);margin-bottom:var(--spacing-md);">
+          <div class="flex-between mb-md">
+            <div>
+              <div style="font-size:0.8rem;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em">Presupuesto Nº</div>
+              <div class="numero-factura-badge" id="r-numero">PRES-2026-001</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-size:0.8rem;color:#6b7280">Fecha / Validez</div>
+              <strong id="r-fecha-validez" class="text-mono">—</strong>
+            </div>
+          </div>
+          <div class="form-grid-2 mb-md">
+            <div>
+              <div class="text-xs text-muted">EMISOR</div>
+              <div class="font-bold">Empresa Demo S.L. (SIMULACIÓN)</div>
+              <div class="text-xs text-muted">NIF: B-00000000 (ficticio)</div>
+            </div>
+            <div>
+              <div class="text-xs text-muted">DESTINATARIO</div>
+              <div class="font-bold" id="r-cliente">—</div>
+              <div class="text-xs text-muted" id="r-tipo-cliente">—</div>
+            </div>
+          </div>
+          <div class="text-xs text-muted mb-md">Objeto: <span id="r-objeto">—</span></div>
+
+          <div id="resumen-lineas" style="margin-bottom:var(--spacing-md);"></div>
+
+          <hr class="divider">
+          <div style="display:grid;grid-template-columns:1fr auto;gap:0.5rem 1rem;max-width:560px;margin-left:auto;">
+            <div class="text-sm text-muted">Base Imponible:</div><div class="text-mono text-right font-bold" id="r-base">0,00 €</div>
+            <div class="text-sm text-muted" id="r-iva-label">IVA (21%):</div><div class="text-mono text-right" id="r-iva">0,00 €</div>
+            <div class="text-sm text-muted" id="r-re-label" style="display:none">R.E. (5,2%):</div><div class="text-mono text-right" id="r-re" style="display:none">0,00 €</div>
+            <div class="text-sm font-bold">TOTAL PRESUPUESTO:</div><div class="text-mono text-right font-bold" style="font-size:1.1rem;color:var(--primary-blue)" id="r-total">0,00 €</div>
+            <div class="text-sm text-muted" id="r-irpf-label" style="display:none">(-) Retención IRPF:</div><div class="text-mono text-right" id="r-irpf-ret" style="display:none">0,00 €</div>
+            <div class="text-sm font-bold" id="r-liquido-label" style="display:none">Líquido a percibir:</div><div class="text-mono text-right font-bold" id="r-liquido" style="color:var(--success-green);display:none">0,00 €</div>
+          </div>
+        </div>
+
+        <!-- Análisis de sensibilidad -->
+        <div class="seccion-titulo mt-md">📈 Análisis de Sensibilidad (+10% costes materia)</div>
+        <div class="kpi-grid">
+          <div class="kpi-card azul">
+            <div class="kpi-titulo">Margen Actual</div>
+            <div class="kpi-numero text-mono" id="s-margen-actual">—</div>
+            <div class="kpi-unidades">% sobre venta</div>
+          </div>
+          <div class="kpi-card rojo">
+            <div class="kpi-titulo">Margen con +10% costes</div>
+            <div class="kpi-numero text-mono" id="s-margen-stress">—</div>
+            <div class="kpi-unidades">% sobre venta</div>
+          </div>
+          <div class="kpi-card ambar">
+            <div class="kpi-titulo">Impacto € negativo</div>
+            <div class="kpi-numero text-mono" id="s-impacto">—</div>
+            <div class="kpi-unidades">Pérdida margen</div>
+          </div>
+        </div>
+
+        <!-- Clausulado -->
+        <div class="seccion-titulo">📄 Clausulado Automático</div>
+        <div class="clausulado" id="clausulado-text">
+          Cargando clausulado…
+        </div>
+
+        <div class="auditoria mt-md">
+          <strong>📋 Auditoría didáctica:</strong> Este presupuesto es una <em>oferta vinculante</em> (art. 1262 CC). Su aceptación genera contrato. No sustituye a la factura reglamentaria (RD 1619/2012). El IVA indicado es orientativo y deberá liquidarse conforme a la Ley 37/1992.
+        </div>
+
+        <div class="btn-group mt-md">
+          <button class="btn btn-success" onclick="convertirAFactura()">✅ Aceptado → Crear Factura Borrador</button>
+          <button class="btn btn-primary" onclick="exportPDF()">🖨️ Imprimir / guardar como PDF (docente)</button>
+          <button class="btn btn-warning" onclick="validarChecklist()">🔍 Validar Checklist Normativo</button>
+          <button class="btn btn-outline" onclick="switchTab('p','fiscal',this)">← Volver</button>
+        </div>
+
+        <!-- MODAL Checklist -->
+        <div id="checklist-modal" style="display:none;background:#f8fafc;border:2px solid var(--primary-blue);border-radius:var(--border-radius);padding:var(--spacing-lg);margin-top:var(--spacing-md);">
+          <div class="seccion-titulo">✅ Checklist Normativo del Presupuesto</div>
+          <ul class="checklist" id="checklist-items"></ul>
+          <button class="btn btn-outline btn-sm" onclick="document.getElementById('checklist-modal').style.display='none'">Cerrar</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- PANEL AYUDA PRESUPUESTOS -->
+    <aside class="panel-ayuda" aria-label="Panel de ayuda y normativa">
+      <h3>📚 Panel Normativo</h3>
+
+      <div class="alerta alerta-info mb-md">
+        <div>
+          <strong>Módulo 1 — Presupuestos</strong><br>
+          <span class="text-xs">Oferta / aceptación → ejecución → factura</span>
+        </div>
+      </div>
+
+      <div class="mb-md">
+        <div class="text-xs font-bold text-muted mb-sm" style="text-transform:uppercase;letter-spacing:0.05em">Estado del presupuesto</div>
+        <ul class="checklist" id="mini-checklist">
+          <li class="checklist-item">
+            <span class="check-mark" id="ck-datos">?</span>
+            <span>Datos base completados</span>
+          </li>
+          <li class="checklist-item">
+            <span class="check-mark" id="ck-lineas">?</span>
+            <span>Líneas con coste y margen</span>
+          </li>
+          <li class="checklist-item">
+            <span class="check-mark" id="ck-fiscal">?</span>
+            <span>Fiscalidad configurada</span>
+          </li>
+          <li class="checklist-item">
+            <span class="check-mark" id="ck-validez">?</span>
+            <span>Validez indicada (si procede)</span>
+          </li>
+        </ul>
+      </div>
+
+      <hr class="divider">
+
+      <div class="mb-md">
+        <div class="text-xs font-bold text-muted mb-sm" style="text-transform:uppercase;letter-spacing:0.05em">Normativa clave</div>
+        <div class="alerta alerta-info mb-sm text-xs">
+          <strong>Art. 1262 CC:</strong> Oferta caduca al plazo fijado o, sin plazo, al cruzarse la propuesta con la aceptación.
+        </div>
+        <div class="alerta alerta-info mb-sm text-xs">
+          <strong>Art. 97 TRLGDCU:</strong> Información precontractual obligatoria al consumidor: precio total, gastos, plazo desistimiento 14 días.
+        </div>
+        <div class="alerta alerta-warning mb-sm text-xs">
+          <strong>RD 1619/2012:</strong> El presupuesto no es factura. La factura debe emitirse al realizarse la operación (art. 11).
+        </div>
+        <div class="alerta alerta-info mb-sm text-xs">
+          <strong>RGPD art. 13:</strong> Informar al cliente sobre el tratamiento de sus datos. En entornos docentes: anonimizar o usar datos ficticios.
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="mb-md">
+        <div class="text-xs font-bold text-muted mb-sm" style="text-transform:uppercase;letter-spacing:0.05em">Resumen rápido</div>
+        <div class="text-xs" id="resumen-rapido" style="line-height:1.8">
+          Completa los datos para ver el resumen…
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div>
+        <div class="text-xs font-bold text-muted mb-sm" style="text-transform:uppercase;letter-spacing:0.05em">Tipos de IVA (España)</div>
+        <table style="width:100%;font-size:0.72rem;border-collapse:collapse;">
+          <tr style="background:#e5e7eb;"><th style="padding:3px 6px;text-align:left">Tipo</th><th style="padding:3px 6px">%</th><th style="padding:3px 6px;text-align:left">Ejemplos</th></tr>
+          <tr style="border-bottom:1px solid #f3f4f6;"><td style="padding:3px 6px">General</td><td style="padding:3px 6px;text-align:center;font-weight:700">21%</td><td style="padding:3px 6px">Mayoría de bienes y servicios</td></tr>
+          <tr style="border-bottom:1px solid #f3f4f6;"><td style="padding:3px 6px">Reducido</td><td style="padding:3px 6px;text-align:center;font-weight:700">10%</td><td style="padding:3px 6px">Hostelería, transporte, vivienda</td></tr>
+          <tr style="border-bottom:1px solid #f3f4f6;"><td style="padding:3px 6px">Superreducido</td><td style="padding:3px 6px;text-align:center;font-weight:700">4%</td><td style="padding:3px 6px">Pan, libros, medicamentos</td></tr>
+          <tr><td style="padding:3px 6px">Exento</td><td style="padding:3px 6px;text-align:center;font-weight:700">0%</td><td style="padding:3px 6px">Sanidad, educación (art.20)</td></tr>
+        </table>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     MÓDULO 2: GENERADOR DIDÁCTICO DE FACTURAS
+     ═══════════════════════════════════════════════════ -->
+<div id="modulo-facturas" class="modulo">
+  <div class="main-container">
+
+    <!-- PANEL TRABAJO -->
+    <main class="panel-trabajo" role="main" aria-label="Generador de facturas">
+      <div class="alerta alerta-info"><strong>Objetivo de aprendizaje:</strong> reconocer los datos de una factura, calcular sus importes y comprender los registros. Esta pantalla no emite facturas reales.</div>
+
+      <!-- TABS INTERNOS -->
+      <div class="tabs" role="tablist">
+        <button class="tab-btn active" onclick="switchTab('f','tipo',this)" role="tab">1 · Tipo / Emisor</button>
+        <button class="tab-btn" onclick="switchTab('f','campos',this)" role="tab">2 · Campos Obligatorios</button>
+        <button class="tab-btn" onclick="switchTab('f','verifactu',this)" role="tab">3 · VeriFactu</button>
+        <button class="tab-btn" onclick="switchTab('f','registro',this)" role="tab">4 · Libro IVA</button>
+      </div>
+
+      <!-- TAB TIPO / EMISOR -->
+      <div id="f-tab-tipo" class="tab-content active">
+        <div class="seccion-titulo">
+          <span class="seccion-badge">RD 1619/2012</span>
+          Selección de Tipo de Factura y Emisor
+        </div>
+
+        <div class="form-grid-2 mb-md">
+          <div class="form-group">
+            <label class="label">Tipo de Factura
+              <span class="tooltip-normativo" data-norma="RD 1619/2012 art.4: Factura completa, simplificada (≤400€ o casos autorizados), rectificativa">RD 1619</span>
+            </label>
+            <select id="f-tipo-factura" class="select-field" onchange="updateTipoFactura()">
+              <option value="completa">Completa (art. 6 RD 1619/2012)</option>
+              <option value="simplificada">Simplificada ≤400€ / autorizados (art. 7)</option>
+              <option value="rectificativa">Rectificativa (art. 80 LIVA / art. 13 RD)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="label">Destinatario del negocio</label>
+            <select id="f-b2x" class="select-field" onchange="updateB2X()">
+              <option value="b2c">B2C — Consumidor final</option>
+              <option value="b2b">B2B — Empresa / Autónomo</option>
+              <option value="b2g">B2G — Administración Pública (FACe)</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="alerta-simplificada-monto" class="alerta alerta-danger" style="display:none">
+          🚨 <strong>Factura simplificada:</strong> más de 400 € (IVA incluido) solo cabe en los supuestos específicos del art. 4.2 (hasta 3.000 € en operaciones enumeradas) o cuando exista autorización. Si no se cumple una excepción, corresponde factura completa.
+        </div>
+        <div id="alerta-b2g" class="alerta alerta-info" style="display:none">
+          🏛️ <strong>B2G — Factura Electrónica obligatoria:</strong> Ley 25/2013 (factura electrónica en el sector público). Formato Facturae 3.2.x + envío FACe. Puntos de entrada específicos por Administración.
+        </div>
+        <div id="alerta-b2b" class="alerta alerta-warning" style="display:none">
+          📋 <strong>B2B — Ley 18/2022 y RD 238/2026:</strong> La factura electrónica estructurada entre empresas tiene un calendario propio: 12 meses desde la entrada en vigor de la orden ministerial de desarrollo para empresas con volumen superior a 8 millones de euros y 24 meses para el resto. No debe confundirse con VeriFactu, que regula los sistemas informáticos de facturación.
+        </div>
+
+        <hr class="divider">
+
+        <div class="seccion-titulo">Datos del Emisor</div>
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="label">Nombre / Razón Social</label>
+            <input type="text" id="f-emisor-nombre" class="input-text" value="Empresa Docente Demo S.L." oninput="actualizarVista()">
+          </div>
+          <div class="form-group">
+            <label class="label">NIF / CIF del Emisor
+              <span class="tooltip-normativo" data-norma="Art. 6.1.b RD 1619/2012: NIF obligatorio del expedidor de la factura">RD 1619 art.6</span>
+            </label>
+            <input type="text" id="f-emisor-nif" class="input-text text-mono" value="B-12345678" oninput="validarNIF('f-emisor-nif', 'nif-emisor-status')" placeholder="B-XXXXXXXX / 12345678A">
+            <span class="text-xs" id="nif-emisor-status"></span>
+          </div>
+          <div class="form-group">
+            <label class="label">Domicilio fiscal</label>
+            <input type="text" id="f-emisor-dir" class="input-text" value="Calle Ejemplo 1, 28001 Madrid" oninput="actualizarVista()">
+          </div>
+          <div class="form-group">
+            <label class="label">Régimen de IVA</label>
+            <select id="f-emisor-regimen" class="select-field">
+              <option value="general">Régimen General</option>
+              <option value="recargo">Recargo de Equivalencia</option>
+              <option value="simplificado">Régimen Simplificado (módulos)</option>
+              <option value="exento">Actividad exenta (art. 20 LIVA)</option>
+            </select>
+          </div>
+        </div>
+
+        <hr class="divider">
+        <div class="seccion-titulo">Numeración de la Factura</div>
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="label">Serie
+              <span class="tooltip-normativo" data-norma="RD 1619 art.6.1.a: Número correlativo dentro de una o varias series. Serie rota = error grave (art.201 LGT)">RD 1619</span>
+            </label>
+            <input type="text" id="f-serie" class="input-text text-mono font-bold" value="A" maxlength="5" oninput="validarSerie()" placeholder="A / B / RECT">
+          </div>
+          <div class="form-group">
+            <label class="label">Número (correlativo)</label>
+            <input type="number" id="f-numero" class="input-number text-mono" value="1" min="1" oninput="generarNumeroFactura()">
+          </div>
+        </div>
+        <div class="flex-gap mb-md">
+          <span class="text-sm text-muted">Número completo:</span>
+          <span class="numero-factura-badge" id="f-numero-completo">A-00001</span>
+          <span id="serie-alerta" class="badge badge-green" style="display:none"></span>
+        </div>
+
+        <div class="btn-group">
+          <button class="btn btn-primary" onclick="switchTab('f','campos',this)">Continuar → Campos Obligatorios</button>
+        </div>
+      </div>
+
+      <!-- TAB CAMPOS OBLIGATORIOS -->
+      <div id="f-tab-campos" class="tab-content">
+        <div class="seccion-titulo">
+          <span class="seccion-badge">Art. 6 RD 1619</span>
+          Campos Obligatorios de la Factura
+        </div>
+
+        <div class="alerta alerta-warning mb-md">
+          ⚖️ <strong>Sanciones:</strong> las infracciones y sanciones por incumplimientos de facturación dependen de la conducta concreta y de los apartados aplicables del art. 201 LGT. No hay una multa única automática para cualquier error formal.
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="label">Fecha de Expedición
+              <span class="tooltip-normativo" data-norma="Art. 11 RD 1619: Facturas entre empresarios: antes del día 16 mes siguiente. B2C: en el acto">RD 1619 art.11</span>
+            </label>
+            <input type="date" id="f-fecha-exp" class="input-text" oninput="actualizarVista()">
+          </div>
+          <div class="form-group">
+            <label class="label">Fecha de Operación (si difiere)</label>
+            <input type="date" id="f-fecha-op" class="input-text" oninput="actualizarVista()">
+          </div>
+          <div class="form-group">
+            <label class="label">NIF / CIF del Destinatario
+              <span class="tooltip-normativo" data-norma="VIES: Validar NIF intracomunitarios en https://ec.europa.eu/taxation_customs/vies/">VIES/NIF</span>
+            </label>
+            <input type="text" id="f-dest-nif" class="input-text text-mono" placeholder="12345678Z / NIF de ejemplo" oninput="validarNIF('f-dest-nif', 'nif-dest-status')">
+            <span class="text-xs" id="nif-dest-status"></span>
+          </div>
+          <div class="form-group">
+            <label class="label">Nombre / Razón Social Destinatario</label>
+            <input type="text" id="f-dest-nombre" class="input-text" placeholder="Cliente S.A." oninput="actualizarVista()">
+          </div>
+          <div class="form-group">
+            <label class="label">Domicilio Destinatario</label>
+            <input type="text" id="f-dest-dir" class="input-text" placeholder="Calle, Nº, Ciudad" oninput="actualizarVista()">
+          </div>
+          <div class="form-group">
+            <label class="label">Descripción operación</label>
+            <input type="text" id="f-descripcion" class="input-text" placeholder="Prestación de servicios…" oninput="actualizarVista()">
+          </div>
+        </div>
+
+        <div class="seccion-titulo mt-md">Líneas de Factura</div>
+        <div style="overflow-x:auto;">
+          <table class="tabla-editable" id="tabla-factura" aria-label="Líneas de la factura">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Descripción</th>
+                <th>Cantidad</th>
+                <th>P. Unitario</th>
+                <th>%Dto</th>
+                <th>Base Imponible</th>
+                <th>Tipo IVA</th>
+                <th>Cuota IVA</th>
+                <th>Total</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="f-lineas-body"></tbody>
+            <tfoot id="f-tfoot"></tfoot>
+          </table>
+        </div>
+        <button class="btn btn-outline btn-sm mt-md" onclick="agregarLineaFactura()">➕ Añadir línea</button>
+
+        <div id="f-isp-info" style="display:none" class="alerta alerta-info mt-md">
+          🔄 <strong>Inversión Sujeto Pasivo (art. 84.1.2º LIVA):</strong> El sujeto pasivo es el destinatario. Mencionar expresamente en factura: <em>"Operación con inversión del sujeto pasivo"</em>.
+        </div>
+
+        <div class="btn-group mt-md">
+          <button class="btn btn-primary" onclick="switchTab('f','verifactu',this)">Continuar → VeriFactu</button>
+          <button class="btn btn-outline" onclick="switchTab('f','tipo',this)">← Volver</button>
+        </div>
+      </div>
+
+      <!-- TAB VERIFACTU -->
+      <div id="f-tab-verifactu" class="tab-content">
+        <div class="seccion-titulo">
+          <span class="seccion-badge">RD 1007/2023</span>
+          Sistema VeriFactu — Verificación e Integridad
+        </div>
+
+        <div class="alerta alerta-info mb-md">
+          🔐 <strong>RD 1007/2023 + Orden HAC/1177/2024 (VeriFactu):</strong> El RD 1007/2023 regula los sistemas informáticos de facturación. Tras la modificación de diciembre de 2025, los plazos generales de adaptación son 1-1-2027 para contribuyentes del Impuesto sobre Sociedades y 1-7-2027 para el resto de obligados incluidos. Esta pantalla es una maqueta: no genera registros reglamentarios, no envía datos a AEAT y no produce un QR válido.
+        </div>
+
+        <div class="form-grid-2 mb-md">
+          <div>
+            <div class="verifactu-panel">
+              <h4>🔗 Hash Encadenado SHA-256</h4>
+              <div class="text-xs text-muted mb-sm">Huella digital de esta factura (campos: NIF+Serie+Nº+Fecha+Base+Cuota+HashAnterior)</div>
+              <div class="hash-display" id="vf-hash">Calculando…</div>
+              <div class="text-xs text-muted">Hash anterior (encadenado):</div>
+              <div class="hash-display" style="color:#94a3b8;font-size:0.6rem;" id="vf-hash-anterior">0000000000000000 (primera factura de la serie)</div>
+              <button class="btn btn-success btn-sm mt-md" onclick="regenerarHash()">🔄 Recalcular Hash</button>
+            </div>
+          </div>
+          <div>
+            <div style="background:white;border:2px solid #e2e8f0;border-radius:var(--border-radius);padding:var(--spacing-md);">
+              <div class="text-xs font-bold text-muted mb-sm" style="text-transform:uppercase;letter-spacing:0.05em">QR de Verificación AEAT</div>
+              <div id="qr-canvas" style="display:flex;justify-content:center;align-items:center;height:120px;background:#f8fafc;border-radius:4px;">
+                <div style="text-align:center;">
+                  <div style="font-size:3rem;">🔲</div>
+                  <div class="text-xs text-muted mt-md">QR generado con datos de factura</div>
+                  <div class="text-xs text-mono" id="qr-url" style="word-break:break-all;max-width:200px;color:#6b7280;font-size:0.6rem;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Log de eventos -->
+        <div class="seccion-titulo">📋 Log de Eventos (No borrar: rectificar)</div>
+        <div class="alerta alerta-danger mb-md">
+          ⛔ <strong>Principio fundamental VeriFactu:</strong> Las facturas NUNCA se borran. Si hay error → emitir factura RECTIFICATIVA (art. 80 LIVA / art. 13 RD 1619/2012). El log es inalterable.
+        </div>
+        <div class="log-container" id="log-verifactu" aria-live="polite" aria-label="Log de eventos de facturación"></div>
+        <button class="btn btn-outline btn-sm" onclick="addLogEntry('warn','Simulación: intento de borrado bloqueado por VeriFactu ⛔')">🧪 Simular intento de borrado</button>
+        <button class="btn btn-outline btn-sm" onclick="addLogEntry('ok','Factura enviada a AEAT (simulación) — Código de recepción: AEAT-' + Math.random().toString(36).substr(2,8).toUpperCase())">📤 Simular envío AEAT</button>
+
+        <hr class="divider">
+
+        <!-- e-Factura / Facturae -->
+        <div class="seccion-titulo">📑 e-Factura — Facturae 3.2.x</div>
+        <div class="form-grid-2">
+          <div>
+            <div class="form-group">
+              <label class="label">Formato de exportación</label>
+              <select id="f-formato" class="select-field">
+                <option value="facturae32">Facturae 3.2.2 (formato estructurado; ejemplo no validado)</option>
+                <option value="ubl21">UBL 2.1 (Peppol / EU)</option>
+                <option value="pdf-a">PDF/A-3 con XML embebido</option>
+              </select>
+            </div>
+            <div class="switch-container">
+              <label class="switch"><input type="checkbox" id="sw-face" onchange="toggleFACe()"><span class="slider-switch"></span></label>
+              <span class="switch-label">Enviar a FACe (Administración Pública)
+                <span class="tooltip-normativo" data-norma="Ley 25/2013: Obligatorio para facturas a la AGE y CCAA adheridas">Ley 25/2013</span>
+              </span>
+            </div>
+          </div>
+          <div id="face-panel" style="display:none">
+            <div class="alerta alerta-info text-xs">
+              🏛️ FACe: Punto general de entrada de facturas electrónicas de la AGE.<br>
+              <strong>Estados:</strong> Registrada → Contabilizada → Pagada / Rechazada<br>
+              Plazo pago: 30 días (art. 198 LCSP). Incumplimiento → intereses de demora + penalización.
+            </div>
+            <select class="select-field mt-md" id="f-face-organo">
+              <option value="">Seleccionar órgano receptor…</option>
+              <option value="AGE">AGE - Ministerio genérico</option>
+              <option value="SEPE">SEPE</option>
+              <option value="TGSS">Tesorería General SS</option>
+              <option value="AYTO">Ayuntamiento (adherido)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="btn-group mt-md">
+          <button class="btn btn-success" onclick="exportarFacturae()">📥 Exportar Facturae XML</button>
+          <button class="btn btn-primary" onclick="exportarPDFFactura()">📄 Exportar PDF A4</button>
+          <button class="btn btn-warning" onclick="exportarTicket()">🧾 Exportar Ticket (80mm)</button>
+          <button class="btn btn-outline" onclick="switchTab('f','registro',this)">Continuar → Libro IVA</button>
+        </div>
+      </div>
+
+      <!-- TAB LIBRO IVA -->
+      <div id="f-tab-registro" class="tab-content">
+        <div class="seccion-titulo">
+          <span class="seccion-badge">Mod. 303/130</span>
+          Libro Registro de Facturas Emitidas — Mod. 303 mock
+        </div>
+
+        <div class="alerta alerta-info mb-md">
+          📊 <strong>Modelo 303 (IVA) / Modelo 130 (IRPF pagos fraccionados):</strong> Estas facturas se acumulan automáticamente. Este libro es un simulacro didáctico del formato AEAT.
+        </div>
+
+        <div class="form-grid-3 mb-md">
+          <div class="form-group">
+            <label class="label">Período liquidación</label>
+            <select id="f-periodo" class="select-field">
+              <option value="1T">1T — Enero-Marzo</option>
+              <option value="2T">2T — Abril-Junio</option>
+              <option value="3T">3T — Julio-Sept.</option>
+              <option value="4T">4T — Oct.-Dic.</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="label">Ejercicio</label>
+            <input type="number" id="f-ejercicio" class="input-number" value="2026" min="2020" max="2030">
+          </div>
+          <div class="form-group" style="display:flex;align-items:flex-end;">
+            <button class="btn btn-primary w-full" onclick="registrarFactura()">➕ Registrar factura actual</button>
+          </div>
+        </div>
+
+        <!-- Tabla libro -->
+        <div style="overflow-x:auto;margin-bottom:var(--spacing-md);">
+          <div class="libro-iva-row header" style="display:grid;grid-template-columns:96px 100px minmax(140px,1fr) 108px 56px 100px 112px;gap:0.4rem;">
+            <div>Serie/Nº</div>
+            <div>Fecha</div>
+            <div>Destinatario</div>
+            <div style="text-align:right">Base Imp.</div>
+            <div style="text-align:right">% IVA</div>
+            <div style="text-align:right">Cuota IVA</div>
+            <div style="text-align:right">Total</div>
+          </div>
+          <div id="libro-rows" style="min-height:60px;"></div>
+        </div>
+
+        <!-- Totales Mod 303 -->
+        <div class="verifactu-panel" style="background:linear-gradient(135deg,#1e3a5f,#1e40af);">
+          <h4 style="color:#93c5fd">📋 Resumen Mod. 303 — Liquidación IVA</h4>
+          <div class="form-grid-3" style="margin-top:0.75rem;">
+            <div style="background:rgba(255,255,255,0.1);border-radius:4px;padding:0.5rem;text-align:center;">
+              <div style="font-size:0.7rem;color:#93c5fd;margin-bottom:0.2rem">IVA DEVENGADO (repercutido)</div>
+              <div style="font-size:1.4rem;font-weight:800;font-family:var(--font-mono);" id="mod303-devengado">0,00 €</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.1);border-radius:4px;padding:0.5rem;text-align:center;">
+              <div style="font-size:0.7rem;color:#93c5fd;margin-bottom:0.2rem">IVA SOPORTADO (deducible)</div>
+              <div style="font-size:1.4rem;font-weight:800;font-family:var(--font-mono);" id="mod303-soportado">0,00 €</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.1);border-radius:4px;padding:0.5rem;text-align:center;">
+              <div style="font-size:0.7rem;color:#fde68a;margin-bottom:0.2rem">A INGRESAR / COMPENSAR</div>
+              <div style="font-size:1.4rem;font-weight:800;font-family:var(--font-mono);color:#fde68a;" id="mod303-resultado">0,00 €</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="btn-group mt-md">
+          <button class="btn btn-primary" onclick="exportarMod303()">📥 Exportar Mod. 303 CSV</button>
+          <button class="btn btn-warning" onclick="limpiarLibro()">🗑️ Limpiar libro (solo en aula)</button>
+        </div>
+
+        <div class="auditoria mt-md">
+          <strong>📋 Nota didáctica:</strong> El Modelo 303 se presenta trimestralmente (régimen general). Plazo: los 20 días naturales siguientes al período. El Modelo 130 (pagos fraccionados IRPF) también es trimestral para profesionales en estimación directa.
+        </div>
+      </div>
+    </main>
+
+    <!-- PANEL AYUDA FACTURAS -->
+    <aside class="panel-ayuda" aria-label="Panel normativo facturas">
+      <h3>📚 Panel Normativo</h3>
+
+      <div class="alerta alerta-info mb-md">
+        <div>
+          <strong>Módulo 2 — Facturas</strong><br>
+          <span class="text-xs">VeriFactu + e-Factura</span>
+        </div>
+      </div>
+
+      <!-- Checklist art. 6 en vivo -->
+      <div class="mb-md">
+        <div class="text-xs font-bold text-muted mb-sm" style="text-transform:uppercase;letter-spacing:0.05em">Checklist Art. 6 RD 1619/2012</div>
+        <ul class="checklist" id="checklist-art6">
+          <li class="checklist-item"><span class="check-mark" id="ck6-numero">?</span><span>Nº/Serie correlativo</span></li>
+          <li class="checklist-item"><span class="check-mark" id="ck6-fecha">?</span><span>Fecha de expedición</span></li>
+          <li class="checklist-item"><span class="check-mark" id="ck6-emisor-nif">?</span><span>NIF emisor</span></li>
+          <li class="checklist-item"><span class="check-mark" id="ck6-dest-nif">?</span><span>NIF destinatario</span></li>
+          <li class="checklist-item"><span class="check-mark" id="ck6-descripcion">?</span><span>Descripción operación</span></li>
+          <li class="checklist-item"><span class="check-mark" id="ck6-base">?</span><span>Base imponible</span></li>
+          <li class="checklist-item"><span class="check-mark" id="ck6-tipo">?</span><span>Tipo/cuota IVA</span></li>
+        </ul>
+      </div>
+
+      <!-- Simulador error -->
+      <hr class="divider">
+      <div class="mb-md">
+        <div class="text-xs font-bold text-muted mb-sm" style="text-transform:uppercase;letter-spacing:0.05em">🧪 Simulador de Inconsistencias</div>
+        <button class="btn btn-danger btn-sm w-full mb-sm" onclick="simularError('cuota')">Ocultar cuota IVA</button>
+        <button class="btn btn-warning btn-sm w-full mb-sm" onclick="simularError('nif')">NIF incorrecto</button>
+        <button class="btn btn-warning btn-sm w-full mb-sm" onclick="simularError('serie')">Romper serie correlativa</button>
+        <button class="btn btn-success btn-sm w-full" onclick="restaurarSimulacion()">✅ Restaurar</button>
+        <div id="error-display" class="alerta alerta-danger mt-md" style="display:none;font-size:0.75rem;"></div>
+      </div>
+
+      <hr class="divider">
+      <div class="mb-md">
+        <div class="text-xs font-bold text-muted mb-sm" style="text-transform:uppercase;letter-spacing:0.05em">Sanciones LGT (art. 201)</div>
+        <div class="alerta alerta-danger text-xs mb-sm">
+          <strong>Infracción grave:</strong> No expedir facturas → 1–2% importe o mín. 300€
+        </div>
+        <div class="alerta alerta-warning text-xs mb-sm">
+          <strong>Infracción leve:</strong> Retraso en expedición → multa proporcional
+        </div>
+        <div class="alerta alerta-danger text-xs">
+          <strong>Muy grave:</strong> Facturas falsas → desde 75% hasta 150% del importe (art. 201.3 LGT)
+        </div>
+      </div>
+
+      <hr class="divider">
+      <div>
+        <div class="text-xs font-bold text-muted mb-sm" style="text-transform:uppercase;letter-spacing:0.05em">Normativa aplicable</div>
+        <div class="text-xs" style="line-height:2">
+          📜 Ley 37/1992 LIVA<br>
+          📜 RD 1619/2012 (Facturación)<br>
+          📜 RD 1007/2023 (VeriFactu)<br>
+          📜 Orden HAC/1177/2024<br>
+          📜 Ley 25/2013 (B2G)<br>
+          📜 Ley 18/2022 (B2B e-factura)<br>
+          📜 Ley 58/2003 LGT (sanciones)
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+</div><!-- /app-body -->
+
+<script>
+// ===================================================
+//  SUITE EMPRESARIAL FP — JavaScript Principal
+// ===================================================
+
+// ── ESTADO GLOBAL ───────────────────────────────────
+const state = {
+  presupuesto: {
+    lineas: [],
+    tipoCliente: 'particular',
+    validez: 30,
+    tipoIVA: 0.21,
+    irpf: 0,
+    subtotal: 0, cuotaIVA: 0, total: 0,
+  },
+  factura: {
+    lineas: [],
+    tipo: 'completa',
+    b2x: 'b2c',
+    serie: 'A',
+    numero: 1,
+    hashAnterior: '0000000000000000000000000000000000000000000000000000000000000000',
+    libroEmitidas: [],
+    mod303Devengado: 0,
+  }
+};
+
+// ── INIT ─────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  // Fechas de hoy
+  const hoy = new Date().toISOString().split('T')[0];
+  document.getElementById('p-fecha').value = hoy;
+  document.getElementById('f-fecha-exp').value = hoy;
+  document.getElementById('f-fecha-op').value = hoy;
+
+  // Presupuesto: 3 líneas demo
+  for(let i=0;i<3;i++) agregarLinea();
+  // Factura: 2 líneas demo
+  for(let i=0;i<2;i++) agregarLineaFactura();
+
+  // Demo datos factura
+  setTimeout(()=>{
+    document.getElementById('f-dest-nif').value = '12345678Z';
+    validarNIF('f-dest-nif','nif-dest-status');
+    document.getElementById('f-dest-nombre').value = 'Cliente Ejemplo S.L.';
+    document.getElementById('f-dest-dir').value = 'Av. Constitución 12, 41001 Sevilla';
+    document.getElementById('f-descripcion').value = 'Prestación de servicios informáticos';
+    generarNumeroFactura();
+    regenerarHash();
+    actualizarChecklistArt6();
+    addLogEntry('ok', 'Sistema VeriFactu iniciado — Hash inicial registrado');
+    addLogEntry('ok', 'Factura ' + document.getElementById('f-numero-completo').textContent + ' creada en memoria');
+  }, 100);
+
+  actualizarResumen();
+  calcularFiscal();
+});
+
+// ── NAVEGACIÓN MÓDULOS ──────────────────────────────
+function switchModulo(modulo) {
+  document.querySelectorAll('.modulo').forEach(m => m.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('modulo-' + modulo).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function switchTab(prefijo, tab) {
+  const allTabs = document.querySelectorAll(`[id^="${prefijo}-tab-"]`);
+  const allBtns = event.target.parentElement.querySelectorAll('.tab-btn');
+  allTabs.forEach(t => t.classList.remove('active'));
+  allBtns.forEach(b => b.classList.remove('active'));
+  const el = document.getElementById(`${prefijo}-tab-${tab}`);
+  if(el) el.classList.add('active');
+  event.target.classList.add('active');
+
+  if(prefijo === 'p' && tab === 'resultado') renderizarResultado();
+  if(prefijo === 'p' && tab === 'lineas') renderChartMargen();
+  if(prefijo === 'f' && tab === 'verifactu') { regenerarHash(); actualizarTotalesFactura(); }
+  if(prefijo === 'f' && tab === 'registro') actualizarMod303();
+}
+
+// ── PRESUPUESTO: LÍNEAS ──────────────────────────────
+let lineaId = 0;
+function agregarLinea() {
+  lineaId++;
+  const id = lineaId;
+  state.presupuesto.lineas.push({ id, ref:'', desc:'', uds:1, costeMat:0, costeMO:0, margen:30, dto:0 });
+  renderLineas();
+}
+
+function renderLineas() {
+  const tbody = document.getElementById('lineas-body');
+  tbody.innerHTML = '';
+  state.presupuesto.lineas.forEach((l, idx) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input value="${l.ref}" onchange="updateLinea(${l.id},'ref',this.value)" placeholder="REF-${String(l.id).padStart(3,'0')}" style="width:65px"></td>
+      <td><input value="${l.desc}" onchange="updateLinea(${l.id},'desc',this.value)" placeholder="Descripción del producto/servicio" style="min-width:140px"></td>
+      <td><input type="number" value="${l.uds}" min="0.01" step="0.01" onchange="updateLinea(${l.id},'uds',+this.value)" style="width:55px"></td>
+      <td><input type="number" value="${l.costeMat}" min="0" step="0.01" onchange="updateLinea(${l.id},'costeMat',+this.value)" style="width:75px" placeholder="€"></td>
+      <td><input type="number" value="${l.costeMO}" min="0" step="0.01" onchange="updateLinea(${l.id},'costeMO',+this.value)" style="width:75px" placeholder="€"></td>
+      <td><input type="number" value="${l.margen}" min="1" max="99" step="1" onchange="updateLinea(${l.id},'margen',+this.value)" style="width:55px"></td>
+      <td><input type="number" value="${l.dto}" min="0" max="99" step="1" onchange="updateLinea(${l.id},'dto',+this.value)" style="width:50px"></td>
+      <td class="calc-cell" id="pvp-${l.id}">—</td>
+      <td class="calc-cell" id="pvpdto-${l.id}">—</td>
+      <td class="calc-cell" id="total-${l.id}">—</td>
+      <td><button class="btn btn-danger btn-sm" onclick="eliminarLinea(${l.id})">✕</button></td>
+    `;
+    tbody.appendChild(tr);
+    calcularLinea(l.id);
+  });
+}
+
+function updateLinea(id, campo, valor) {
+  const l = state.presupuesto.lineas.find(x => x.id === id);
+  if(l) { l[campo] = valor; calcularLinea(id); calcularFiscal(); actualizarResumen(); renderChartMargen(); }
+}
+
+function calcularLinea(id) {
+  const l = state.presupuesto.lineas.find(x => x.id === id);
+  if(!l) return;
+  const costeTotal = (l.costeMat + l.costeMO) * l.uds;
+  const margenF = l.margen / 100;
+  const pvp = margenF >= 1 ? 0 : (l.costeMat + l.costeMO) / (1 - margenF);
+  const pvpDto = pvp * (1 - l.dto/100);
+  const total = pvpDto * l.uds;
+  const fmt = v => v.toFixed(2).replace('.',',') + ' €';
+  const el = (s) => document.getElementById(s);
+  if(el(`pvp-${id}`)) el(`pvp-${id}`).textContent = fmt(pvp);
+  if(el(`pvpdto-${id}`)) el(`pvpdto-${id}`).textContent = fmt(pvpDto);
+  if(el(`total-${id}`)) el(`total-${id}`).textContent = fmt(total);
+  calcularSubtotal();
+}
+
+function calcularSubtotal() {
+  let sub = 0;
+  state.presupuesto.lineas.forEach(l => {
+    const margenF = l.margen/100;
+    const pvp = margenF >= 1 ? 0 : (l.costeMat + l.costeMO) / (1 - margenF);
+    const pvpDto = pvp * (1 - l.dto/100);
+    sub += pvpDto * l.uds;
+  });
+  state.presupuesto.subtotal = sub;
+  document.getElementById('p-subtotal').textContent = sub.toFixed(2).replace('.',',') + ' €';
+  calcularFiscal();
+  actualizarMiniChecklist();
+}
+
+function eliminarLinea(id) {
+  state.presupuesto.lineas = state.presupuesto.lineas.filter(l => l.id !== id);
+  renderLineas();
+  calcularSubtotal();
+}
+
+// ── PRESUPUESTO: FISCAL ─────────────────────────────
+function calcularFiscal() {
+  const sel = document.getElementById('p-tipo-iva');
+  if(!sel) return;
+  const tipoIVA = sel.value;
+  const irpfSel = document.getElementById('p-irpf');
+  const irpfVal = irpfSel ? irpfSel.value : '0';
+  const irpf = (irpfVal === 'aapp') ? 0 : parseFloat(irpfVal);
+  const base = state.presupuesto.subtotal;
+  const tipoNum = tipoIVA === 'isp' ? 0 : parseFloat(tipoIVA);
+  const cuota = base * tipoNum;
+  // RE: tasa correcta según tipo IVA (LIVA art. 158)
+  const reRates = {'0.21': 0.052, '0.10': 0.014, '0.04': 0.005};
+  const reRate = reRates[tipoIVA] || 0;
+  const reActivo = document.getElementById('sw-recargo')?.checked;
+  const re = reActivo ? base * reRate : 0;
+  const total = base + cuota + re;
+  const retIRPF = base * irpf;
+  state.presupuesto.cuotaIVA = cuota;
+  state.presupuesto.total = total;
+  state.presupuesto.tipoIVA = tipoNum;
+  const fmt = v => v.toFixed(2).replace('.',',') + ' €';
+  const el = id => document.getElementById(id);
+  if(el('kpi-base')) el('kpi-base').textContent = fmt(base);
+  if(el('kpi-iva')) el('kpi-iva').textContent = tipoIVA === 'isp' ? 'ISP' : fmt(cuota);
+  if(el('kpi-total')) el('kpi-total').textContent = fmt(total);
+  const ivaLabel = tipoIVA === '0' ? '0% Exento' : tipoIVA === 'isp' ? 'ISP art.84' : (parseFloat(tipoIVA)*100).toFixed(0)+'%';
+  if(el('kpi-iva-label')) el('kpi-iva-label').textContent = ivaLabel;
+  // RE badge dinámico
+  const reBadge = el('re-tasa-badge');
+  if(reBadge) {
+    if(reActivo && reRate > 0) {
+      reBadge.style.display = 'inline-block';
+      reBadge.textContent = 'RE: ' + (reRate*100).toFixed(1) + '%';
+    } else {
+      reBadge.style.display = 'none';
+    }
+  }
+  if(irpf > 0) {
+    const c = el('kpi-irpf-container'); if(c) c.style.display = 'block';
+    const i = el('irpf-info'); if(i) i.textContent = fmt(retIRPF) + ' (' + (irpf*100).toFixed(0) + '%)';
+  } else if(irpfVal === 'aapp') {
+    const c = el('kpi-irpf-container'); if(c) c.style.display = 'block';
+    const i = el('irpf-info'); if(i) i.textContent = 'AAPP: retención a verificar según convenio o tipo prestación';
+  } else {
+    const c = el('kpi-irpf-container'); if(c) c.style.display = 'none';
+  }
+  checkRecargoEquivalencia();
+}
+
+function checkTipoCliente() {
+  const v = document.getElementById('p-tipo-cliente').value;
+  state.presupuesto.tipoCliente = v;
+  document.getElementById('alerta-consumidor').style.display = v === 'particular' ? 'block' : 'none';
+  document.getElementById('alerta-aapp').style.display = v === 'aapp' ? 'block' : 'none';
+  updateValidez(document.getElementById('p-validez').value);
+  actualizarMiniChecklist();
+}
+
+function updateValidez(val) {
+  val = parseInt(val);
+  state.presupuesto.validez = val;
+  const el = document.getElementById('validez-display');
+  if(el) el.textContent = val + ' días';
+  const bar = document.getElementById('validez-bar');
+  if(bar) bar.style.width = ((val-7)/(180-7)*100) + '%';
+  const alerta = document.getElementById('alerta-validez-corta');
+  if(alerta) alerta.style.display = (val < 30 && state.presupuesto.tipoCliente === 'particular') ? 'block' : 'none';
+  actualizarMiniChecklist();
+}
+
+function checkRecargoEquivalencia() {
+  const re = document.getElementById('sw-recargo')?.checked;
+  const iva = document.getElementById('p-tipo-iva')?.value;
+  const alerta = document.getElementById('alerta-re');
+  if(alerta) alerta.style.display = (re && iva === '0') ? 'block' : 'none';
+}
+
+function checkISP() {
+  const isp = document.getElementById('sw-isp')?.checked;
+  if(isp) document.getElementById('p-tipo-iva').value = 'isp';
+  calcularFiscal();
+}
+
+// ── PRESUPUESTO: RESULTADO ───────────────────────────
+function renderizarResultado() {
+  const get = id => document.getElementById(id);
+  const fmt = v => v.toFixed(2).replace('.',',') + ' €';
+  const tipoIVA = parseFloat(document.getElementById('p-tipo-iva')?.value || 0.21);
+  const irpf = parseFloat(document.getElementById('p-irpf')?.value || 0);
+
+  get('r-numero') && (get('r-numero').textContent = document.getElementById('p-numero').value || '—');
+  const fecha = document.getElementById('p-fecha').value;
+  const fechaStr = fecha ? new Date(fecha).toLocaleDateString('es-ES') : '—';
+  get('r-fecha-validez') && (get('r-fecha-validez').textContent = fechaStr + ' · Validez ' + state.presupuesto.validez + ' días');
+  get('r-cliente') && (get('r-cliente').textContent = document.getElementById('p-cliente').value || '(sin cliente)');
+  const tipos = { particular:'Consumidor (TRLGDCU)', empresa:'Empresa / Autónomo', aapp:'Administración Pública' };
+  get('r-tipo-cliente') && (get('r-tipo-cliente').textContent = tipos[state.presupuesto.tipoCliente] || '—');
+  get('r-objeto') && (get('r-objeto').textContent = document.getElementById('p-objeto').value || '—');
+
+  // Líneas resumen
+  const resumenDiv = document.getElementById('resumen-lineas');
+  if(resumenDiv) {
+    let html = '';
+    state.presupuesto.lineas.forEach(l => {
+      const margenF = l.margen/100;
+      const pvp = margenF >= 1 ? 0 : (l.costeMat + l.costeMO) / (1 - margenF);
+      const pvpDto = pvp * (1 - l.dto/100);
+      const total = pvpDto * l.uds;
+      html += `<div class="libro-iva-row" style="grid-template-columns:84px minmax(120px,1fr) 56px 104px 104px;gap:0.5rem;font-size:0.78rem;">
+        <span class="text-mono badge badge-blue">${l.ref || '—'}</span>
+        <span>${l.desc || '(sin descripción)'}</span>
+        <span class="text-center">${l.uds}</span>
+        <span class="text-right text-mono">${fmt(pvpDto)}</span>
+        <span class="text-right text-mono font-bold">${fmt(total)}</span>
+      </div>`;
+    });
+    resumenDiv.innerHTML = html || '<div class="text-muted text-xs text-center" style="padding:0.5rem">Sin líneas</div>';
+  }
+
+  const base = state.presupuesto.subtotal;
+  const cuota = base * (isNaN(tipoIVA) ? 0 : tipoIVA);
+  // RE: tasa correcta según tipo IVA (LIVA art. 158)
+  const reRatesR = {'0.21': 0.052, '0.10': 0.014, '0.04': 0.005};
+  const reRateR = reRatesR[String(isNaN(tipoIVA) ? 0 : tipoIVA)] || 0;
+  const re = document.getElementById('sw-recargo')?.checked ? base * reRateR : 0;
+  const total = base + cuota + re;
+  const retIRPF = base * irpf;
+  const liquido = total - retIRPF;
+
+  get('r-base') && (get('r-base').textContent = fmt(base));
+  get('r-iva') && (get('r-iva').textContent = fmt(cuota));
+  get('r-iva-label') && (get('r-iva-label').textContent = isNaN(tipoIVA) ? 'IVA (ISP)' : 'IVA (' + (tipoIVA*100).toFixed(0) + '%):');
+  get('r-total') && (get('r-total').textContent = fmt(total));
+  if(re > 0) { get('r-re-label') && (get('r-re-label').style.display = ''); get('r-re') && (get('r-re').style.display = '', get('r-re').textContent = fmt(re)); }
+  if(irpf > 0) {
+    ['r-irpf-label','r-irpf-ret','r-liquido-label','r-liquido'].forEach(id => get(id) && (get(id).style.display = ''));
+    get('r-irpf-ret') && (get('r-irpf-ret').textContent = '(-) ' + fmt(retIRPF));
+    get('r-liquido') && (get('r-liquido').textContent = fmt(liquido));
+  }
+
+  // Sensibilidad
+  let costeTotal = 0, ingresosTotal = 0;
+  state.presupuesto.lineas.forEach(l => {
+    const margenF = l.margen/100;
+    const pvp = margenF >= 1 ? 0 : (l.costeMat + l.costeMO) / (1 - margenF);
+    const pvpDto = pvp * (1 - l.dto/100);
+    costeTotal += (l.costeMat + l.costeMO) * l.uds;
+    ingresosTotal += pvpDto * l.uds;
+  });
+  const margenActual = ingresosTotal > 0 ? ((ingresosTotal - costeTotal) / ingresosTotal * 100) : 0;
+  const costeStress = costeTotal * 1.1;
+  const margenStress = ingresosTotal > 0 ? ((ingresosTotal - costeStress) / ingresosTotal * 100) : 0;
+  const impacto = (margenActual - margenStress) / 100 * ingresosTotal;
+
+  get('s-margen-actual') && (get('s-margen-actual').textContent = margenActual.toFixed(1) + '%');
+  get('s-margen-stress') && (get('s-margen-stress').textContent = margenStress.toFixed(1) + '%');
+  get('s-impacto') && (get('s-impacto').textContent = fmt(impacto));
+
+  // Clausulado
+  generarClausulado();
+  actualizarMiniChecklist();
+}
+
+function generarClausulado() {
+  const numero = document.getElementById('p-numero').value || 'PRES-2026-001';
+  const cliente = document.getElementById('p-cliente').value || 'el destinatario';
+  const validez = state.presupuesto.validez;
+  const tipo = state.presupuesto.tipoCliente;
+  const total = state.presupuesto.total.toFixed(2).replace('.',',');
+  const pago = document.getElementById('p-pago')?.value || 'contado';
+  const fecha = document.getElementById('p-fecha').value;
+  const fechaStr = fecha ? new Date(fecha).toLocaleDateString('es-ES') : '—';
+  const tipoTexto = { particular:'consumidor (TRLGDCU)', empresa:'empresario/profesional', aapp:'Administración Pública' }[tipo];
+
+  let clausulado = `<strong>1. OFERTA VINCULANTE:</strong> El presente presupuesto ${numero} emitido el ${fechaStr} constituye una oferta vinculante en los términos del art. 1262 del Código Civil, dirigida a ${cliente} en calidad de ${tipoTexto}. Importe total: ${total} €.
+
+<strong>2. VALIDEZ:</strong> Esta oferta tendrá validez durante ${validez} días naturales desde la fecha de emisión. Transcurrido dicho plazo sin aceptación expresa, decaerá sin efecto y los precios podrán ser revisados.
+
+<strong>3. CONDICIONES DE PAGO:</strong> ${pago === 'contado' ? 'Pago al contado en el momento de la entrega.' : pago === '30d' ? 'Pago a 30 días desde la fecha de factura, conforme a Ley 3/2004 de morosidad.' : pago === '60d' ? 'Pago a 60 días (límite máximo Ley 3/2004 entre empresas).' : 'Según condiciones específicas acordadas.'}
+
+<strong>4. FACTURACIÓN:</strong> La aceptación de este presupuesto genera la obligación de emitir factura reglamentaria conforme al RD 1619/2012. Este documento no tiene carácter de factura a efectos fiscales.
+${tipo === 'particular' ? '\n<strong>5. DERECHOS DEL CONSUMIDOR:</strong> De conformidad con el art. 97 TRLGDCU, se le informa: (a) precio total impuestos incluidos, (b) plazo de 14 días para ejercer el derecho de desistimiento sin justificación, (c) posibilidad de resolución extrajudicial de conflictos.' : ''}
+<strong>${tipo === 'particular' ? '6' : '5'}. PROTECCIÓN DE DATOS:</strong> Los datos del cliente son tratados conforme al RGPD (UE) 2016/679 y la LOPDGDD. Base jurídica: ejecución de contrato. En este entorno docente, los datos son ficticios (art. 5.1.f RGPD).`;
+
+  const el = document.getElementById('clausulado-text');
+  if(el) el.innerHTML = clausulado.replace(/\n/g, '<br>');
+}
+
+// ── MINI-CHECKLIST ────────────────────────────────────
+function actualizarMiniChecklist() {
+  const cliente = document.getElementById('p-cliente')?.value;
+  const tieneLineas = state.presupuesto.lineas.length > 0;
+  const tieneLineasConCoste = state.presupuesto.lineas.some(l => (l.costeMat + l.costeMO) > 0);
+
+  setCheck('ck-datos', cliente ? 'verde' : 'rojo');
+  setCheck('ck-lineas', (tieneLineas && tieneLineasConCoste) ? 'verde' : (tieneLineas ? 'ambar' : 'rojo'));
+  setCheck('ck-fiscal', 'verde');
+  const validezOk = true;
+  setCheck('ck-validez', validezOk ? 'verde' : 'rojo');
+}
+
+function setCheck(id, tipo) {
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.className = 'check-mark ' + (tipo === 'verde' ? 'check-verde' : tipo === 'ambar' ? 'check-ambar' : 'check-rojo');
+  el.textContent = tipo === 'verde' ? '✓' : tipo === 'ambar' ? '!' : '✗';
+}
+
+function actualizarResumen() {
+  const el = document.getElementById('resumen-rapido');
+  if(!el) return;
+  const numero = document.getElementById('p-numero')?.value || '—';
+  const cliente = document.getElementById('p-cliente')?.value || '(sin cliente)';
+  const nLineas = state.presupuesto.lineas.length;
+  const total = state.presupuesto.total.toFixed(2).replace('.',',');
+  el.innerHTML = `<span class="badge badge-blue">${numero}</span><br>
+    👤 ${cliente}<br>
+    📦 ${nLineas} línea(s) · Validez ${state.presupuesto.validez}d<br>
+    💰 <strong>${total} €</strong> (IVA incl.)<br>
+    📅 Tipo: ${state.presupuesto.tipoCliente}`;
+}
+
+// ── CHART MARGEN ─────────────────────────────────────
+function renderChartMargen() {
+  const canvas = document.getElementById('chart-margen');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.offsetWidth || 500;
+  const H = 110;
+  canvas.width = W; canvas.height = H;
+  ctx.clearRect(0,0,W,H);
+
+  const dtos = [0,5,10,15,20,25,30,40,50];
+  if(state.presupuesto.lineas.length === 0) {
+    ctx.fillStyle = '#9ca3af'; ctx.font = '13px Lexend, sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('Añade líneas con coste y margen para ver el gráfico', W/2, H/2);
+    return;
+  }
+
+  // Calcular margen total por dto %
+  const valores = dtos.map(dto => {
+    let ben = 0, ven = 0;
+    state.presupuesto.lineas.forEach(l => {
+      const margenF = l.margen/100;
+      const pvp = margenF >= 1 ? 0 : (l.costeMat + l.costeMO) / (1 - margenF);
+      const pvpDto = pvp * (1 - dto/100);
+      const total = pvpDto * l.uds;
+      ven += total;
+      ben += total - (l.costeMat + l.costeMO) * l.uds;
+    });
+    return ven > 0 ? (ben/ven*100) : 0;
+  });
+
+  const maxV = Math.max(...valores, 1);
+  const minV = Math.min(...valores, 0);
+  const pad = { t:15, b:25, l:40, r:10 };
+
+  // Área rellena
+  ctx.beginPath();
+  dtos.forEach((d, i) => {
+    const x = pad.l + (i/(dtos.length-1))*(W-pad.l-pad.r);
+    const y = pad.t + (1 - (valores[i]-minV)/(maxV-minV+0.001)) * (H-pad.t-pad.b);
+    i === 0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+  });
+  ctx.lineTo(W-pad.r, H-pad.b);
+  ctx.lineTo(pad.l, H-pad.b);
+  ctx.closePath();
+  const grad = ctx.createLinearGradient(0,pad.t,0,H-pad.b);
+  grad.addColorStop(0, 'rgba(16,185,129,0.25)');
+  grad.addColorStop(1, 'rgba(16,185,129,0.02)');
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // Línea
+  ctx.beginPath();
+  dtos.forEach((d, i) => {
+    const x = pad.l + (i/(dtos.length-1))*(W-pad.l-pad.r);
+    const y = pad.t + (1 - (valores[i]-minV)/(maxV-minV+0.001)) * (H-pad.t-pad.b);
+    i === 0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+  });
+  ctx.strokeStyle = '#10b981'; ctx.lineWidth = 2; ctx.stroke();
+
+  // Línea cero
+  if(minV < 0 && maxV > 0) {
+    const yZero = pad.t + (1 - (0-minV)/(maxV-minV+0.001)) * (H-pad.t-pad.b);
+    ctx.beginPath(); ctx.moveTo(pad.l, yZero); ctx.lineTo(W-pad.r, yZero);
+    ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 1; ctx.setLineDash([4,3]); ctx.stroke(); ctx.setLineDash([]);
+  }
+
+  // Ejes
+  ctx.strokeStyle = '#e5e7eb'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(pad.l, pad.t); ctx.lineTo(pad.l, H-pad.b); ctx.lineTo(W-pad.r, H-pad.b); ctx.stroke();
+
+  // Labels X
+  ctx.fillStyle = '#6b7280'; ctx.font = '9px Lexend, sans-serif'; ctx.textAlign = 'center';
+  dtos.forEach((d,i) => {
+    const x = pad.l + (i/(dtos.length-1))*(W-pad.l-pad.r);
+    ctx.fillText(d+'%', x, H-pad.b+12);
+  });
+
+  // Puntos
+  dtos.forEach((d,i) => {
+    const x = pad.l + (i/(dtos.length-1))*(W-pad.l-pad.r);
+    const y = pad.t + (1 - (valores[i]-minV)/(maxV-minV+0.001)) * (H-pad.t-pad.b);
+    ctx.beginPath(); ctx.arc(x,y,3,0,Math.PI*2);
+    ctx.fillStyle = valores[i] < 0 ? '#ef4444' : '#10b981'; ctx.fill();
+  });
+
+  // Título
+  ctx.fillStyle = '#374151'; ctx.font = 'bold 10px Lexend, sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText('Margen neto (%) vs Descuento (%)', pad.l, pad.t-3);
+}
+
+// ── ACCIONES PRESUPUESTO ────────────────────────────
+function exportPDF() {
+  alert('Se abrirá la impresión del navegador. Puedes elegir «Guardar como PDF». El documento es una muestra docente, no un documento fiscal ni una factura.');
+  window.print();
+}
+
+function validarChecklist() {
+  const modal = document.getElementById('checklist-modal');
+  const ul = document.getElementById('checklist-items');
+  modal.style.display = 'block';
+  const items = [
+    { texto: 'Número de presupuesto identificado', ok: !!document.getElementById('p-numero')?.value },
+    { texto: 'Cliente/destinatario indicado', ok: !!document.getElementById('p-cliente')?.value },
+    { texto: 'Fecha de emisión registrada', ok: !!document.getElementById('p-fecha')?.value },
+    { texto: 'Validez indicada (si procede) — art. 97 TRLGDCU', ok: state.presupuesto.tipoCliente !== 'particular' || state.presupuesto.validez >= 1 },
+    { texto: 'Al menos una línea con coste definido', ok: state.presupuesto.lineas.some(l => (l.costeMat+l.costeMO)>0) },
+    { texto: 'IVA configurado (no combinación ilegal exento+RE)', ok: !(document.getElementById('sw-recargo')?.checked && document.getElementById('p-tipo-iva')?.value === '0') },
+    { texto: 'Objeto del presupuesto descrito', ok: !!document.getElementById('p-objeto')?.value },
+    { texto: 'Condiciones de pago indicadas', ok: true },
+    { texto: 'Aviso "No sustituye a factura" incluido (RD 1619/2012)', ok: true },
+  ];
+  ul.innerHTML = items.map(it => `
+    <li class="checklist-item">
+      <span class="check-mark ${it.ok ? 'check-verde' : 'check-rojo'}">${it.ok ? '✓' : '✗'}</span>
+      <span>${it.texto}</span>
+    </li>
+  `).join('');
+}
+
+function convertirAFactura() {
+  alert('✅ Presupuesto aceptado — Datos trasladados al Módulo 2 de Facturas (simulación).\n\nEn la app real: se crearía una factura borrador con los mismos datos, número siguiente de la serie, y estado "Pendiente de confirmación".');
+  switchModulo('facturas',this);
+  document.querySelectorAll('.nav-tab')[1].classList.add('active');
+  document.querySelectorAll('.nav-tab')[0].classList.remove('active');
+}
+
+function resetPresupuesto() {
+  if(!confirm('¿Crear un nuevo presupuesto? Se perderán los datos actuales.')) return;
+  state.presupuesto.lineas = [];
+  lineaId = 0;
+  document.getElementById('p-cliente').value = '';
+  document.getElementById('p-objeto').value = '';
+  document.getElementById('p-numero').value = 'PRES-2026-' + String(Math.floor(Math.random()*900)+100);
+  for(let i=0;i<2;i++) agregarLinea();
+  calcularFiscal();
+  actualizarResumen();
+}
+
+// ── FACTURA: LÍNEAS ──────────────────────────────────
+let fLineaId = 0;
+function agregarLineaFactura() {
+  fLineaId++;
+  const id = fLineaId;
+  state.factura.lineas.push({ id, desc:'', cantidad:1, precioUnit:0, dto:0, tipoIVA:21 });
+  renderLineasFactura();
+}
+
+function renderLineasFactura() {
+  const tbody = document.getElementById('f-lineas-body');
+  if(!tbody) return;
+  tbody.innerHTML = '';
+  state.factura.lineas.forEach((l, idx) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="text-align:center;color:#6b7280;font-weight:600">${idx+1}</td>
+      <td><input value="${l.desc}" onchange="updateLineaFactura(${l.id},'desc',this.value)" placeholder="Descripción" style="min-width:140px"></td>
+      <td><input type="number" value="${l.cantidad}" min="0.01" step="0.01" onchange="updateLineaFactura(${l.id},'cantidad',+this.value)" style="width:55px"></td>
+      <td><input type="number" value="${l.precioUnit}" min="0" step="0.01" onchange="updateLineaFactura(${l.id},'precioUnit',+this.value)" style="width:75px"></td>
+      <td><input type="number" value="${l.dto}" min="0" max="100" step="1" onchange="updateLineaFactura(${l.id},'dto',+this.value)" style="width:50px"></td>
+      <td class="calc-cell" id="fb-${l.id}">—</td>
+      <td>
+        <select style="width:75px;border:1px solid #e5e7eb;padding:0.25rem;border-radius:4px;font-size:11px" onchange="updateLineaFactura(${l.id},'tipoIVA',+this.value)">
+          <option value="21" ${l.tipoIVA==21?'selected':''}>21%</option>
+          <option value="10" ${l.tipoIVA==10?'selected':''}>10%</option>
+          <option value="4" ${l.tipoIVA==4?'selected':''}>4%</option>
+          <option value="0" ${l.tipoIVA==0?'selected':''}>0% Exento</option>
+        </select>
+      </td>
+      <td class="calc-cell" id="fc-${l.id}">—</td>
+      <td class="calc-cell" id="ft-${l.id}">—</td>
+      <td><button class="btn btn-danger btn-sm" onclick="eliminarLineaFactura(${l.id})">✕</button></td>
+    `;
+    tbody.appendChild(tr);
+    calcularLineaFactura(l.id);
+  });
+  actualizarTotalesFactura();
+  actualizarChecklistArt6();
+}
+
+function updateLineaFactura(id, campo, valor) {
+  const l = state.factura.lineas.find(x => x.id === id);
+  if(l) { l[campo] = valor; calcularLineaFactura(id); actualizarTotalesFactura(); actualizarChecklistArt6(); }
+}
+
+function calcularLineaFactura(id) {
+  const l = state.factura.lineas.find(x => x.id === id);
+  if(!l) return;
+  const base = l.cantidad * l.precioUnit * (1 - l.dto/100);
+  const cuota = base * l.tipoIVA/100;
+  const total = base + cuota;
+  const fmt = v => v.toFixed(2).replace('.',',') + ' €';
+  const el = id2 => document.getElementById(id2);
+  if(el(`fb-${id}`)) el(`fb-${id}`).textContent = fmt(base);
+  if(el(`fc-${id}`)) el(`fc-${id}`).textContent = fmt(cuota);
+  if(el(`ft-${id}`)) el(`ft-${id}`).textContent = fmt(total);
+}
+
+function eliminarLineaFactura(id) {
+  state.factura.lineas = state.factura.lineas.filter(l => l.id !== id);
+  renderLineasFactura();
+}
+
+function actualizarTotalesFactura() {
+  let base = 0, cuota = 0;
+  state.factura.lineas.forEach(l => {
+    const b = l.cantidad * l.precioUnit * (1 - l.dto/100);
+    base += b;
+    cuota += b * l.tipoIVA/100;
+  });
+  const total = base + cuota;
+  const fmt = v => v.toFixed(2).replace('.',',') + ' €';
+  const tfoot = document.getElementById('f-tfoot');
+  if(tfoot) {
+    tfoot.innerHTML = `
+      <tr><td colspan="5" style="text-align:right;font-weight:700;padding:0.6rem">Base Imponible Total</td><td class="calc-cell">${fmt(base)}</td><td></td><td class="calc-cell">${fmt(cuota)}</td><td class="calc-cell" style="font-size:1rem">${fmt(total)}</td><td></td></tr>
+    `;
+  }
+  // Check simplificada > 400
+  const alerta = document.getElementById('alerta-simplificada-monto');
+  if(alerta) alerta.style.display = (state.factura.tipo === 'simplificada' && total > 400) ? 'block' : 'none';
+}
+
+// ── FACTURA: TIPO Y NÚMERO ────────────────────────────
+function updateTipoFactura() {
+  const v = document.getElementById('f-tipo-factura').value;
+  state.factura.tipo = v;
+  if(v === 'rectificativa') {
+    document.getElementById('f-serie').value = 'R';
+    validarSerie();
+  }
+  actualizarTotalesFactura();
+  addLogEntry('warn', 'Tipo de factura cambiado a: ' + v);
+}
+
+function updateB2X() {
+  const v = document.getElementById('f-b2x').value;
+  state.factura.b2x = v;
+  document.getElementById('alerta-b2g').style.display = v === 'b2g' ? 'block' : 'none';
+  document.getElementById('alerta-b2b').style.display = v === 'b2b' ? 'block' : 'none';
+}
+
+function generarNumeroFactura() {
+  const serie = document.getElementById('f-serie')?.value?.trim() || 'A';
+  const num = parseInt(document.getElementById('f-numero')?.value || 1);
+  const completo = serie + '-' + String(num).padStart(5,'0');
+  const el = document.getElementById('f-numero-completo');
+  if(el) el.textContent = completo;
+  state.factura.serie = serie;
+  state.factura.numero = num;
+  actualizarChecklistArt6();
+}
+
+function validarSerie() {
+  const input = document.getElementById('f-serie');
+  const el = document.getElementById('serie-alerta');
+  if(!input || !el) return;
+  const v = input.value.trim();
+  if(!v) { input.classList.add('serie-rota'); el.style.display='block'; el.className='badge badge-red'; el.textContent='⚠️ Serie vacía'; return; }
+  if(/^[A-Z0-9-]{1,5}$/.test(v)) {
+    input.classList.remove('serie-rota');
+    el.style.display = 'block'; el.className = 'badge badge-green'; el.textContent = '✓ Serie válida';
+  } else {
+    input.classList.add('serie-rota');
+    el.style.display = 'block'; el.className = 'badge badge-red'; el.textContent = '⚠️ Serie inválida';
+  }
+  generarNumeroFactura();
+}
+
+function validarNIF(inputId, statusId) {
+  const val = document.getElementById(inputId)?.value?.trim();
+  const el = document.getElementById(statusId);
+  if(!el || !val) return;
+  // Validación simplificada DNI/NIE/CIF
+  const dniReg = /^\d{8}[A-Z]$/i;
+  const nieReg = /^[XYZ]\d{7}[A-Z]$/i;
+  const cifReg = /^[ABCDEFGHJKLMNPQRSUVW]\d{7}[0-9A-J]$/i;
+  const intUE = /^(ES)?[A-Z0-9]{9,12}$/i;
+  let ok = dniReg.test(val) || nieReg.test(val) || cifReg.test(val) || intUE.test(val);
+  el.textContent = ok ? '✓ Formato NIF/CIF válido' : '⚠️ Formato incorrecto (simulación)';
+  el.style.color = ok ? '#16a34a' : '#dc2626';
+  const input = document.getElementById(inputId);
+  if(input) {
+    input.classList.toggle('nif-ok', ok);
+    input.classList.toggle('nif-ko', !ok);
+  }
+  actualizarChecklistArt6();
+}
+
+// ── CHECKLIST ART. 6 ─────────────────────────────────
+function actualizarChecklistArt6() {
+  const get = id => document.getElementById(id)?.value?.trim();
+  const serie = get('f-serie'); const num = get('f-numero');
+  const hasNumero = !!(serie && num);
+  const hasFecha = !!get('f-fecha-exp');
+  const hasEmisorNIF = !!get('f-emisor-nif');
+  const hasDestNIF = !!get('f-dest-nif');
+  const hasDesc = !!get('f-descripcion');
+  const hasBase = state.factura.lineas.some(l => (l.cantidad * l.precioUnit) > 0);
+  const hasTipo = state.factura.lineas.length > 0;
+
+  const sets = [
+    ['ck6-numero', hasNumero],
+    ['ck6-fecha', hasFecha],
+    ['ck6-emisor-nif', hasEmisorNIF],
+    ['ck6-dest-nif', hasDestNIF],
+    ['ck6-descripcion', hasDesc],
+    ['ck6-base', hasBase],
+    ['ck6-tipo', hasTipo],
+  ];
+  sets.forEach(([id, ok]) => setCheck(id, ok ? 'verde' : 'rojo'));
+}
+
+function actualizarVista() {
+  generarNumeroFactura();
+  actualizarChecklistArt6();
+}
+
+// ── VERIFACTU: HASH SIMULADO ─────────────────────────
+function simpleHash(str) {
+  // Simulación de SHA-256 (no criptográfico real — demo didáctica)
+  let hash = 0;
+  for(let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash;
+  }
+  // Ampliar a formato hexadecimal de 64 chars
+  const base = Math.abs(hash).toString(16).padStart(8,'0');
+  let result = '';
+  const seed = str.length;
+  for(let i = 0; i < 8; i++) {
+    let block = parseInt(base, 16) ^ (seed * (i+1) * 0x9e3779b9);
+    result += (Math.abs(block) % 0xFFFFFFFF).toString(16).padStart(8,'0');
+  }
+  return result.substring(0,64).toUpperCase();
+}
+
+function regenerarHash() {
+  const nif = document.getElementById('f-emisor-nif')?.value || 'B-12345678';
+  const serie = document.getElementById('f-serie')?.value || 'A';
+  const num = document.getElementById('f-numero')?.value || '1';
+  const fecha = document.getElementById('f-fecha-exp')?.value || new Date().toISOString().split('T')[0];
+  let base = 0, cuota = 0;
+  state.factura.lineas.forEach(l => {
+    const b = l.cantidad * l.precioUnit * (1 - l.dto/100);
+    base += b; cuota += b * l.tipoIVA/100;
+  });
+  const str = `${nif}|${serie}|${num.padStart(5,'0')}|${fecha}|${base.toFixed(2)}|${cuota.toFixed(2)}|${state.factura.hashAnterior}`;
+  const hash = simpleHash(str);
+  const el = document.getElementById('vf-hash');
+  if(el) el.textContent = hash;
+  // QR URL simulado
+  const qrUrl = `https://preverifactu.aeat.es/api/verify?nif=${nif}&serie=${serie}&num=${num}&fecha=${fecha}&total=${(base+cuota).toFixed(2)}&hash=${hash.substring(0,16)}`;
+  const qrEl = document.getElementById('qr-url');
+  if(qrEl) qrEl.textContent = qrUrl.substring(0,80) + '…';
+  addLogEntry('ok', `Hash recalculado: ${hash.substring(0,16)}… · Serie ${serie}-${num.padStart(5,'0')}`);
+  actualizarChecklistArt6();
+}
+
+// ── LOG VERIFACTU ────────────────────────────────────
+function addLogEntry(tipo, msg) {
+  const log = document.getElementById('log-verifactu');
+  if(!log) return;
+  const now = new Date().toLocaleTimeString('es-ES');
+  const div = document.createElement('div');
+  div.className = `log-entry log-${tipo}`;
+  const icon = { ok:'✅', err:'❌', warn:'⚠️' }[tipo] || '•';
+  div.textContent = `[${now}] ${icon} ${msg}`;
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+}
+
+function toggleFACe() {
+  const panel = document.getElementById('face-panel');
+  if(panel) panel.style.display = document.getElementById('sw-face')?.checked ? 'block' : 'none';
+}
+
+// ── EXPORT SIMULADOS ─────────────────────────────────
+function exportarFacturae() {
+  const nif = document.getElementById('f-emisor-nif')?.value || 'B-12345678';
+  const nombre = document.getElementById('f-emisor-nombre')?.value || 'Empresa Demo';
+  const serie = document.getElementById('f-serie')?.value || 'A';
+  const num = document.getElementById('f-numero')?.value || '1';
+  const fecha = document.getElementById('f-fecha-exp')?.value || '2026-01-01';
+  let base = 0, cuota = 0;
+  state.factura.lineas.forEach(l => {
+    const b = l.cantidad * l.precioUnit * (1 - l.dto/100);
+    base += b; cuota += b * l.tipoIVA/100;
+  });
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<!-- SIMULACIÓN DIDÁCTICA — No válido fiscalmente -->
+<!-- Formato: Facturae 3.2.2 (RD 1619/2012) -->
+<fe:Facturae xmlns:fe="http://www.facturae.gob.es/formato/Version3_2_2/Facturae32">
+  <FileHeader>
+    <SchemaVersion>3.2.2</SchemaVersion>
+    <Modality>I</Modality>
+    <InvoiceIssuerType>EM</InvoiceIssuerType>
+    <Batch>
+      <BatchIdentifier>${serie}-${num.padStart(5,'0')}</BatchIdentifier>
+      <InvoicesCount>1</InvoicesCount>
+      <TotalInvoicesAmount><TotalAmount>${(base+cuota).toFixed(2)}</TotalAmount></TotalInvoicesAmount>
+    </Batch>
+  </FileHeader>
+  <Parties>
+    <SellerParty>
+      <TaxIdentification>
+        <PersonTypeCode>J</PersonTypeCode>
+        <ResidenceTypeCode>R</ResidenceTypeCode>
+        <TaxIdentificationNumber>${nif}</TaxIdentificationNumber>
+      </TaxIdentification>
+      <LegalEntity><CorporateName>${nombre}</CorporateName></LegalEntity>
+    </SellerParty>
+    <BuyerParty>
+      <TaxIdentification>
+        <TaxIdentificationNumber>${document.getElementById('f-dest-nif')?.value || 'XXXXXXXXX'}</TaxIdentificationNumber>
+      </TaxIdentification>
+      <LegalEntity><CorporateName>${document.getElementById('f-dest-nombre')?.value || 'Destinatario'}</CorporateName></LegalEntity>
+    </BuyerParty>
+  </Parties>
+  <Invoices>
+    <Invoice>
+      <InvoiceHeader>
+        <InvoiceNumber>${num.padStart(5,'0')}</InvoiceNumber>
+        <InvoiceSeriesCode>${serie}</InvoiceSeriesCode>
+        <InvoiceDocumentType>FC</InvoiceDocumentType>
+        <InvoiceClass>OO</InvoiceClass>
+      </InvoiceHeader>
+      <InvoiceTotals>
+        <TotalGrossAmount>${base.toFixed(2)}</TotalGrossAmount>
+        <TotalTaxOutputs>${cuota.toFixed(2)}</TotalTaxOutputs>
+        <InvoiceTotal>${(base+cuota).toFixed(2)}</InvoiceTotal>
+      </InvoiceTotals>
+    </Invoice>
+  </Invoices>
+</fe:Facturae>`;
+  const blob = new Blob([xml], {type:'application/xml'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `SIMULACION-Facturae-${serie}-${num.padStart(5,'0')}.xml`;
+  a.click();
+  URL.revokeObjectURL(url);
+  addLogEntry('ok', `Facturae XML exportado: ${serie}-${num.padStart(5,'0')}.xml`);
+}
+
+function exportarPDFFactura() {
+  window.print();
+  addLogEntry('ok', 'Solicitud de impresión/PDF lanzada');
+}
+
+function exportarTicket() {
+  alert('🧾 Export Ticket 80mm — Simulación\n\nEn producción: se generaría un PDF de 80mm de ancho compatible con impresoras térmicas, con los datos mínimos de la factura simplificada (art. 7 RD 1619/2012).');
+  addLogEntry('ok', 'Ticket 80mm generado (simulación)');
+}
+
+// ── LIBRO IVA / MOD 303 ──────────────────────────────
+function registrarFactura() {
+  let base = 0, cuota = 0;
+  state.factura.lineas.forEach(l => {
+    const b = l.cantidad * l.precioUnit * (1 - l.dto/100);
+    base += b; cuota += b * l.tipoIVA/100;
+  });
+  const total = base + cuota;
+  const serie = document.getElementById('f-serie')?.value || 'A';
+  const num = document.getElementById('f-numero')?.value || '1';
+  const fecha = document.getElementById('f-fecha-exp')?.value || '—';
+  const dest = document.getElementById('f-dest-nombre')?.value || '(sin nombre)';
+
+  state.factura.libroEmitidas.push({ serie, num, fecha, dest, base, cuota, total });
+  state.factura.mod303Devengado += cuota;
+
+  renderLibro();
+  actualizarMod303();
+  addLogEntry('ok', `Factura ${serie}-${num.padStart(5,'0')} registrada en Libro IVA. Cuota: ${cuota.toFixed(2)}€`);
+  // Avanzar numeración
+  const numEl = document.getElementById('f-numero');
+  if(numEl) { numEl.value = parseInt(numEl.value)+1; generarNumeroFactura(); regenerarHash(); }
+}
+
+function renderLibro() {
+  const cont = document.getElementById('libro-rows');
+  if(!cont) return;
+  if(state.factura.libroEmitidas.length === 0) {
+    cont.innerHTML = '<div class="text-center text-muted text-xs" style="padding:1rem">Sin facturas registradas. Usa el botón "Registrar factura actual".</div>';
+    return;
+  }
+  const fmt = v => v.toFixed(2).replace('.',',') + ' €';
+  cont.innerHTML = state.factura.libroEmitidas.map(f => `
+    <div style="display:grid;grid-template-columns:96px 100px minmax(140px,1fr) 108px 56px 100px 112px;gap:0.4rem;padding:0.35rem 0.5rem;border-bottom:1px solid #e5e7eb;font-size:0.72rem;font-family:var(--font-mono);align-items:center;">
+      <span class="badge badge-blue">${f.serie}-${String(f.num).padStart(3,'0')}</span>
+      <span>${f.fecha}</span>
+      <span style="font-family:var(--font-sans);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${f.dest}</span>
+      <span style="text-align:right">${fmt(f.base)}</span>
+      <span style="text-align:right">${(f.cuota/f.base*100).toFixed(0)}%</span>
+      <span style="text-align:right">${fmt(f.cuota)}</span>
+      <span style="text-align:right;font-weight:700">${fmt(f.total)}</span>
+    </div>
+  `).join('');
+}
+
+function actualizarMod303() {
+  const fmt = v => v.toFixed(2).replace('.',',') + ' €';
+  const devengado = state.factura.mod303Devengado;
+  const soportado = 0; // simplificación didáctica
+  const resultado = devengado - soportado;
+  const el = id => document.getElementById(id);
+  if(el('mod303-devengado')) el('mod303-devengado').textContent = fmt(devengado);
+  if(el('mod303-soportado')) el('mod303-soportado').textContent = fmt(soportado);
+  if(el('mod303-resultado')) el('mod303-resultado').textContent = fmt(resultado);
+  renderLibro();
+}
+
+function exportarMod303() {
+  const filas = state.factura.libroEmitidas.map(f =>
+    `${f.serie}-${String(f.num).padStart(5,'0')},${f.fecha},${f.dest},${f.base.toFixed(2)},${f.cuota.toFixed(2)},${f.total.toFixed(2)}`
+  ).join('\n');
+  const csv = `NºFactura,Fecha,Destinatario,Base Imponible,Cuota IVA,Total\n${filas}`;
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = 'SIMULACION-Libro-IVA-Emitidas.csv'; a.click();
+  addLogEntry('ok', 'Libro IVA exportado a CSV');
+}
+
+function limpiarLibro() {
+  if(!confirm('Limpiar el libro de facturas (solo entorno docente)')) return;
+  state.factura.libroEmitidas = [];
+  state.factura.mod303Devengado = 0;
+  renderLibro(); actualizarMod303();
+  addLogEntry('warn', 'Libro IVA limpiado (acción permitida solo en entorno de aula)');
+}
+
+// ── SIMULADOR ERRORES ────────────────────────────────
+function simularError(tipo) {
+  const el = document.getElementById('error-display');
+  if(!el) return;
+  el.style.display = 'block';
+  if(tipo === 'cuota') {
+    el.innerHTML = '🚨 <strong>Error detectado: Cuota IVA oculta</strong><br>Comprueba si la factura debe expresar el tipo o tipos impositivos y la cuota tributaria, o la mención legal que corresponda en operaciones exentas/no sujetas. La consecuencia sancionadora depende del caso; no se presume una multa fija.';
+    addLogEntry('err', 'SIMULACIÓN ERROR: Cuota IVA omitida — Inconsistencia detectada por sistema de control');
+  } else if(tipo === 'nif') {
+    el.innerHTML = '🚨 <strong>Error: NIF incorrecto</strong><br>Art. 6.1.b RD 1619/2012: El NIF del destinatario debe ser correcto y verificado. Un NIF falso puede constituir delito fiscal. Verificar en VIES para operaciones UE.';
+    const input = document.getElementById('f-dest-nif');
+    if(input) { input.value = 'INVALIDO-XX'; input.classList.add('nif-ko'); }
+    addLogEntry('err', 'SIMULACIÓN ERROR: NIF destinatario inválido — Verificación VIES fallida');
+  } else if(tipo === 'serie') {
+    el.innerHTML = '🚨 <strong>Error: Serie correlativa rota</strong><br>Art. 6.1.a RD 1619/2012: Numeración estrictamente correlativa. Un salto de número o serie es infracción grave. Nunca eliminar facturas: rectificar.';
+    const numEl = document.getElementById('f-numero');
+    if(numEl) { numEl.value = parseInt(numEl.value) + 5; generarNumeroFactura(); }
+    addLogEntry('err', 'SIMULACIÓN ERROR: Numeración saltada — Serie correlativa rota (infracción art. 201 LGT)');
+  }
+  actualizarChecklistArt6();
+}
+
+function restaurarSimulacion() {
+  const el = document.getElementById('error-display');
+  if(el) el.style.display = 'none';
+  const nifEl = document.getElementById('f-dest-nif');
+  if(nifEl && nifEl.value === 'INVALIDO-XX') {
+    nifEl.value = '12345678Z'; nifEl.classList.remove('nif-ko'); nifEl.classList.add('nif-ok');
+    document.getElementById('nif-dest-status').textContent = '✓ Formato NIF/CIF válido';
+    document.getElementById('nif-dest-status').style.color = '#16a34a';
+  }
+  addLogEntry('ok', 'Simulación de error restaurada — Estado normalizado');
+  actualizarChecklistArt6();
+}
+
+// ── WINDOW RESIZE ─────────────────────────────────────
+window.addEventListener('resize', () => {
+  if(document.getElementById('p-tab-lineas').classList.contains('active')) renderChartMargen();
+});
+
+// ===================================================
+// CAPA DE MEJORA DIDÁCTICA Y CORRECCIONES FUNCIONALES
+// ===================================================
+function switchModulo(modulo, boton) {
+  document.querySelectorAll('.modulo').forEach(m => m.classList.remove('active'));
+  document.querySelectorAll('.nav-tabs .nav-tab').forEach(t => {
+    t.classList.remove('active'); t.setAttribute('aria-selected','false');
+  });
+  const panel = document.getElementById('modulo-' + modulo);
+  if (panel) panel.classList.add('active');
+  if (boton && boton.classList.contains('nav-tab')) {
+    boton.classList.add('active'); boton.setAttribute('aria-selected','true');
+  } else {
+    const idx = modulo === 'presupuestos' ? 0 : 1;
+    const nav = document.querySelectorAll('.nav-tabs .nav-tab');
+    if (nav[idx]) { nav[idx].classList.add('active'); nav[idx].setAttribute('aria-selected','true'); }
+  }
+}
+function switchTab(prefijo, tab, boton) {
+  const panel = document.getElementById(prefijo === 'p' ? 'modulo-presupuestos' : 'modulo-facturas');
+  if (!panel) return;
+  panel.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  panel.querySelectorAll('.tabs .tab-btn').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+  const content = document.getElementById(prefijo + '-tab-' + tab);
+  if (content) content.classList.add('active');
+  const tabButton = Array.from(panel.querySelectorAll('.tabs .tab-btn')).find(b => (b.getAttribute('onclick') || '').includes("'" + tab + "'"));
+  const chosen = boton && boton.classList.contains('tab-btn') ? boton : tabButton;
+  if (chosen) { chosen.classList.add('active'); chosen.setAttribute('aria-selected','true'); }
+  if (prefijo === 'p' && tab === 'resultado') renderizarResultado();
+  if (prefijo === 'p' && tab === 'lineas') renderChartMargen();
+  if (prefijo === 'f' && tab === 'verifactu') { regenerarHash(); actualizarTotalesFactura(); }
+  if (prefijo === 'f' && tab === 'registro') actualizarMod303();
+}
+function abrirAyuda() {
+  const modal = document.getElementById('centro-ayuda');
+  if (modal) { modal.classList.add('open'); document.body.style.overflow='hidden'; }
+}
+function cerrarAyuda() {
+  const modal = document.getElementById('centro-ayuda');
+  if (modal) { modal.classList.remove('open'); document.body.style.overflow=''; }
+}
+function cerrarAyudaFondo(e) { if (e.target && e.target.id === 'centro-ayuda') cerrarAyuda(); }
+function mostrarAyuda(id, btn) {
+  document.querySelectorAll('.help-topic').forEach(t => t.classList.remove('active'));
+  const el = document.getElementById('help-' + id);
+  if (el) el.classList.add('active');
+  document.querySelectorAll('.help-side button').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const main = document.querySelector('.help-main');
+  if (main) main.scrollTop = 0;
+}
+function toggleRespuesta(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('show');
+}
+function escapeHTML(value) {
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarAyuda(); });
+
+// Validación numérica básica: impide precios, unidades o porcentajes imposibles.
+const _updateLineaOriginal = updateLinea;
+updateLinea = function(id, campo, valor) {
+  const l = state.presupuesto.lineas.find(x => x.id === id);
+  if (!l) return;
+  if (['uds','costeMat','costeMO','margen','dto'].includes(campo)) {
+    valor = Number(valor);
+    if (!Number.isFinite(valor)) { alert('Introduce un número válido.'); renderLineas(); return; }
+    if (campo === 'uds' && valor <= 0) { alert('Las unidades deben ser mayores que cero.'); renderLineas(); return; }
+    if (['costeMat','costeMO'].includes(campo) && valor < 0) { alert('Un coste no puede ser negativo.'); renderLineas(); return; }
+    if (campo === 'margen' && (valor <= 0 || valor >= 100)) { alert('El margen debe ser mayor que 0 y menor que 100 %.'); renderLineas(); return; }
+    if (campo === 'dto' && (valor < 0 || valor > 100)) { alert('El descuento debe estar entre 0 y 100 %.'); renderLineas(); return; }
+  }
+  _updateLineaOriginal(id,campo,valor);
+};
+
+// La aplicación no debe presentar una retención "AAPP" como NaN ni mantener rótulos antiguos.
+const _renderizarResultadoOriginal = renderizarResultado;
+renderizarResultado = function() {
+  _renderizarResultadoOriginal();
+  const get = id => document.getElementById(id);
+  const irpfVal = get('p-irpf')?.value || '0';
+  const tieneRetencion = irpfVal === '0.15' || irpfVal === '0.07';
+  ['r-irpf-label','r-irpf-ret','r-liquido-label','r-liquido'].forEach(id => { if(get(id)) get(id).style.display = tieneRetencion ? '' : 'none'; });
+  const reActivo = !!get('sw-recargo')?.checked;
+  ['r-re-label','r-re'].forEach(id => { if(get(id)) get(id).style.display = reActivo ? '' : 'none'; });
+  const isp = get('p-tipo-iva')?.value === 'isp';
+  if (get('r-iva-label')) get('r-iva-label').textContent = isp ? 'IVA (ISP: autoliquidación destinatario)' : 'IVA (' + ((Number(get('p-tipo-iva')?.value)||0)*100).toFixed(0) + '%):';
+  if (get('r-iva')) get('r-iva').textContent = isp ? 'No repercutido por emisor' : get('r-iva').textContent;
+  if (get('r-total') && isp) get('r-total').textContent = (state.presupuesto.subtotal).toFixed(2).replace('.',',') + ' €*';
+};
+
+// No afirmar que el hash de juguete sea SHA-256 ni que el QR sea oficial.
+const _regenerarHashOriginal = regenerarHash;
+regenerarHash = function() {
+  _regenerarHashOriginal();
+  const h = document.getElementById('vf-hash');
+  if (h) h.title = 'Hash ficticio de demostración; no es SHA-256 ni registro VeriFactu.';
+  const q = document.getElementById('qr-url');
+  if (q) q.textContent = 'QR NO OFICIAL · SIMULACIÓN DIDÁCTICA';
+  const prev = document.getElementById('vf-hash-anterior');
+  if (prev) prev.textContent = 'Cadena anterior ilustrativa; no se conserva un encadenamiento reglamentario.';
+};
+
+// NIF: el indicador solo informa de una forma reconocible; nunca afirma validar fiscalmente.
+const _validarNIFOriginal = validarNIF;
+validarNIF = function(inputId,statusId) {
+  _validarNIFOriginal(inputId,statusId);
+  const el = document.getElementById(statusId);
+  if (el && el.textContent.startsWith('✓')) el.textContent = '✓ Formato reconocible (no verificado ante AEAT/VIES)';
+};
+
+// Registro en libro: evitar doble clic/duplicado y no inventar cuota cuando no hay líneas.
+registrarFactura = function() {
+  const f = state.factura;
+  if (!f.lineas.length || !f.lineas.some(l => l.cantidad > 0 && l.precioUnit > 0)) {
+    alert('Añade al menos una línea con cantidad y precio unitario antes de registrar.'); return;
+  }
+  const serie = (document.getElementById('f-serie')?.value || 'A').trim();
+  const num = String(document.getElementById('f-numero')?.value || '1');
+  const fecha = document.getElementById('f-fecha-exp')?.value || '';
+  const dest = document.getElementById('f-dest-nombre')?.value || '';
+  if (!serie || !num || !fecha || !dest) {
+    alert('Completa serie, número, fecha y destinatario antes de registrar.'); return;
+  }
+  if (f.libroEmitidas.some(x => x.serie === serie && String(x.num) === num)) {
+    alert('Esta serie y número ya aparecen en el libro. No se ha duplicado el registro.'); return;
+  }
+  let base = 0, cuota = 0;
+  f.lineas.forEach(l => {
+    const b = Number(l.cantidad) * Number(l.precioUnit) * (1 - Number(l.dto)/100);
+    base += b; cuota += b * Number(l.tipoIVA)/100;
+  });
+  const total = base + cuota;
+  f.libroEmitidas.push({serie,num,fecha,dest,base,cuota,total,periodo:document.getElementById('f-periodo')?.value || '1T',ejercicio:Number(document.getElementById('f-ejercicio')?.value || new Date().getFullYear())});
+  f.mod303Devengado += cuota;
+  renderLibro(); actualizarMod303();
+  addLogEntry('ok',`Registro didáctico añadido: ${serie}-${String(num).padStart(5,'0')}`);
+  const numEl = document.getElementById('f-numero');
+  if (numEl) { numEl.value = String(Number(num)+1); generarNumeroFactura(); }
+  // Se recalcula una huella de muestra, pero no se simula una cadena oficial.
+  regenerarHash();
+};
+
+// Libro: representar tipo medio solo si todas las líneas comparten tipo; evitar NaN en base cero.
+renderLibro = function() {
+  const cont = document.getElementById('libro-rows');
+  if (!cont) return;
+  const rows = state.factura.libroEmitidas;
+  if (!rows.length) { cont.innerHTML = '<div class="text-center text-muted text-xs" style="padding:1rem">Sin facturas registradas. Usa el botón «Registrar factura actual».</div>'; return; }
+  const fmt = v => Number(v).toFixed(2).replace('.',',') + ' €';
+  cont.innerHTML = rows.map(f => `<div style="display:grid;grid-template-columns:96px 100px minmax(140px,1fr) 108px 56px 100px 112px;gap:.4rem;padding:.35rem .5rem;border-bottom:1px solid #e5e7eb;font-size:.72rem;align-items:center">
+    <span class="badge badge-blue">${escapeHTML(f.serie)}-${escapeHTML(String(f.num).padStart(5,'0'))}</span>
+    <span>${escapeHTML(f.fecha)}</span><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHTML(f.dest)}</span>
+    <span style="text-align:right">${fmt(f.base)}</span><span style="text-align:right">—</span><span style="text-align:right">${fmt(f.cuota)}</span><span style="text-align:right;font-weight:700">${fmt(f.total)}</span></div>`).join('');
+};
+
+// Corregir error de cálculo de impuesto "aapp" y mostrar el resultado como orientativo.
+const _calcularFiscalOriginal = calcularFiscal;
+calcularFiscal = function() {
+  const sel = document.getElementById('p-tipo-iva');
+  if (!sel) return;
+  _calcularFiscalOriginal();
+  const irpf = document.getElementById('p-irpf')?.value || '0';
+  if (irpf === 'aapp') {
+    const info = document.getElementById('irpf-info');
+    if (info) info.textContent = 'No se calcula automáticamente: depende del tipo de renta y de la obligación de retener.';
+  }
+  const recargo = document.getElementById('sw-recargo')?.checked;
+  const iva = sel.value;
+  const alerta = document.getElementById('alerta-re');
+  if (alerta) alerta.style.display = (recargo && (iva === '0' || iva === 'isp')) ? 'block' : 'none';
+  const swIsp = document.getElementById('sw-isp');
+  if (swIsp && iva !== 'isp') swIsp.checked = false;
+  if (swIsp && iva === 'isp') swIsp.checked = true;
+};
+
+// Conversión: trasladar los datos que sí existen a un borrador de factura, sin simular emisión.
+convertirAFactura = function() {
+  if (!state.presupuesto.lineas.length) { alert('Añade al menos una línea al presupuesto antes de convertirlo.'); return; }
+  const cliente = document.getElementById('p-cliente')?.value || '';
+  const tipo = document.getElementById('p-tipo-iva')?.value || '0.21';
+  document.getElementById('f-dest-nombre').value = cliente;
+  document.getElementById('f-descripcion').value = document.getElementById('p-objeto')?.value || 'Operación procedente de presupuesto';
+  const fecha = document.getElementById('p-fecha')?.value;
+  if (fecha) document.getElementById('f-fecha-op').value = fecha;
+  state.factura.lineas = state.presupuesto.lineas.map((l,i) => ({
+    id: ++fLineaId, desc:l.desc || l.ref || ('Línea '+(i+1)), cantidad:l.uds,
+    precioUnit:(l.costeMat+l.costeMO)/(1-l.margen/100)*(1-l.dto/100),
+    dto:0, tipoIVA: tipo === 'isp' ? 0 : Math.round(Number(tipo)*100)
+  }));
+  renderLineasFactura();
+  switchModulo('facturas');
+  switchTab('f','campos');
+  addLogEntry('warn','Borrador docente importado desde presupuesto. Revisa datos fiscales antes de continuar; no se ha emitido factura.');
+  alert('Se han trasladado las líneas y el cliente a un borrador docente. Revisa NIF, fechas, impuestos y requisitos antes de continuar. No se ha emitido ni registrado una factura.');
+};
+
+// Mostrar mensajes claros en exportaciones que son solo demostraciones.
+exportarPDFFactura = function() {
+  alert('La impresión del navegador puede guardarse como PDF para estudiar el diseño. No es un PDF fiscal certificado ni acredita el cumplimiento de VeriFactu.');
+  window.print();
+};
+
+
+function ajustarCabecera(){
+  const b=document.querySelector('.header-simulacion'), n=document.querySelector('.modulo-nav');
+  if(!b||!n) return;
+  const bh=b.offsetHeight;
+  const nav=getComputedStyle(n).position==='sticky' ? n.offsetHeight : 0;
+  const r=document.documentElement.style;
+  r.setProperty('--banner-h',bh+'px');
+  r.setProperty('--sticky-top',(bh+nav+12)+'px');
+}
+window.addEventListener('load',ajustarCabecera);
+window.addEventListener('resize',ajustarCabecera);
+document.addEventListener('DOMContentLoaded',ajustarCabecera);
+if(document.fonts&&document.fonts.ready) document.fonts.ready.then(()=>{ajustarCabecera(); if(document.getElementById('p-tab-lineas').classList.contains('active')) renderChartMargen();});
+</script>
+
+<!-- CENTRO DE AYUDA: manual de aprendizaje integrado -->
+<div id="centro-ayuda" class="help-overlay" role="dialog" aria-modal="true" aria-labelledby="help-title" onclick="cerrarAyudaFondo(event)">
+ <div class="help-dialog">
+  <nav class="help-side" aria-label="Temas de ayuda">
+   <h2>📘 Guía de aprendizaje</h2>
+   <button class="active" onclick="mostrarAyuda('inicio',this)">Cómo empezar</button>
+   <button onclick="mostrarAyuda('presupuesto',this)">1. Presupuestos</button>
+   <button onclick="mostrarAyuda('costes',this)">2. Costes y precios</button>
+   <button onclick="mostrarAyuda('impuestos',this)">3. IVA, IRPF y recargo</button>
+   <button onclick="mostrarAyuda('factura',this)">4. Facturas</button>
+   <button onclick="mostrarAyuda('verifactu',this)">5. VeriFactu y factura-e</button>
+   <button onclick="mostrarAyuda('libros',this)">6. Libro de IVA</button>
+   <button onclick="mostrarAyuda('glosario',this)">7. Glosario</button>
+   <button onclick="mostrarAyuda('errores',this)">8. Errores frecuentes</button>
+   <button onclick="mostrarAyuda('practica',this)">9. Prácticas y soluciones</button>
+   <button onclick="mostrarAyuda('limites',this)">10. Límites de la simulación</button>
+  </nav>
+  <section class="help-main">
+   <div class="help-head"><h2 id="help-title">Centro de ayuda · Suite Empresarial FP</h2><button class="help-close" onclick="cerrarAyuda()">Cerrar ✕</button></div>
+   <article id="help-inicio" class="help-topic active">
+    <p><strong>Bienvenido/a.</strong> Esta aplicación es un aula práctica para aprender cómo se prepara un presupuesto comercial, cómo se calcula su precio, cómo se confecciona una factura y cómo se registran sus importes.</p>
+    <div class="help-callout help-good"><strong>Regla para aprender:</strong> primero intenta comprender el concepto, después introduce los datos, observa el resultado y, por último, explica con tus propias palabras por qué aparece esa cifra.</div>
+    <h3>Qué vas a aprender</h3>
+    <ol><li>Identificar los datos necesarios en una operación comercial.</li><li>Distinguir coste, precio de venta, margen y descuento.</li><li>Calcular base imponible, IVA, recargo y retención cuando proceda.</li><li>Diferenciar presupuesto, factura completa, simplificada y rectificativa.</li><li>Reconocer los datos que debe contener una factura.</li><li>Comprender qué persiguen los sistemas de facturación verificables y los libros registro.</li></ol>
+    <h3>Cómo está organizada</h3>
+    <table class="help-table"><tr><th>Zona</th><th>Para qué sirve</th></tr><tr><td>Módulo 1 · Presupuestos</td><td>Preparar una oferta económica antes de realizar el trabajo o entregar el producto.</td></tr><tr><td>Módulo 2 · Facturas</td><td>Documentar una operación realizada, calcular sus importes y estudiar su registro.</td></tr><tr><td>Panel lateral</td><td>Recordatorios, comprobaciones y normativa relacionada con el paso actual.</td></tr><tr><td>Esta ayuda</td><td>Explicaciones desde cero, ejemplos, vocabulario, errores y ejercicios resueltos.</td></tr></table>
+    <h3>Itinerario recomendado</h3><div class="help-progress"><strong>1.</strong> Abre Presupuestos y revisa Datos Base.<br><strong>2.</strong> Introduce una línea de ejemplo y cambia el margen.<br><strong>3.</strong> Prueba un descuento y observa el beneficio.<br><strong>4.</strong> Configura el impuesto solo después de entender la base.<br><strong>5.</strong> Revisa el resultado y el clausulado.<br><strong>6.</strong> Pasa a Facturas, revisa los campos y el libro de IVA.</div>
+    <p>Los datos iniciales son ejemplos ficticios. Puedes modificarlos para experimentar. No introduzcas datos personales reales de clientes o estudiantes.</p>
+   </article>
+   <article id="help-presupuesto" class="help-topic">
+    <h3>1. Qué es un presupuesto</h3>
+    <p>Un presupuesto es una propuesta económica que describe qué se ofrece, a quién, en qué condiciones y por qué importe. Se prepara <strong>antes</strong> de ejecutar el trabajo o entregar el bien. Si el cliente lo acepta, puede formarse un contrato según las circunstancias y el contenido de la oferta; no significa que todo presupuesto sea automáticamente irrevocable o que la aceptación siempre produzca idénticos efectos.</p>
+    <h3>Datos base, uno por uno</h3>
+    <ul><li><strong>Número:</strong> identificador interno para localizar la oferta y distinguirla de otras.</li><li><strong>Fecha:</strong> permite saber cuándo se emitió y calcular el plazo de validez.</li><li><strong>Cliente:</strong> destinatario de la propuesta. En prácticas, utiliza nombres inventados.</li><li><strong>Tipo de cliente:</strong> particular/consumidor, empresa/profesional o Administración. Puede cambiar la información y las reglas aplicables.</li><li><strong>Validez:</strong> tiempo durante el que el emisor mantiene los precios y condiciones ofrecidos. Debe indicarse claramente; no existe una regla general que obligue a fijar 30 días.</li><li><strong>Condiciones de pago:</strong> cuándo y cómo se abonará el importe. Deben acordarse y respetar las normas aplicables.</li><li><strong>Portes:</strong> indica si el transporte está incluido o quién lo asume. Evita expresiones ambiguas.</li><li><strong>Objeto:</strong> explica con precisión qué producto se suministra o qué servicio se realizará.</li></ul>
+    <div class="help-callout help-warn"><strong>Atención:</strong> el derecho de desistimiento de 14 días no se aplica automáticamente a cualquier presupuesto aceptado. Depende de que exista una relación de consumo y de que el contrato se celebre en circunstancias que reconozcan ese derecho, con excepciones legales.</div>
+    <h3>Cómo completar el módulo</h3><ol><li>Asigna un número y fecha.</li><li>Identifica al cliente y su condición.</li><li>Describe el objeto con suficiente detalle.</li><li>Establece plazo de validez y condiciones de pago.</li><li>Pasa a Líneas / Costes para calcular los importes.</li><li>Revisa Fiscalidad y, finalmente, Resultado.</li></ol>
+   </article>
+   <article id="help-costes" class="help-topic">
+    <h3>2. Costes, margen, precio y descuento</h3>
+    <p>Una línea representa un producto o servicio del presupuesto. Los importes de coste que se introducen aquí son <strong>unitarios</strong>; las unidades multiplican después el resultado.</p>
+    <table class="help-table"><tr><th>Campo</th><th>Significado</th></tr><tr><td>Unidades</td><td>Cuántas unidades se suministran o cuántas veces se presta el servicio.</td></tr><tr><td>Coste de material</td><td>Coste unitario de materiales o mercancías consumidos.</td></tr><tr><td>Coste de mano de obra</td><td>Coste unitario del trabajo imputado a esa unidad/servicio.</td></tr><tr><td>Margen</td><td>Porcentaje del precio de venta que se quiere obtener como diferencia entre venta y coste, antes de otros gastos e impuestos.</td></tr><tr><td>Descuento</td><td>Reducción porcentual aplicada al precio calculado.</td></tr></table>
+    <h3>Fórmula que utiliza la aplicación</h3>
+    <p>Si el margen es un porcentaje sobre el precio de venta:</p>
+    <div class="help-callout"><strong>Precio de venta unitario = Coste unitario ÷ (1 − margen)</strong><br>Precio con descuento = Precio de venta × (1 − descuento)<br>Importe de línea = Precio con descuento × unidades</div>
+    <p><strong>Ejemplo:</strong> material 60 €, mano de obra 40 €, margen 20 % y 2 unidades. Coste unitario = 100 €. Precio unitario = 100 ÷ 0,80 = 125 €. Si no hay descuento, el importe de dos unidades es 250 €.</p>
+    <p>Con un descuento del 10 %, el precio baja a 112,50 € y el total de dos unidades es 225 €. El coste total sigue siendo 200 €, por lo que el beneficio bruto de la línea pasa a 25 €.</p>
+    <h3>Margen no es recargo</h3>
+    <p>Margen del 20 % sobre venta: coste 100 €, precio 125 € (beneficio 25 €, que representa el 20 % de 125 €). Recargo del 20 % sobre coste: coste 100 €, precio 120 € (beneficio 20 €, que representa el 16,67 % de 120 €). Son cálculos distintos.</p>
+    <div class="help-callout help-warn"><strong>Comprueba:</strong> si el descuento es muy elevado, puede reducir el margen hasta hacerlo negativo. El precio de venta no incluye automáticamente todos los costes indirectos, gastos generales, financiación ni beneficio neto de la empresa.</div>
+    <h3>Gráfico de sensibilidad</h3><p>El gráfico muestra cómo cambia el margen estimado cuando varía el descuento, manteniendo el resto de los datos. Es una simulación sencilla, no un estudio completo de rentabilidad ni un cálculo del punto muerto.</p>
+   </article>
+   <article id="help-impuestos" class="help-topic">
+    <h3>3. Fiscalidad: base imponible, IVA, recargo e IRPF</h3>
+    <h4>Base imponible</h4><p>Es el importe sobre el que se calcula el IVA. En este simulador coincide con el subtotal de las líneas después de aplicar descuentos, antes de añadir los impuestos.</p>
+    <h4>IVA</h4><p>El IVA es un impuesto indirecto. La empresa repercute al cliente la cuota que corresponda y, en su caso, podrá deducir el IVA soportado que cumpla los requisitos legales. Tipos generales, reducidos, superreducidos, exenciones y no sujeciones dependen de la operación concreta: no se eligen por conveniencia.</p>
+    <div class="help-callout"><strong>Ejemplo didáctico:</strong> base 100 € al 21 % → cuota 21 € → total 121 €. La cuota se calcula como 100 × 0,21.</div>
+    <h4>Operación exenta y no sujeta</h4><p>En una operación exenta existe hecho imponible, pero la ley establece que no se repercuta IVA por una exención. En una operación no sujeta, la operación queda fuera del ámbito de aplicación del impuesto. No son expresiones intercambiables y pueden exigir menciones distintas en factura.</p>
+    <h4>Inversión del sujeto pasivo (ISP)</h4><p>En determinados supuestos, el destinatario pasa a ser el sujeto pasivo y debe declarar el impuesto. No es un tipo de IVA del 0 % ni se aplica por marcar una casilla sin comprobar los requisitos del artículo 84 LIVA. La factura debe incluir la mención que corresponda.</p>
+    <h4>Recargo de equivalencia</h4><p>Régimen especial que afecta a determinados comerciantes minoristas personas físicas o entidades en atribución de rentas, con excepciones y requisitos. El proveedor repercute IVA y recargo cuando procede. No es un recargo general para cualquier empresa.</p>
+    <h4>Retención IRPF</h4><p>La retención es un pago a cuenta del IRPF del profesional, que el pagador obligado ingresa en Hacienda. No es un descuento comercial ni un impuesto que se sume al precio. El tipo aplicable depende de la actividad, circunstancias y normativa vigente; 15 % y 7 % no son universales.</p>
+    <div class="help-callout help-warn"><strong>Límite del simulador:</strong> se muestra un cálculo simplificado. No decide si una operación está exenta, sujeta, localizada en España, acogida a un régimen especial o sometida a retención. Esa calificación debe realizarse antes de seleccionar el tipo.</div>
+   </article>
+   <article id="help-factura" class="help-topic">
+    <h3>4. Qué es una factura y qué tipos existen</h3>
+    <p>La factura documenta una entrega de bienes o prestación de servicios y deja constancia de los datos relevantes para el cliente, la contabilidad y las obligaciones tributarias. No es lo mismo que un presupuesto: el presupuesto propone; la factura documenta la operación en los términos exigidos por la normativa.</p>
+    <table class="help-table"><tr><th>Tipo</th><th>Uso general</th><th>Idea clave</th></tr><tr><td>Completa</td><td>Factura ordinaria con el contenido del art. 6 del RD 1619/2012.</td><td>Identifica emisor y, cuando proceda, destinatario; describe operación, bases, tipos y cuotas.</td></tr><tr><td>Simplificada</td><td>En los supuestos del art. 4: hasta 400 € IVA incluido, rectificativas y determinados casos hasta 3.000 €.</td><td>No es simplemente una factura completa con menos campos por decisión propia.</td></tr><tr><td>Rectificativa</td><td>Para corregir una factura en los supuestos y forma previstos en la normativa.</td><td>Debe identificar la factura rectificada y la causa/rectificación que corresponda. No se borra la original.</td></tr></table>
+    <h3>Campos principales de la factura completa</h3><ol><li>Número y, en su caso, serie correlativa.</li><li>Fecha de expedición y, cuando sea distinta, fecha de operación o anticipo.</li><li>Identificación fiscal y nombre/razón social del expedidor.</li><li>Identificación del destinatario cuando sea exigible.</li><li>Domicilios exigidos por la norma.</li><li>Descripción de las operaciones y datos necesarios para determinar la base imponible.</li><li>Tipo o tipos impositivos y cuota tributaria, o menciones específicas cuando procedan.</li><li>Las menciones especiales aplicables: exención, inversión del sujeto pasivo, régimen especial, facturación por destinatario, etc.</li></ol>
+    <h3>Numeración y series</h3><p>La numeración debe ser correlativa dentro de cada serie. Pueden existir series separadas cuando concurren motivos admitidos por la normativa. Una factura rectificativa suele identificarse con una serie específica, pero la organización concreta debe cumplir las reglas vigentes.</p>
+    <h3>Cómo usar esta pantalla</h3><p>Selecciona el tipo, identifica emisor y destinatario, completa fechas, descripción y líneas. Comprueba que el tipo de IVA de cada línea corresponde a la operación. El checklist es orientativo: que aparezca verde no certifica legalidad ni valida el NIF ante la AEAT.</p>
+   </article>
+   <article id="help-verifactu" class="help-topic">
+    <h3>5. VeriFactu, integridad y factura electrónica</h3>
+    <h4>Qué regula VeriFactu</h4><p>El RD 1007/2023 establece requisitos para los sistemas informáticos que soportan procesos de facturación: integridad, conservación, accesibilidad, legibilidad, trazabilidad e inalterabilidad de los registros, entre otros. El sistema debe ajustarse al reglamento y a sus especificaciones técnicas.</p>
+    <p>La modalidad de emisión de registros verificables y la modalidad no verificable tienen características diferentes. No basta con calcular una cadena de caracteres o mostrar un código QR para cumplir el reglamento.</p>
+    <div class="help-callout help-warn"><strong>Fechas actualizadas:</strong> tras el Real Decreto-ley 15/2025, los contribuyentes del Impuesto sobre Sociedades incluidos en el ámbito deben tener adaptados sus sistemas antes del 1 de enero de 2027; el resto de obligados incluidos, antes del 1 de julio de 2027. Hay exclusiones y reglas específicas que deben revisarse en la norma.</div>
+    <h4>Qué hace esta maqueta</h4><p>La huella que aparece en pantalla es un hash ficticio de demostración; no es SHA-256 real ni un registro de facturación reglamentario. El QR no es un QR oficial de verificación. El botón de envío no contacta con AEAT. El log solo vive en la memoria de esta página y puede perderse al cerrarla.</p>
+    <h4>Factura electrónica B2B</h4><p>La Ley 18/2022 y el RD 238/2026 desarrollan un sistema de factura electrónica entre empresarios y profesionales. Su calendario se cuenta desde la entrada en vigor de la orden ministerial de desarrollo: 12 meses para empresas cuyo volumen de operaciones supere 8 millones de euros y 24 meses para el resto. Es una obligación distinta de VeriFactu.</p>
+    <h4>Facturae y FACe</h4><p>Facturae es un formato estructurado utilizado en la facturación electrónica del sector público. FACe es un punto general de entrada de facturas electrónicas de la Administración General del Estado y de las administraciones adheridas. Descargar un XML de ejemplo no equivale a generar un Facturae válido ni a presentarlo en FACe.</p>
+   </article>
+   <article id="help-libros" class="help-topic">
+    <h3>6. Libro registro y liquidación de IVA</h3>
+    <p>El libro registro de facturas expedidas recoge datos de las operaciones documentadas mediante factura. Permite ordenar la información y preparar declaraciones tributarias. No es por sí mismo el Modelo 303 ni sustituye la presentación de una autoliquidación.</p>
+    <h4>IVA devengado y soportado</h4><ul><li><strong>IVA devengado/repercutido:</strong> cuotas que la empresa repercute en sus operaciones sujetas.</li><li><strong>IVA soportado deducible:</strong> cuotas de compras y gastos que cumplen los requisitos de deducción.</li><li><strong>Resultado:</strong> de forma simplificada, diferencia entre IVA devengado y deducible, con ajustes y casuística que el modelo real contempla.</li></ul>
+    <div class="help-callout help-warn"><strong>En esta versión:</strong> el IVA soportado está fijado a cero, no se filtra de verdad por trimestre/ejercicio y el resultado no reproduce todas las casillas ni ajustes del Modelo 303. Es una suma demostrativa, no una liquidación fiscal.</div>
+    <p>Para que un registro sea útil, evita duplicados, comprueba fecha, serie, número, destinatario, base y cuota. Una factura rectificativa debe registrarse de acuerdo con su naturaleza y no como si fuera una venta ordinaria más.</p>
+   </article>
+   <article id="help-glosario" class="help-topic">
+    <h3>7. Glosario básico</h3>
+    <table class="help-table"><tr><th>Término</th><th>Definición sencilla</th></tr>
+    <tr><td>Base imponible</td><td>Importe sobre el que se calcula el impuesto.</td></tr><tr><td>Cuota tributaria</td><td>Resultado de aplicar el tipo impositivo a la base.</td></tr><tr><td>Coste directo</td><td>Coste que puede atribuirse directamente al producto o servicio.</td></tr><tr><td>Coste indirecto</td><td>Coste compartido por varios productos/servicios, como alquiler o administración.</td></tr><tr><td>Margen comercial</td><td>Diferencia entre precio de venta y coste, expresada en relación con el precio de venta.</td></tr><tr><td>Recargo sobre coste</td><td>Porcentaje añadido al coste para fijar un precio; no equivale al margen.</td></tr><tr><td>Descuento</td><td>Reducción del precio acordada con el cliente.</td></tr><tr><td>IVA repercutido</td><td>IVA que se cobra al cliente en una operación sujeta.</td></tr><tr><td>IVA soportado</td><td>IVA que se paga en compras y gastos.</td></tr><tr><td>Retención</td><td>Cantidad que el pagador detrae e ingresa como pago a cuenta del impuesto del perceptor.</td></tr><tr><td>ISP</td><td>Inversión del sujeto pasivo: el destinatario pasa a ser sujeto pasivo en determinados supuestos.</td></tr><tr><td>Factura rectificativa</td><td>Factura que corrige otra anterior conforme a las reglas legales.</td></tr><tr><td>VeriFactu</td><td>Modalidad de sistema de emisión de registros de facturación verificables dentro del marco del RD 1007/2023.</td></tr><tr><td>FACe</td><td>Punto general de entrada de facturas electrónicas de la Administración General del Estado y entidades adheridas.</td></tr></table>
+   </article>
+   <article id="help-errores" class="help-topic">
+    <h3>8. Errores frecuentes y cómo detectarlos</h3>
+    <details><summary>Confundir margen con recargo</summary><p>Un coste de 100 € con recargo del 20 % da 120 €. Un margen del 20 % sobre venta exige 125 €. Revisa qué porcentaje te pide el ejercicio.</p></details>
+    <details><summary>Aplicar descuento antes de calcular el margen</summary><p>En esta aplicación se calcula primero el precio según margen y después se aplica el descuento. El descuento reduce el beneficio.</p></details>
+    <details><summary>Aplicar el IVA a la cantidad equivocada</summary><p>El IVA se calcula sobre la base imponible, no sobre el coste de la empresa ni sobre el beneficio.</p></details>
+    <details><summary>Creer que cualquier operación lleva el 21 %</summary><p>El tipo depende de la naturaleza de la operación, localización, sujeto y posibles exenciones o regímenes. Debe analizarse antes de elegirlo.</p></details>
+    <details><summary>Confundir exención con inversión del sujeto pasivo</summary><p>En la exención no se repercute IVA por una exención legal; en ISP el destinatario asume la condición de sujeto pasivo en los supuestos previstos.</p></details>
+    <details><summary>Creer que la factura simplificada se puede emitir siempre por menos de 400 €</summary><p>La regla general del art. 4 exige atender a los supuestos y límites. Hay casos específicos hasta 3.000 € y otros requisitos.</p></details>
+    <details><summary>Dar por válido un NIF porque el formato parece correcto</summary><p>La comprobación de formato no valida el dígito de control, la existencia del contribuyente ni su situación censal o intracomunitaria.</p></details>
+    <details><summary>Creer que el hash o QR de la maqueta es oficial</summary><p>No lo es. La pantalla sirve para entender la idea de integridad y trazabilidad, no para emitir facturas reales.</p></details>
+   </article>
+   <article id="help-practica" class="help-topic">
+    <h3>9. Prácticas guiadas</h3>
+    <div class="mini-exercise"><strong>Ejercicio 1 · Precio con margen</strong><p>Una empresa compra un artículo por 80 € y soporta 20 € de mano de obra por unidad. Desea un margen del 25 % sobre venta. ¿Cuál es el precio unitario antes de IVA?</p><button class="btn btn-outline btn-sm" onclick="toggleRespuesta('sol1')">Ver solución razonada</button><div id="sol1" class="answer">Coste unitario = 80 + 20 = 100 €. Precio = 100 ÷ (1 − 0,25) = 133,33 €. El margen es 33,33 €, equivalente al 25 % del precio (redondeo a céntimos).</div></div>
+    <div class="mini-exercise"><strong>Ejercicio 2 · Descuento e IVA</strong><p>Sobre un precio neto de 200 € se aplica un descuento del 10 % y después IVA del 21 %. ¿Cuál es el total?</p><button class="btn btn-outline btn-sm" onclick="toggleRespuesta('sol2')">Ver solución razonada</button><div id="sol2" class="answer">Descuento = 20 €. Base imponible = 180 €. IVA = 180 × 0,21 = 37,80 €. Total = 217,80 €.</div></div>
+    <div class="mini-exercise"><strong>Ejercicio 3 · Diferenciar conceptos</strong><p>Explica por qué un presupuesto no es una factura y por qué un QR de demostración no acredita el envío a AEAT.</p><button class="btn btn-outline btn-sm" onclick="toggleRespuesta('sol3')">Ver orientación</button><div id="sol3" class="answer">El presupuesto es una oferta previa con alcance y condiciones; la factura documenta una operación y debe cumplir los requisitos de facturación. Un QR solo tiene valor de verificación si se genera con el sistema y datos reglamentarios y responde al servicio previsto; un dibujo o URL ficticia no lo acredita.</div></div>
+    <div class="mini-exercise"><strong>Ejercicio 4 · Clasifica el documento</strong><p>Se detecta que una factura ya expedida contiene una base imponible incorrecta. ¿Debe borrarse y sustituirse silenciosamente?</p><button class="btn btn-outline btn-sm" onclick="toggleRespuesta('sol4')">Ver orientación</button><div id="sol4" class="answer">No. Debe analizarse si procede expedir una factura rectificativa conforme al art. 15 del RD 1619/2012 y al art. 80 LIVA. La original no debe desaparecer del rastro documental.</div></div>
+   </article>
+   <article id="help-limites" class="help-topic">
+    <h3>10. Qué hace y qué no hace esta aplicación</h3>
+    <div class="help-callout help-warn"><strong>Uso exclusivamente docente.</strong> No utilices los documentos generados para facturar, declarar impuestos, presentar documentos a una Administración ni justificar operaciones reales.</div>
+    <ul><li>Los datos de empresa y cliente son ficticios.</li><li>Los cálculos no cubren todas las reglas de redondeo, suplidos, anticipos, operaciones intracomunitarias, exportaciones, prorrata, regímenes especiales ni particularidades territoriales.</li><li>La validación del NIF es superficial y no consulta AEAT/VIES.</li><li>La huella, QR, envío AEAT y registro de eventos son simulados.</li><li>El XML descargado es un ejemplo educativo, no un fichero Facturae validado contra su esquema ni firmado.</li><li>El PDF de impresión no constituye un documento fiscal certificado.</li><li>El libro de IVA no es el Modelo 303 oficial y no contempla IVA soportado real ni todos los ajustes.</li><li>Los datos permanecen en memoria durante la sesión; al cerrar o recargar se pueden perder.</li></ul>
+    <h3>Normas de referencia para estudiar</h3>
+    <ul><li>Ley 37/1992, del IVA.</li><li>Real Decreto 1619/2012, Reglamento de obligaciones de facturación.</li><li>Ley 58/2003, General Tributaria.</li><li>Real Decreto 1007/2023 y sus modificaciones, sobre sistemas informáticos de facturación.</li><li>Ley 18/2022 y Real Decreto 238/2026, sobre factura electrónica B2B.</li><li>Ley 25/2013, sobre factura electrónica en el sector público.</li><li>Texto refundido de la Ley General para la Defensa de los Consumidores y Usuarios.</li></ul>
+    <p>La normativa puede cambiar. Antes de aplicar un criterio a un caso real, consulta el texto consolidado del BOE y las instrucciones de la AEAT.</p>
+   </article>
+  </section>
+ </div>
+</div>
+
+</body>
+</html>

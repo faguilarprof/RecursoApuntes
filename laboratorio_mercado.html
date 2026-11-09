@@ -1,0 +1,1878 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Laboratorio de oferta y demanda · taller interactivo</title>
+<style>
+/* ============ BASE ============ */
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --bg:#f5f3ee; --ink:#151a2b; --ink2:#4b5370; --ink3:#7b839c;
+  --card:#fff; --line:#e7e3da; --line2:#f1eee7;
+  --accent:#4338ca; --accent2:#6d5ef0; --accent-soft:#eceafd;
+  --dem:#1d4ed8; --dem-soft:#e2ebfe;
+  --sup:#c2410c; --sup-soft:#fdeadf;
+  --ok:#15803d; --ok-soft:#e3f7e9;
+  --warn:#a16207; --warn-soft:#fdf3d7;
+  --bad:#b91c1c; --bad-soft:#fde8e8;
+  --r:16px;
+  --sh:0 1px 2px rgba(21,26,43,.05), 0 10px 28px -16px rgba(21,26,43,.35);
+  --sh2:0 1px 2px rgba(21,26,43,.06), 0 18px 40px -22px rgba(21,26,43,.45);
+}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto} *{animation-duration:.001s!important;transition-duration:.001s!important}}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{margin:0;line-height:1.2;letter-spacing:-.015em}
+p{margin:0 0 .8em}
+a{color:var(--accent)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+/* ============ HERO ============ */
+.hero{position:relative;overflow:hidden;color:#fff;
+  background:
+    radial-gradient(900px 420px at 88% -10%, rgba(109,94,240,.55), transparent 60%),
+    radial-gradient(700px 380px at 8% 120%, rgba(29,78,216,.45), transparent 65%),
+    linear-gradient(135deg,#171a3a 0%,#2a2a6b 48%,#3b2fa8 100%);
+}
+.hero::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.28;
+  background-image:linear-gradient(rgba(255,255,255,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.12) 1px,transparent 1px);
+  background-size:44px 44px;
+  mask-image:radial-gradient(120% 90% at 70% 0%,#000,transparent 75%);
+  -webkit-mask-image:radial-gradient(120% 90% at 70% 0%,#000,transparent 75%);
+}
+.hero .wrap{position:relative;z-index:1;padding-top:44px;padding-bottom:52px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);padding:6px 12px;border-radius:999px;font-weight:600}
+.hero h1{font-size:clamp(1.9rem,4.4vw,3rem);margin:16px 0 12px;max-width:22ch}
+.hero h1 em{font-style:normal;background:linear-gradient(90deg,#c7d2fe,#fbcfe8);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lead{max-width:62ch;color:#dfe2f5;font-size:1.03rem;margin:0 0 22px}
+.hero-chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;font-weight:600;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);padding:5px 11px;border-radius:999px}
+.dot{width:8px;height:8px;border-radius:50%;background:#a5b4fc;flex:none}
+
+/* ============ NAV ============ */
+.nav{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.9);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;gap:6px;padding:9px 20px;overflow-x:auto;scrollbar-width:none}
+.nav .wrap::-webkit-scrollbar{display:none}
+.nav a{flex:none;text-decoration:none;color:var(--ink2);font-size:.84rem;font-weight:600;padding:7px 12px;border-radius:999px;white-space:nowrap}
+.nav a:hover{background:var(--accent-soft);color:var(--accent)}
+
+/* ============ SECCIONES ============ */
+section{padding:44px 0 8px}
+section:target{scroll-margin-top:64px}
+.sec-head{max-width:70ch;margin-bottom:20px}
+.kicker{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--accent)}
+.kicker .num{display:grid;place-items:center;width:22px;height:22px;border-radius:7px;background:var(--accent);color:#fff;font-size:.72rem}
+.sec-head h2{font-size:clamp(1.35rem,2.6vw,1.8rem);margin:10px 0 8px}
+.sec-head p{color:var(--ink2);margin:0}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh)}
+.card.pad{padding:18px}
+
+/* ============ TALLER ============ */
+.lab{display:grid;grid-template-columns:352px minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:940px){.lab{grid-template-columns:1fr}}
+
+.panel-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.panel-title h3{font-size:.98rem}
+.tag{font-size:.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
+
+/* selector de modelo */
+.modelo{display:grid;grid-template-columns:1fr 1fr;gap:8px;background:#f3f1fb;padding:6px;border-radius:14px;border:1px solid #e6e2f7}
+.modelo button{appearance:none;border:0;background:transparent;border-radius:10px;padding:9px 6px;cursor:pointer;
+  font:inherit;font-size:.83rem;font-weight:700;color:var(--ink2);line-height:1.25;transition:.18s}
+.modelo button small{display:block;font-weight:500;font-size:.7rem;color:var(--ink3);letter-spacing:0}
+.modelo button[aria-pressed="true"]{background:#fff;color:var(--accent);box-shadow:0 1px 3px rgba(21,26,43,.14)}
+.modelo button[aria-pressed="true"] small{color:var(--accent2)}
+
+/* sliders */
+.factor{padding:10px 0;border-bottom:1px dashed var(--line2)}
+.factor:last-of-type{border-bottom:0}
+.factor .top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.factor .name{font-size:.87rem;font-weight:600}
+.factor .name .sym{font-family:Georgia,serif;font-style:italic;color:var(--ink3);font-weight:400}
+.factor .read{font-variant-numeric:tabular-nums;font-weight:800;color:var(--accent);font-size:.9rem}
+.factor .hint{font-size:.75rem;color:var(--ink3);margin:1px 0 0}
+.factor .aport{font-size:.75rem;color:var(--ink2);margin-top:2px}
+.aport b{font-variant-numeric:tabular-nums}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:26px;background:transparent;margin:2px 0 0;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:99px;background:linear-gradient(90deg,var(--accent) var(--fill,50%),#e7e4f5 var(--fill,50%))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:19px;height:19px;margin-top:-6.5px;border-radius:50%;
+  background:#fff;border:2.5px solid var(--accent);box-shadow:0 1px 4px rgba(21,26,43,.25)}
+input[type=range]::-moz-range-track{height:6px;border-radius:99px;background:#e7e4f5}
+input[type=range]::-moz-range-progress{height:6px;border-radius:99px;background:var(--accent)}
+input[type=range]::-moz-range-thumb{width:15px;height:15px;border-radius:50%;background:#fff;border:2.5px solid var(--accent)}
+input[type=range]:focus-visible{outline:2px solid var(--accent2);outline-offset:4px;border-radius:6px}
+
+.chips-ds{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0 4px}
+.dsbox{border-radius:12px;padding:8px 10px;font-size:.76rem;line-height:1.35;border:1px solid}
+.dsbox span{display:block;font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.8}
+.dsbox b{font-size:1.02rem;font-variant-numeric:tabular-nums}
+.dsbox.d{background:var(--dem-soft);border-color:#cfdcfb;color:#152f8a}
+.dsbox.s{background:var(--sup-soft);border-color:#f6d5c0;color:#8a3208}
+
+.presets{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px}
+.preset{appearance:none;font:inherit;font-size:.79rem;font-weight:600;cursor:pointer;
+  background:#f4f2ec;border:1px solid var(--line);color:var(--ink2);border-radius:999px;padding:6px 11px;transition:.16s}
+.preset:hover{background:var(--accent-soft);border-color:#d6d0f7;color:var(--accent)}
+.preset.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.ghost{appearance:none;font:inherit;font-size:.79rem;font-weight:600;cursor:pointer;background:#fff;
+  border:1px solid var(--line);color:var(--ink2);border-radius:999px;padding:6px 11px}
+.ghost:hover{background:#f7f6f2}
+.sub-h{font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin:18px 0 8px}
+
+/* ============ GRÁFICO ============ */
+.chart-card{padding:16px 16px 8px}
+.chart-wrap{position:relative;width:100%}
+canvas{display:block;width:100%;border-radius:12px;touch-action:pan-y}
+.leyenda{display:flex;flex-wrap:wrap;gap:6px 16px;padding:10px 4px 4px;font-size:.77rem;color:var(--ink2)}
+.leyenda span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:22px;height:0;border-top:3px solid;border-radius:2px;flex:none}
+.sw.dash{border-top-style:dashed}
+.sw.d-marker{width:9px;height:9px;border:0;border-radius:50%}
+
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:14px}
+.kpi{border:1px solid var(--line);border-radius:13px;padding:9px 11px;background:#fcfbf8}
+.kpi .lbl{font-size:.7rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3)}
+.kpi .v{font-size:1.12rem;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.kpi .v small{font-size:.68rem;font-weight:600;color:var(--ink3);letter-spacing:0}
+.kpi.up .v{color:var(--dem)}
+.kpi.down .v{color:var(--sup)}
+.kpi.state{border-color:#e3e0d6}
+.kpi.state.eq{background:var(--ok-soft);border-color:#bfe6cb}
+.kpi.state.short{background:var(--warn-soft);border-color:#f0dda2}
+.kpi.state.glut{background:var(--bad-soft);border-color:#f3c4c4}
+.kpi.state .v{font-size:.92rem;font-weight:700}
+
+/* lectura narrativa */
+.lectura{margin-top:14px;border:1px solid #e6e2f7;background:linear-gradient(180deg,#fbfaff,#f7f5ff);border-radius:14px;padding:14px 16px}
+.lectura h4{font-size:.72rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;display:flex;align-items:center;gap:7px}
+.lectura h4::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--accent2);box-shadow:0 0 0 3px rgba(109,94,240,.18)}
+.lectura p{font-size:.9rem;margin:0 0 .55em;color:#2a2f47}
+.lectura p:last-child{margin-bottom:0}
+.lectura .cambios{list-style:none;margin:0 0 10px;padding:0;display:grid;gap:6px}
+.lectura .cambios li{font-size:.85rem;display:flex;gap:8px;align-items:flex-start;color:#2a2f47}
+.lectura .cambios .pill{flex:none;font-size:.68rem;font-weight:800;padding:2px 7px;border-radius:6px;margin-top:3px;letter-spacing:.02em}
+.pill.d{background:var(--dem-soft);color:#152f8a}
+.pill.s{background:var(--sup-soft);color:#8a3208}
+.arrow{font-variant-numeric:tabular-nums;font-weight:700;color:var(--accent)}
+.lectura .why{font-size:.85rem;color:#38405c;background:#fff;border:1px solid #e9e5f8;border-radius:10px;padding:9px 11px}
+
+/* ============ CÓMO LEER ============ */
+.guia{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.paso{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 15px;box-shadow:var(--sh);position:relative}
+.paso .n{width:26px;height:26px;border-radius:8px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;
+  font-weight:800;font-size:.8rem;margin-bottom:9px}
+.paso h4{font-size:.94rem;margin-bottom:5px}
+.paso p{font-size:.84rem;color:var(--ink2);margin:0}
+.paso code{background:#f4f2ec;border-radius:5px;padding:1px 5px;font-size:.85em}
+
+/* ============ FÓRMULAS ============ */
+.fx{font-family:Georgia,"Times New Roman",serif;font-size:1.02em}
+.fx i,.fxiv{font-style:italic}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:-0.6em;margin:0 .18em;
+  font-size:.92em;line-height:1.2;text-align:center}
+.frac>span:first-child{border-bottom:1.4px solid currentColor;padding:0 .35em}
+.frac>span:last-child{padding:0 .35em}
+.eq{font-family:Georgia,serif;font-size:1.02rem;background:#fbfaf6;border:1px solid var(--line);border-left:4px solid var(--accent);
+  border-radius:10px;padding:12px 14px;margin:10px 0;overflow-x:auto;line-height:2.1}
+.eq .num{color:var(--accent);font-weight:700;font-style:normal;background:#efedfd;border-radius:5px;padding:1px 5px}
+.eq .res{background:var(--ok-soft);color:#0f5c2c;font-weight:800;font-style:normal;border-radius:5px;padding:2px 7px}
+.sub{font-size:.72em;vertical-align:-0.25em;font-family:"Segoe UI",system-ui,sans-serif;font-weight:700}
+
+.deriv{display:grid;gap:14px}
+.deriv .card{padding:18px 18px 14px}
+.deriv h3{font-size:1rem;display:flex;align-items:center;gap:9px;margin-bottom:4px}
+.deriv h3 .badge{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-size:.75rem;font-weight:800;flex:none;background:var(--accent-soft);color:var(--accent)}
+.deriv h3.d .badge{background:var(--dem-soft);color:#152f8a}
+.deriv h3.s .badge{background:var(--sup-soft);color:#8a3208}
+.deriv .sub{font-size:.82rem;color:var(--ink3);margin:0 0 10px}
+.deriv p{font-size:.88rem;color:var(--ink2);margin:0 0 .6em}
+.deriv p:last-child{margin-bottom:0}
+.pasos{counter-reset:s;list-style:none;margin:8px 0 0;padding:0;display:grid;gap:9px}
+.pasos li{counter-increment:s;position:relative;padding-left:32px;font-size:.88rem;color:var(--ink2)}
+.pasos li::before{content:counter(s);position:absolute;left:0;top:1px;width:22px;height:22px;border-radius:7px;
+  background:var(--accent-soft);color:var(--accent);font-weight:800;font-size:.72rem;display:grid;place-items:center}
+.pasos li b{color:var(--ink)}
+.tabla-coef{width:100%;border-collapse:collapse;font-size:.84rem;margin:6px 0}
+.tabla-coef th{text-align:left;font-size:.7rem;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);padding:6px 8px;border-bottom:1px solid var(--line)}
+.tabla-coef td{padding:7px 8px;border-bottom:1px solid var(--line2);vertical-align:top}
+.tabla-coef tr:last-child td{border-bottom:0}
+.tabla-coef td.c{font-variant-numeric:tabular-nums;font-weight:700;color:var(--accent);white-space:nowrap}
+.note{font-size:.8rem;color:var(--ink3);border-left:3px solid var(--line);padding-left:10px;margin-top:10px}
+
+/* ============ ELASTICIDAD ============ */
+.elast-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+.etar{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.ecard{border:1px solid var(--line);border-radius:14px;padding:14px;background:#fff;box-shadow:var(--sh)}
+.ecard .head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:2px}
+.ecard h4{font-size:.88rem}
+.ecard .val{font-size:1.25rem;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.ecard .who{font-size:.72rem;color:var(--ink3);margin-bottom:8px}
+.ecard .f{font-family:Georgia,serif;font-size:.84rem;color:var(--ink2);margin-bottom:9px;line-height:1.9}
+.ecard .f .num{color:var(--accent);font-weight:700;font-style:normal}
+.bar{height:7px;border-radius:99px;background:#eeece4;position:relative;margin:10px 0 6px;overflow:visible}
+.bar .fill{position:absolute;left:0;top:0;bottom:0;border-radius:99px;background:var(--accent2);transition:width .35s}
+.bar .tick{position:absolute;top:-4px;bottom:-4px;width:2px;background:#a8a2c9;border-radius:2px}
+.bar .tick::after{content:"1";position:absolute;top:-15px;left:-3px;font-size:.6rem;font-weight:800;color:#8b85b3}
+.bar .lbl{display:flex;justify-content:space-between;font-size:.65rem;color:var(--ink3);margin-top:8px;font-weight:600}
+.ecard .interp{font-size:.8rem;color:var(--ink2);margin:8px 0 0}
+.chip-estado{display:inline-block;font-size:.68rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  padding:2px 8px;border-radius:6px;background:var(--accent-soft);color:var(--accent)}
+.chip-estado.ok{background:var(--ok-soft);color:#0f5c2c}
+.chip-estado.warn{background:var(--warn-soft);color:#7a4b06}
+.chip-estado.bad{background:var(--bad-soft);color:#8f1d1d}
+
+.cmp{width:100%;border-collapse:collapse;font-size:.86rem}
+.cmp th,.cmp td{padding:9px 10px;border-bottom:1px solid var(--line2);text-align:center;font-variant-numeric:tabular-nums}
+.cmp th:first-child,.cmp td:first-child{text-align:left}
+.cmp th{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);border-bottom:1px solid var(--line)}
+.cmp tr.active{background:#fbfaff}
+.cmp tr.active td:first-child{font-weight:800}
+.cmp .tagA{font-size:.66rem;font-weight:800;color:#fff;background:var(--accent);border-radius:5px;padding:1px 6px;margin-left:6px;vertical-align:1px}
+
+.defgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:22px}
+@media (max-width:760px){.defgrid{grid-template-columns:1fr}}
+
+
+/* ============ NIVELES DE EXPLICACIÓN ============ */
+body.nivel1 .solo-avanzado,body.nivel2 .solo-basico{display:none!important}
+.niveles{display:inline-flex;align-items:center;gap:3px;background:#f1eefb;border:1px solid #e2ddf5;border-radius:999px;padding:3px}
+.niveles .lbl{font-size:.64rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#7b83a8;padding:0 6px 0 8px}
+.niveles button{appearance:none;border:0;background:transparent;font:inherit;font-size:.76rem;font-weight:700;color:#4b5370;padding:5px 11px;border-radius:999px;cursor:pointer;white-space:nowrap;transition:.16s}
+.niveles button:hover{color:var(--accent)}
+.niveles button[aria-pressed="true"]{background:#fff;color:var(--accent);box-shadow:0 1px 3px rgba(21,26,43,.16)}
+.nav .niveles{margin-left:auto;flex:none}
+.nivelbox{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;
+  background:linear-gradient(180deg,#fbfaff,#f4f1ff);border:1px solid #e6e2f7;border-radius:14px;padding:14px 16px;margin-bottom:16px}
+.nivelbox h3{font-size:.95rem;margin:0 0 4px}
+.nivelbox p{margin:0;font-size:.83rem;color:#4b5370;max-width:64ch}
+.nivelbox .niveles{padding:4px;background:#fff;border-color:#ddd6f6}
+.niveltag{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:800;letter-spacing:.03em;
+  background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:3px 10px;margin-left:8px;vertical-align:2px}
+table.vals{width:100%;max-width:430px;border-collapse:collapse;font-size:.86rem;margin:8px 0 12px;font-variant-numeric:tabular-nums}
+table.vals.wide{max-width:100%;font-size:.82rem}
+table.vals th{font-size:.67rem;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);text-align:right;padding:6px 9px;border-bottom:1px solid var(--line)}
+table.vals th:first-child{text-align:left}
+table.vals td{padding:6px 9px;border-bottom:1px solid var(--line2);text-align:right;color:var(--ink2)}
+table.vals td:first-child{text-align:left;color:var(--ink);font-weight:600}
+table.vals td.v{font-weight:700;color:var(--accent)}
+table.vals tr.hi td{background:#eef4ff}
+table.vals.wide td:last-child{text-align:left;font-size:.78rem;color:var(--ink3)}
+@media (max-width:700px){table.vals{max-width:100%}}
+
+
+/* ============ BARRA DE CONTROL JUNTO AL GRÁFICO ============ */
+.chart-toolbar{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:flex-end;justify-content:space-between;
+  border-bottom:1px solid var(--line2);padding:0 2px 11px;margin-bottom:12px}
+.ctl-price{flex:1 1 230px;min-width:190px}
+.ctl-line{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.ctl-line label{font-size:.82rem;font-weight:700;color:var(--ink)}
+.ctl-line output{font-variant-numeric:tabular-nums;font-weight:800;color:var(--accent);font-size:.95rem}
+.ctl-hint{font-size:.72rem;color:var(--ink3);margin:1px 0 0}
+.ctl-esc{display:flex;flex-wrap:wrap;gap:5px;align-items:center;padding-bottom:2px}
+.ctl-lbl{font-size:.63rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-right:3px}
+.preset.sm,.ghost.sm{font-size:.72rem;padding:4px 9px}
+.legend-toggle{display:inline-flex;align-items:center;gap:6px;appearance:none;border:0;background:transparent;
+  font:inherit;font-size:.77rem;color:var(--ink2);cursor:pointer;padding:0;line-height:1.4}
+.legend-toggle:hover{color:var(--accent)}
+.legend-toggle[aria-pressed="false"]{opacity:.4;text-decoration:line-through}
+.lectura{overflow-y:auto;overscroll-behavior:contain}
+.lectura::-webkit-scrollbar{width:8px}
+.lectura::-webkit-scrollbar-thumb{background:#d8d3ee;border-radius:8px}
+@media (min-width:941px){
+  .chart-card{position:sticky;top:62px;align-self:start}
+}
+@media (max-width:940px){
+  .chart-card{order:-1}
+  .chart-toolbar{gap:8px 12px}
+}
+
+/* ============ PRÁCTICA ============ */
+.practica{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:940px){.practica{grid-template-columns:1fr}}
+.quizcard{padding:18px}
+.qhead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:4px}
+.qhead h3{font-size:1rem}
+.score{font-size:.76rem;font-weight:800;color:var(--accent);background:var(--accent-soft);padding:4px 10px;border-radius:999px;font-variant-numeric:tabular-nums}
+.qbox{border-top:1px solid var(--line2);padding:14px 0 4px}
+.qbox:first-of-type{border-top:0}
+.qbox .q{font-size:.9rem;font-weight:700;margin:0 0 9px;display:flex;gap:9px}
+.qbox .q .qn{flex:none;width:22px;height:22px;border-radius:7px;background:#f4f2ec;color:var(--ink2);font-size:.74rem;display:grid;place-items:center;font-weight:800}
+.opts{display:grid;gap:6px;margin-bottom:9px}
+.opt{display:flex;gap:9px;align-items:flex-start;font-size:.86rem;border:1px solid var(--line);border-radius:10px;
+  padding:8px 11px;cursor:pointer;transition:.14s;background:#fff}
+.opt:hover{border-color:#cfcaf0;background:#fbfaff}
+.opt input{accent-color:var(--accent);margin:3px 0 0}
+.opt.correct{border-color:#9fdcb2;background:var(--ok-soft)}
+.opt.wrong{border-color:#f0b4b4;background:var(--bad-soft)}
+.btn-check{appearance:none;font:inherit;font-size:.8rem;font-weight:700;cursor:pointer;background:var(--accent);color:#fff;
+  border:0;border-radius:9px;padding:7px 14px;transition:.16s}
+.btn-check:hover{background:#372db0}
+.fb{font-size:.85rem;margin-top:9px;border-radius:10px;padding:10px 12px;display:none}
+.fb.show{display:block}
+.fb.ok{background:var(--ok-soft);color:#0f5c2c;border:1px solid #bfe6cb}
+.fb.no{background:var(--bad-soft);color:#8f1d1d;border:1px solid #f3c4c4}
+.fb b{font-weight:800}
+
+.logros{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.logro{display:flex;gap:10px;align-items:flex-start;font-size:.84rem;color:var(--ink3);border:1px dashed var(--line);
+  border-radius:11px;padding:9px 11px;transition:.25s;background:#fcfbf8}
+.logro .bx{flex:none;width:19px;height:19px;border-radius:6px;border:1.6px solid #cfcac0;display:grid;place-items:center;margin-top:1px}
+.logro .bx svg{opacity:0;transform:scale(.6);transition:.25s}
+.logro.done{color:var(--ink);border-style:solid;border-color:#bfe6cb;background:var(--ok-soft)}
+.logro.done .bx{background:var(--ok);border-color:var(--ok)}
+.logro.done .bx svg{opacity:1;transform:scale(1)}
+.logro.done .t{font-weight:600}
+
+/* ============ GLOSARIO ============ */
+.glos{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:10px}
+details.g{background:#fff;border:1px solid var(--line);border-radius:12px;padding:0;box-shadow:var(--sh);overflow:hidden}
+details.g summary{cursor:pointer;padding:12px 15px;font-weight:700;font-size:.88rem;list-style:none;display:flex;justify-content:space-between;gap:10px;align-items:center}
+details.g summary::-webkit-details-marker{display:none}
+details.g summary::after{content:"+";font-size:1.1rem;color:var(--ink3);font-weight:400;line-height:1}
+details.g[open] summary::after{content:"−"}
+details.g[open] summary{background:#fbfafd;border-bottom:1px solid var(--line2)}
+details.g .body{padding:12px 15px;font-size:.85rem;color:var(--ink2)}
+details.g .body .eq{font-size:.92rem;margin:8px 0 0}
+
+footer{margin-top:52px;padding:26px 0 40px;border-top:1px solid var(--line);color:var(--ink3);font-size:.8rem}
+footer .wrap{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between}
+
+@media print{.nav,.hero::after{display:none}body{background:#fff}}
+</style>
+</head>
+<body class="nivel1">
+
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Taller interactivo · Economía</span>
+    <h1>Oferta y demanda: <em>de dónde sale cada número</em></h1>
+    <p class="lead">Mueve los factores, mira cómo se desplazan las curvas y comprueba, paso a paso, cómo se obtienen el precio de equilibrio, la cantidad y las elasticidades. Todo lo que aparece en el gráfico está calculado y explicado aquí.</p>
+    <div class="hero-chips">
+      <span class="chip"><span class="dot"></span>Dos niveles de explicación</span>
+      <span class="chip"><span class="dot" style="background:#fcd34d"></span>Rectas y curvas</span>
+      <span class="chip"><span class="dot" style="background:#86efac"></span>Cada número, paso a paso</span>
+      <span class="chip"><span class="dot" style="background:#f9a8d4"></span>8 preguntas de autoevaluación</span>
+    </div>
+  </div>
+</header>
+
+<nav class="nav">
+  <div class="wrap">
+    <a href="#taller">1 · El taller</a>
+    <a href="#guia">2 · Cómo leer el gráfico</a>
+    <a href="#origen">3 · De dónde sale cada número</a>
+    <a href="#elasticidad">4 · Elasticidad</a>
+    <a href="#practica">5 · Practica</a>
+    <a href="#glosario">6 · Glosario</a>
+    <div class="niveles" role="group" aria-label="Nivel de las explicaciones">
+      <span class="lbl">Nivel</span>
+      <button type="button" data-n="1" aria-pressed="true">1 · básico</button>
+      <button type="button" data-n="2" aria-pressed="false">2 · avanzado</button>
+    </div>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- ============================================================ TALLER -->
+<section id="taller">
+  <div class="sec-head">
+    <span class="kicker"><span class="num">1</span>El taller</span>
+    <h2>Mueve un factor y sigue la cadena completa</h2>
+    <p>Cada cambio se aplica <em>ceteris paribus</em>: solo se mueve el factor que tocas y el resto se queda quieto. Así se ve qué provoca exactamente cada variable.</p>
+  </div>
+
+  <div class="lab">
+    <!-- ------------------------- CONTROLES -->
+    <div class="card pad">
+      <div class="panel-title">
+        <h3>Panel de control</h3>
+        <span class="tag">variables</span>
+      </div>
+
+      <div class="modelo" role="group" aria-label="Modelo matemático">
+        <button type="button" id="mCurva" data-m="curva" aria-pressed="true">Curvas<small>potencias · elasticidad constante</small></button>
+        <button type="button" id="mLineal" data-m="lineal" aria-pressed="false">Rectas<small>funciones lineales</small></button>
+      </div>
+
+      <div class="sub-h">Factores de la demanda</div>
+
+      <div class="factor">
+        <div class="top"><span class="name">Precio del bien sustitutivo <span class="sym">P<sub>s</sub></span></span><span class="read" id="vPs"></span></div>
+        <input type="range" id="Ps" min="0" max="30" step="1" value="10" aria-label="Precio del bien sustitutivo">
+        <p class="hint">Si el sustitutivo se encarece, los consumidores se pasan al bien X.</p>
+        <p class="aport" id="aPs"></p>
+      </div>
+
+      <div class="factor">
+        <div class="top"><span class="name">Precio del bien complementario <span class="sym">P<sub>c</sub></span></span><span class="read" id="vPc"></span></div>
+        <input type="range" id="Pc" min="0" max="30" step="1" value="10" aria-label="Precio del bien complementario">
+        <p class="hint">Si el complementario se encarece, se consume menos del bien X.</p>
+        <p class="aport" id="aPc"></p>
+      </div>
+
+      <div class="factor">
+        <div class="top"><span class="name">Renta de los consumidores <span class="sym">R</span></span><span class="read" id="vR"></span></div>
+        <input type="range" id="R" min="0" max="100" step="1" value="50" aria-label="Renta de los consumidores">
+        <p class="hint">Índice de renta (50 = renta de partida).</p>
+        <p class="aport" id="aR"></p>
+      </div>
+
+      <div class="sub-h">Factores de la oferta</div>
+
+      <div class="factor">
+        <div class="top"><span class="name">Coste de los factores <span class="sym">C<sub>f</sub></span></span><span class="read" id="vCf"></span></div>
+        <input type="range" id="Cf" min="0" max="30" step="1" value="10" aria-label="Coste de los factores de producción">
+        <p class="hint">Salarios, energía, materias primas… Si suben, producir es más caro.</p>
+        <p class="aport" id="aCf"></p>
+      </div>
+
+      <div class="factor">
+        <div class="top"><span class="name">Estado de la técnica <span class="sym">T</span></span><span class="read" id="vT"></span></div>
+        <input type="range" id="T" min="0" max="30" step="1" value="10" aria-label="Estado de la técnica">
+        <p class="hint">Mejor tecnología = producir más con los mismos recursos.</p>
+        <p class="aport" id="aT"></p>
+      </div>
+
+      <div class="chips-ds">
+        <div class="dsbox d"><span>ΔD · demanda</span><b id="ddVal">0</b><span style="text-transform:none;font-weight:500;letter-spacing:0;opacity:.85" id="ddDir">sin desplazar</span></div>
+        <div class="dsbox s"><span>ΔS · oferta</span><b id="dsVal">0</b><span style="text-transform:none;font-weight:500;letter-spacing:0;opacity:.85" id="dsDir">sin desplazar</span></div>
+      </div>
+
+      <div class="presets" style="margin-top:14px">
+        <button type="button" class="ghost" id="reset">↺ Volver al inicio</button>
+      </div>
+    </div>
+
+    <!-- ------------------------- GRÁFICO -->
+    <div class="card chart-card" id="chartCard">
+      <div class="chart-toolbar">
+        <div class="ctl-price">
+          <div class="ctl-line">
+            <label for="P">Precio de mercado simulado</label>
+            <output id="vP" for="P"></output>
+          </div>
+          <input type="range" id="P" min="0" max="14" step="0.5" value="6" aria-label="Precio de mercado simulado">
+          <p class="ctl-hint">No mueve ninguna curva: te desplaza <em>a lo largo</em> de ellas.</p>
+        </div>
+        <div class="ctl-esc">
+          <span class="ctl-lbl">Escenarios</span>
+          <button type="button" class="preset sm" data-s="oliva" title="Sube el precio del bien sustitutivo">↑ sustitutivo</button>
+          <button type="button" class="preset sm" data-s="complementario" title="Sube el precio del bien complementario">↑ complementario</button>
+          <button type="button" class="preset sm" data-s="renta" title="Crece la renta de los consumidores">↑ renta</button>
+          <button type="button" class="preset sm" data-s="costes" title="Suben los costes de producción">↑ costes</button>
+          <button type="button" class="preset sm" data-s="tecnica" title="Mejora la técnica">↑ técnica</button>
+        </div>
+      </div>
+
+      <div class="chart-wrap"><canvas id="chart" aria-label="Gráfico de oferta y demanda"></canvas></div>
+
+      <div class="leyenda">
+        <span><i class="sw" style="border-color:#1d4ed8"></i>Demanda (D)</span>
+        <span><i class="sw" style="border-color:#c2410c"></i>Oferta (O)</span>
+        <button type="button" class="legend-toggle" id="toggleBase" aria-pressed="true" title="Mostrar u ocultar las curvas de partida">
+          <i class="sw dash" style="border-color:#a8a29a"></i>Curvas iniciales</button>
+        <span><i class="sw d-marker" style="background:#111827"></i>Equilibrio E</span>
+        <span><i class="sw dash" style="border-color:#7c3aed"></i>Precio simulado</span>
+        <span><i class="sw d-marker" style="background:#dc2626;opacity:.55;border-radius:3px;height:9px"></i>Exceso</span>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi up"><div class="lbl">Precio de equilibrio</div><div class="v" id="kP">—</div></div>
+        <div class="kpi down"><div class="lbl">Cantidad de equilibrio</div><div class="v" id="kQ">—</div></div>
+        <div class="kpi state" id="kStateBox"><div class="lbl">Situación del mercado</div><div class="v" id="kState">—</div></div>
+      </div>
+
+      <div class="lectura">
+        <h4>Qué está pasando</h4>
+        <div id="lectura"><p>Mueve cualquier factor del panel para empezar.</p></div>
+      </div>
+    </div>
+  </div>
+  <details class="g" style="margin-top:16px">
+    <summary>¿Cómo usarlo en clase? · guion en 6 pasos</summary>
+    <div class="body">
+      <ol class="pasos">
+        <li><b>Punto de partida.</b> Sin tocar nada, pregunta qué es el punto negro <span class="fx">E</span> y por qué el mercado se detiene justo ahí.</li>
+        <li><b>Mueve solo el precio.</b> Con el deslizador «Precio fijado» aparece un exceso: pregunta por qué las curvas <em>no</em> se han movido. Es la diferencia entre moverse a lo largo de la curva y desplazarla.</li>
+        <li><b>Un escenario.</b> Pulsa «Sube el sustitutivo» y lee en voz alta la cadena de «Qué está pasando»: factor → ΔD → desplazamiento → nuevo equilibrio.</li>
+        <li><b>De dónde sale.</b> Baja a la sección 3 y resolved juntos el equilibrio paso a paso con los números que hay en pantalla.</li>
+        <li><b>Rectas frente a curvas.</b> Cambia de modelo y comparad la tabla de elasticidades: mismo equilibrio de partida, comportamiento distinto.</li>
+        <li><b>Cierre.</b> Autoevaluación de 8 preguntas y retos de exploración.</li>
+      </ol>
+    </div>
+  </details>
+</section>
+
+<!-- ============================================================ GUÍA -->
+<section id="guia">
+  <div class="sec-head">
+    <span class="kicker"><span class="num">2</span>Cómo leer el gráfico</span>
+    <h2>Seis cosas que hay que saber mirar</h2>
+    <p>Antes de tocar nada, conviene saber qué representa cada elemento del dibujo.</p>
+  </div>
+  <div class="guia">
+    <div class="paso"><div class="n">1</div><h4>Los ejes</h4><p>En el eje vertical va el <b>precio</b> (€ por unidad); en el horizontal, la <b>cantidad</b> (unidades por período). La cantidad <em>no</em> es «lo que se vende»: cada curva es un <em>plan</em>, una intención.</p></div>
+    <div class="paso"><div class="n">2</div><h4>Cada punto de la demanda</h4><p>Es la cantidad que los consumidores <b>quieren comprar</b> a ese precio. La curva baja porque, a precios menores, más gente está dispuesta a comprar (aunque sea la misma persona comprando más).</p></div>
+    <div class="paso"><div class="n">3</div><h4>Cada punto de la oferta</h4><p>Es la cantidad que las empresas <b>quieren vender</b> a ese precio. Sube porque un precio mayor cubre costes más altos y hace rentables producciones que antes no lo eran.</p></div>
+    <div class="paso"><div class="n">4</div><h4>La intersección</h4><p>Donde <code>Q<sub>d</sub> = Q<sub>s</sub></code>. Ese precio es el único con el que nadie quiere cambiar de decisión: es el <b>equilibrio</b> <code>(P*, Q*)</code>.</p></div>
+    <div class="paso"><div class="n">5</div><h4>Fuera del equilibrio</h4><p>Si el precio está por debajo, la cantidad demandada supera la ofrecida: <b>exceso de demanda</b> (escasez) y el precio tiende a subir. Si está por encima, hay <b>exceso de oferta</b> y tiende a bajar.</p></div>
+    <div class="paso"><div class="n">6</div><h4>Recta o curva: no es lo mismo</h4><p>Una demanda <b>recta</b> cambia de elasticidad a lo largo de la línea.<span class="solo-basico"> Una demanda <b>curva</b> (como la del modelo «Curvas»), en cambio, reacciona siempre en la misma proporción: sube el precio un 1 % y la cantidad baja siempre lo mismo, tanto a precios altos como bajos. Las curvas con esa propiedad se llaman <b>isoelásticas</b>. Por eso el taller te deja comparar ambas.</span><span class="solo-avanzado"> Una demanda <b>curva</b> como <code>Q = A·P<sup>−1,2</sup></code> tiene la <em>misma</em> elasticidad en todos sus puntos: es la familia de curvas <b>isoelásticas</b>. Por eso el taller te deja comparar ambas.</span></p></div>
+  </div>
+</section>
+
+<!-- ============================================================ ORIGEN -->
+<section id="origen">
+  <div class="sec-head">
+    <span class="kicker"><span class="num">3</span>De dónde sale cada número</span>
+    <h2>El modelo, escrito entero y con tus datos dentro</h2>
+    <p>Estas tarjetas se recalculan con los valores que tengas ahora mismo en el panel. Los números en <span style="color:#4338ca;font-weight:700;background:#efedfd;border-radius:5px;padding:0 5px">azul</span> son los datos del problema; los <span style="color:#0f5c2c;font-weight:700;background:#e3f7e9;border-radius:5px;padding:0 5px">verdes</span> son resultados.</p>
+  </div>
+
+  <div class="nivelbox">
+    <div>
+      <h3>Elige cómo quieres las explicaciones</h3>
+      <p><b>Nivel 1 · básico</b> (el de partida): todo con palabras, tablas de valores y cuentas sencillas de sumar, restar y dividir. No hace falta álgebra ni derivadas.
+      <b>Nivel 2 · avanzado</b>: las mismas ideas con la fórmula completa, potencias y el atajo del cálculo.</p>
+    </div>
+    <div class="niveles" role="group" aria-label="Nivel de las explicaciones">
+      <button type="button" data-n="1" aria-pressed="true">1 · básico</button>
+      <button type="button" data-n="2" aria-pressed="false">2 · avanzado</button>
+    </div>
+  </div>
+
+  <div class="deriv">
+    <div class="card">
+      <h3 class="d"><span class="badge">D</span>Función de demanda</h3>
+      <p class="sub" id="demSub"></p>
+      <div id="demFormula"></div>
+      <div id="demText"></div>
+    </div>
+
+    <div class="card">
+      <h3 class="s"><span class="badge">O</span>Función de oferta</h3>
+      <p class="sub" id="ofeSub"></p>
+      <div id="ofeFormula"></div>
+      <div id="ofeText"></div>
+    </div>
+
+    <div class="card">
+      <h3><span class="badge">Δ</span>De dónde salen los desplazamientos ΔD y ΔS</h3>
+      <p class="sub">Cada factor entra con un coeficiente fijo. Ese coeficiente es una <em>hipótesis del modelo</em>: dice cuánto reacciona la cantidad ante cada variable, manteniendo el resto constante.</p>
+      <div id="shiftBody"></div>
+    </div>
+
+    <div class="card">
+      <h3><span class="badge">=</span>El equilibrio, resuelto paso a paso</h3>
+      <p class="sub">El equilibrio es la pareja (P, Q) que cumple a la vez las dos ecuaciones: <span class="fx">Q<sub>d</sub> = Q<sub>s</sub></span>.</p>
+      <div id="eqBody"></div>
+    </div>
+
+    <div class="card">
+      <h3><span class="badge">!</span>Los excesos al precio simulado</h3>
+      <p class="sub">Si el precio no es P*, las dos cantidades no coinciden. La diferencia es el desequilibrio y explica hacia dónde tiende a moverse el precio.</p>
+      <div id="excBody"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ ELASTICIDAD -->
+<section id="elasticidad">
+  <div class="sec-head">
+    <span class="kicker"><span class="num">4</span>Elasticidad</span>
+    <h2>Cuánto reacciona una cantidad a un cambio porcentual</h2>
+    <p>La elasticidad es la herramienta que permite comparar reacciones que van en unidades distintas (euros, índices, unidades físicas). Se mide siempre en porcentajes, y por eso no tiene unidades.
+    <span class="niveltag"><span class="solo-basico">Nivel 1 · básico</span><span class="solo-avanzado">Nivel 2 · avanzado</span></span></p>
+  </div>
+
+  <div class="card pad" style="margin-bottom:14px">
+    <!-- ---------- nivel 1 ---------- -->
+    <div class="solo-basico">
+      <h3 style="font-size:.95rem;margin-bottom:8px">Qué es la elasticidad, en una frase</h3>
+      <p style="font-size:.88rem;color:#4b5370">Responde a una pregunta muy concreta: <b>si el precio cambia un 1 %, ¿cuánto cambia la cantidad?</b> El resultado es un número sin unidades, porque se comparan dos porcentajes.</p>
+      <div class="eq">ε =
+        <span class="frac"><span>cambio % de la cantidad</span><span>cambio % de lo que sea (precio, renta…)</span></span></div>
+      <p style="font-size:.88rem;color:#4b5370">Ejemplo con números redondos: si el precio sube un <b>2 %</b> y la cantidad baja un <b>6 %</b>, entonces ε = 6 ÷ 2 = <b>3</b>. La cantidad reacciona el triple que el precio.</p>
+      <ul style="font-size:.86rem;color:#4b5370;margin:6px 0 0;padding-left:18px">
+        <li>Se compara siempre con <b>1</b>: si el número es mayor que 1, la reacción es «grande»; si es menor, es «pequeña».</li>
+        <li>El <b>signo</b> (+ o −) solo dice la dirección: − significa que al subir una cosa baja la otra; + que suben las dos a la vez.</li>
+        <li>Y no hace falta la fórmula para nada: en las tarjetas de abajo el número ya está calculado y explicado en palabras.</li>
+      </ul>
+    </div>
+
+    <!-- ---------- nivel 2 ---------- -->
+    <div class="defgrid solo-avanzado">
+      <div>
+        <h3 style="font-size:.95rem;margin-bottom:8px">Definición (la que se usa en el curso)</h3>
+        <div class="eq">ε<sub>x</sub> =
+          <span class="frac"><span>ΔQ / Q</span><span>Δx / x</span></span>
+          =
+          <span class="frac"><span>variación porcentual de la cantidad</span><span>variación porcentual de la variable x</span></span></div>
+        <p style="font-size:.86rem;color:#4b5370">Se divide una variación porcentual entre otra variación porcentual: así el resultado no depende de si medimos el precio en euros o en céntimos. El signo indica la <em>dirección</em> de la relación; el valor absoluto, su <em>intensidad</em>.</p>
+      </div>
+      <div>
+        <h3 style="font-size:.95rem;margin-bottom:8px">El atajo del cálculo (si ya has visto derivadas)</h3>
+        <div class="eq">ε<sub>x</sub> =
+          <span class="frac"><span>dQ</span><span>dx</span></span> ·
+          <span class="frac"><span>x</span><span>Q</span></span></div>
+        <p style="font-size:.86rem;color:#4b5370">La derivada mide la variación <em>absoluta</em> de Q ante un cambio pequeño de x; multiplicar por <span class="fx">x/Q</span> la convierte en porcentual. Con las dos fórmulas se obtiene prácticamente el mismo número: en las tarjetas de abajo puedes ver el cálculo numérico y comprobarlo.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="elastCuenta"></div>
+
+  <div class="etar" id="elastCards"></div>
+
+  <div class="card pad" style="margin-top:14px">
+    <h3 style="font-size:.95rem;margin-bottom:4px">Recta o curva: la elasticidad a lo largo de la función</h3>
+    <p style="font-size:.86rem;color:#7b839c;margin-bottom:10px">Misma demanda, tres precios distintos. Esta es la diferencia matemática entre una recta y una curva isoelástica.</p>
+    <div style="overflow-x:auto"><table class="cmp" id="cmpTable"></table></div>
+    <p class="note" id="cmpNote"></p>
+  </div>
+</section>
+
+<!-- ============================================================ PRÁCTICA -->
+<section id="practica">
+  <div class="sec-head">
+    <span class="kicker"><span class="num">5</span>Practica</span>
+    <h2>Comprueba lo que has entendido</h2>
+    <p>Ocho preguntas con explicación. Y a la derecha, retos que se marcan solos cuando los consigues en el taller.</p>
+  </div>
+
+  <div class="practica">
+    <div class="card quizcard">
+      <div class="qhead">
+        <h3>Autoevaluación</h3>
+        <span class="score" id="score">0 de 8 correctas</span>
+      </div>
+      <div id="quiz"></div>
+    </div>
+
+    <div class="card pad">
+      <div class="panel-title"><h3>Retos de exploración</h3><span class="tag">se marcan solos</span></div>
+      <ul class="logros" id="logros"></ul>
+      <p class="note" style="margin-top:14px">Si algo no se marca, mueve de nuevo los factores en el taller: los retos se comprueban sobre el estado actual del gráfico y sobre lo que has ido haciendo.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ GLOSARIO -->
+<section id="glosario">
+  <div class="sec-head">
+    <span class="kicker"><span class="num">6</span>Glosario</span>
+    <h2>Todos los conceptos que aparecen, definidos</h2>
+    <p>Si una palabra del taller no te suena, está aquí.</p>
+  </div>
+
+  <div class="glos">
+    <details class="g"><summary>Ceteris paribus</summary><div class="body">Expresión latina: «manteniendo lo demás igual». Es el supuesto que permite analizar un factor cada vez. Si moviéramos dos variables a la vez no podríamos saber cuál ha causado el cambio del equilibrio. En el taller, cuando usas un escenario, el resto de factores vuelve a su valor inicial justo por esto.</div></details>
+
+    <details class="g"><summary>Curva de demanda</summary><div class="body">Relación entre el precio de un bien y la cantidad que los consumidores están dispuestos a comprar, manteniendo constante todo lo demás. Se dibuja con el precio en el eje vertical y la cantidad en el horizontal; por eso la demanda <em>cae</em> hacia la derecha: a menor precio, más cantidad.<div class="eq">Q<sub>d</sub> = A<sub>d</sub> − b·P (recta) &nbsp;·&nbsp; Q<sub>d</sub> = A<sub>d</sub>·P<sup>−ε</sup> (curva isoelástica)</div></div></details>
+
+    <details class="g"><summary>Curva de oferta</summary><div class="body">Relación entre el precio y la cantidad que las empresas están dispuestas a vender, con todo lo demás constante. Es creciente: precios más altos hacen rentables producciones que antes generaban pérdidas.<div class="eq">Q<sub>s</sub> = A<sub>s</sub> + c·P (recta) &nbsp;·&nbsp; Q<sub>s</sub> = A<sub>s</sub>·P<sup>+η</sup> (curva)</div></div></details>
+
+    <details class="g"><summary>Desplazamiento vs. movimiento a lo largo</summary><div class="body"><b>Movimiento a lo largo:</b> lo provoca el precio del propio bien. Cambia la cantidad demandada, pero la curva se queda donde está.<br><b>Desplazamiento:</b> lo provoca cualquier <em>otra</em> variable (renta, precios de otros bienes, costes, técnica). La curva entera se mueve: a la derecha es un aumento, a la izquierda una disminución. En el taller, el deslizador «Precio fijado» hace lo primero; los demás, lo segundo.</div></details>
+
+    <details class="g"><summary>Equilibrio de mercado</summary><div class="body">Precio y cantidad en los que la cantidad demandada coincide con la ofrecida: <span class="fx">Q<sub>d</sub>(P*) = Q<sub>s</sub>(P*)</span>. Matemáticamente es la solución del sistema formado por las dos ecuaciones; gráficamente, la intersección de las dos curvas.<div class="eq">P* = <span class="frac"><span>A<sub>d</sub> − A<sub>s</sub></span><span>b + c</span></span> &nbsp;·&nbsp; P* = <span class="frac"><span>A<sub>d</sub></span><span>A<sub>s</sub></span></span><sup>1/(ε+η)</sup></div></div></details>
+
+    <details class="g"><summary>Exceso de demanda (escasez)</summary><div class="body">A un precio inferior al de equilibrio, <span class="fx">Q<sub>d</sub> &gt; Q<sub>s</sub></span>: se quiere comprar más de lo que se ofrece. Aparecen colas, listas de espera o mercados paralelos, y la presión empuja el precio <b>hacia arriba</b> hasta P*.</div></details>
+
+    <details class="g"><summary>Exceso de oferta (excedente)</summary><div class="body">A un precio superior al de equilibrio, <span class="fx">Q<sub>s</sub> &gt; Q<sub>d</sub></span>: sobra producto sin vender. Las empresas acumulan existencias y bajan precios. El precio tiende a <b>caer</b> hasta P*.</div></details>
+
+    <details class="g"><summary>Elasticidad-precio de la demanda</summary><div class="body">Sensibilidad de la cantidad demandada al precio. Se compara <span class="fx">|ε|</span> con 1: si es mayor que 1 es <b>elástica</b> (la cantidad reacciona más que proporcionalmente); igual a 1, <b>unitaria</b>; menor que 1, <b>inelástica</b>. La demanda de bienes con buenos sustitutivos o de lujo suele ser más elástica.</div></details>
+
+    <details class="g"><summary>Elasticidad-renta</summary><div class="body">Sensibilidad de la demanda a la renta. Si es negativa, el bien es <b>inferior</b> (al aumentar la renta se consume menos). Si está entre 0 y 1 es un bien <b>normal de primera necesidad</b>; si es mayor que 1, un bien <b>normal de lujo</b>.</div></details>
+
+    <details class="g"><summary>Elasticidad cruzada</summary><div class="body">Sensibilidad de la demanda del bien X ante el precio de otro bien Y. Positiva → son <b>sustitutivos</b> (si Y sube, se compra más X). Negativa → son <b>complementarios</b> (se consumen juntos). Cercana a cero → son independientes.</div></details>
+
+    <details class="g"><summary>Curva isoelástica</summary><div class="body">Curva de la forma <span class="fx">Q = A·P<sup>−ε</sup></span>. Su elasticidad vale exactamente −ε en <em>todos</em> los puntos, sea cual sea el precio. Es una curva (hipérbola), no una recta: si se dibuja en papel milimetrado normal se ve curvada hacia el origen. Es el modelo «Curvas» del taller.</div></details>
+
+    <details class="g"><summary>Pendiente no es elasticidad</summary><div class="body">La pendiente depende de las unidades (y de la escala de los ejes); la elasticidad no, porque es un cociente de porcentajes. Dos rectas con la misma pendiente pueden tener elasticidades distintas si pasan por puntos con valores de P y Q diferentes: <span class="fx">ε = pendiente · P/Q</span>. Esa es la razón de que una recta tenga elasticidad variable a lo largo de la línea.</div></details>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Laboratorio de oferta y demanda · taller interactivo de Economía</span>
+    <span>Modelo didáctico simplificado: no reproduce datos reales de ningún mercado.</span>
+  </div>
+</footer>
+<script>
+(function(){
+"use strict";
+
+/* ==================== utilidades ==================== */
+const $ = s => document.querySelector(s);
+const MINUS = '\u2212';
+const nf = (v, d = 2) => {
+  if (!isFinite(v)) return '—';
+  const p = Math.pow(10, d);
+  const r = Math.round(v * p) / p;
+  let s = Math.abs(r).toFixed(d);
+  return (r < 0 ? MINUS : '') + s.replace('.', ',');
+};
+const n = (v, d = 2) => nf(v, d);
+const sgn = (v, d = 2) => (v >= 0 ? '+' : MINUS) + Math.abs(v).toFixed(d).replace('.', ',');
+const eps = (v) => Math.abs(v) < 1e-9;
+const coef = v => (Math.abs(v - Math.round(v)) < 1e-9 ? (v > 0 ? '+' : MINUS) + Math.abs(v) : sgn(v, 1));
+
+/* ==================== modelo ==================== */
+const BASE = { Ps: 10, Pc: 10, R: 50, Cf: 10, T: 10 };
+const KEYS = ['Ps', 'Pc', 'R', 'Cf', 'T'];
+
+// desplazamientos (hipótesis del modelo: coeficientes fijos)
+const DD = x => 4 * (x.Ps - 10) - 4 * (x.Pc - 10) + 0.5 * (x.R - 50);
+const DS = x => 2 * (x.T - 10) - 2 * (x.Cf - 10);
+
+const MODELS = {
+  lineal: {
+    tipo: 'lineal', id: 'lineal',
+    nombre: 'rectas',
+    b: 10, c: 6,
+    Ad: x => 100 + DD(x),
+    As: x => 4 + DS(x),
+    qd: (P, Ad) => Ad - 10 * P,
+    qs: (P, As) => As + 6 * P
+  },
+  curva: {
+    tipo: 'curva', id: 'curva',
+    nombre: 'curvas',
+    ed: 1.2, es: 1.5,
+    Ad: x => 343.4 * (1 + DD(x) / 200),
+    As: x => 2.722 * (1 + DS(x) / 100),
+    qd: (P, Ad) => Ad * Math.pow(Math.max(P, 0.0005), -1.2),
+    qs: (P, As) => As * Math.pow(Math.max(P, 0.0005), 1.5)
+  }
+};
+// los exponentes de qd/qs se derivan de ed/es para que no puedan desincronizarse
+MODELS.curva.qd = (P, Ad) => Ad * Math.pow(Math.max(P, 0.0005), -MODELS.curva.ed);
+MODELS.curva.qs = (P, As) => As * Math.pow(Math.max(P, 0.0005), MODELS.curva.es);
+
+function eqOfAdAs(m, Ad, As){
+  if (!isFinite(Ad) || !isFinite(As)) return { P: NaN, Q: NaN };
+  if (m.tipo === 'lineal'){
+    const P = (Ad - As) / 16;
+    return { P: P, Q: As + 6 * P };
+  }
+  if (Ad <= 0 || As <= 0) return { P: NaN, Q: NaN };
+  const P = Math.pow(Ad / As, 1 / (m.ed + m.es));
+  return { P: P, Q: As * Math.pow(P, m.es) };
+}
+
+function elasticidad(f, v){
+  const q0 = f(v);
+  if (!isFinite(q0) || q0 <= 0) return NaN;
+  const h = Math.max(Math.abs(v) * 0.01, 1e-3);
+  const d = (f(v + h) - f(v - h)) / (2 * h);
+  const r = d * v / q0;
+  return isFinite(r) ? r : NaN;
+}
+
+/* ==================== estado ==================== */
+let modelo = 'curva';
+let m = MODELS.curva;
+let x = Object.assign({}, BASE);
+let Pd = 6;
+let showBase = true;
+let target = { Ad: 343.4, As: 7.974 };
+let view = { Ad: 343.4, As: 7.974 };
+let axis = { Pmax: 12, Qmax: 80 };
+let hoverP = null;
+let prev = null;
+let animId = null;
+const logros = { excesoD: false, excesoS: false, desplD: false, desplS: false, inelastica: false, comparar: false };
+const quizOk = new Set();
+
+/* ==================== canvas ==================== */
+const cv = document.getElementById('chart');
+const ctx = cv.getContext('2d');
+let VW = 640, VH = 420;
+
+function rr(x0, y0, w, h, r){
+  ctx.beginPath();
+  ctx.moveTo(x0 + r, y0);
+  ctx.arcTo(x0 + w, y0, x0 + w, y0 + h, r);
+  ctx.arcTo(x0 + w, y0 + h, x0, y0 + h, r);
+  ctx.arcTo(x0, y0 + h, x0, y0, r);
+  ctx.arcTo(x0, y0, x0 + w, y0, r);
+  ctx.closePath();
+}
+function pill(text, cx, cy, fill, color, align){
+  ctx.font = '700 11px "Segoe UI",system-ui,sans-serif';
+  const w = ctx.measureText(text).width + 13;
+  const px = align === 'right' ? cx - w : align === 'center' ? cx - w / 2 : cx;
+  rr(px, cy - 9, w, 18, 9);
+  ctx.fillStyle = fill; ctx.fill();
+  ctx.fillStyle = color; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(text, px + w / 2, cy + 0.5);
+  ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+}
+function niceStep(range, ticks){
+  const raw = range / ticks;
+  const pw = Math.pow(10, Math.floor(Math.log10(raw)));
+  const cands = [1, 2, 2.5, 3, 4, 5, 10];
+  for (const k of cands){ if (pw * k >= raw) return pw * k; }
+  return pw * 10;
+}
+
+function chooseAxis(){
+  const e = eqOfAdAs(m, target.Ad, target.As);
+  const PL = [12, 16, 20, 26, 32, 40];
+  const QL = [80, 120, 180, 260, 360];
+  const safe = v => (isFinite(v) && v > 0 ? v : 0);
+  const needP = Math.max(isFinite(e.P) && e.P > 0 ? e.P * 1.7 : 10, Pd * 1.06, 8);
+  axis.Pmax = PL.find(v => v >= needP) || 40;
+  const qsHi = safe(m.qs(axis.Pmax * 0.8, target.As));
+  const qdP = safe(m.qd(Pd, target.Ad)), qsP = safe(m.qs(Pd, target.As));
+  const needQ = Math.max(safe(e.Q) * 1.75, qdP, qsP, qsHi * 1.04, 30);
+  axis.Qmax = QL.find(v => v >= needQ) || 360;
+}
+
+function drawAll(){
+  if (!VW || !VH) return;
+  const W = VW, H = VH;
+  const ml = 58, mr = 18, mt = 16, mb = 44;
+  const pw = W - ml - mr, ph = H - mt - mb;
+  const Pmax = axis.Pmax, Qmax = axis.Qmax;
+  const X = q => ml + (q / Qmax) * pw;
+  const Y = p => mt + ph - (p / Pmax) * ph;
+  const invY = py => (mt + ph - py) / ph * Pmax;
+
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#fdfcf8';
+  ctx.fillRect(0, 0, W, H);
+
+  /* --- rejilla --- */
+  const pxStep = niceStep(Pmax, 6), qStep = niceStep(Qmax, 6);
+  ctx.lineWidth = 1;
+  ctx.font = '11px "Segoe UI",system-ui,sans-serif';
+  for (let p = 0; p <= Pmax + 1e-9; p += pxStep){
+    const y = Y(p);
+    ctx.strokeStyle = p === 0 ? '#cfc9bd' : '#ece8de';
+    ctx.beginPath(); ctx.moveTo(ml, y); ctx.lineTo(W - mr, y); ctx.stroke();
+    ctx.fillStyle = '#8d867c';
+    ctx.textAlign = 'right';
+    ctx.fillText(p === 0 ? '0' : n(p, pxStep < 1 ? 1 : 0), ml - 9, y + 4);
+    ctx.textAlign = 'left';
+  }
+  for (let q = 0; q <= Qmax + 1e-9; q += qStep){
+    const xx = X(q);
+    ctx.strokeStyle = q === 0 ? '#cfc9bd' : '#ece8de';
+    ctx.beginPath(); ctx.moveTo(xx, mt); ctx.lineTo(xx, mt + ph); ctx.stroke();
+    ctx.fillStyle = '#8d867c';
+    ctx.textAlign = 'center';
+    ctx.fillText(q === 0 ? '' : n(q, 0), xx, mt + ph + 16);
+    ctx.textAlign = 'left';
+  }
+
+  /* --- ejes --- */
+  ctx.strokeStyle = '#3f3a33'; ctx.lineWidth = 1.6;
+  ctx.beginPath();
+  ctx.moveTo(ml, mt); ctx.lineTo(ml, mt + ph); ctx.lineTo(W - mr, mt + ph);
+  ctx.stroke();
+  // puntas
+  ctx.beginPath();
+  ctx.moveTo(ml, mt - 2); ctx.lineTo(ml - 4, mt + 7); ctx.lineTo(ml + 4, mt + 7); ctx.closePath(); ctx.fillStyle = '#3f3a33'; ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(W - mr + 2, mt + ph); ctx.lineTo(W - mr - 7, mt + ph - 4); ctx.lineTo(W - mr - 7, mt + ph + 4); ctx.closePath(); ctx.fill();
+
+  ctx.font = '600 11.5px "Segoe UI",system-ui,sans-serif';
+  ctx.fillStyle = '#57524a';
+  ctx.textAlign = 'right';
+  ctx.fillText('Cantidad (unidades por período)', W - mr, H - 8);
+  ctx.save();
+  ctx.translate(12, mt + ph / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.textAlign = 'center';
+  ctx.fillText('Precio (€/unidad)', 0, 0);
+  ctx.restore();
+  ctx.textAlign = 'left';
+
+  /* --- recorte al área de dibujo --- */
+  const qdF = P => m.qd(P, view.Ad);
+  const qsF = P => m.qs(P, view.As);
+  const qdBase = P => m.qd(P, m.Ad(BASE));
+  const qsBase = P => m.qs(P, m.As(BASE));
+
+  ctx.save();
+  ctx.beginPath(); ctx.rect(ml, mt - 2, pw + 2, ph + 2); ctx.clip();
+
+  const strokeCurve = (qf, color, dash, lw) => {
+    ctx.beginPath();
+    let started = false, best = null;
+    const N = 320;
+    for (let i = 0; i <= N; i++){
+      const P = Pmax * i / N;
+      const Q = qf(P);
+      if (!isFinite(Q) || Q < 0 || Q > Qmax * 1.8){ started = false; continue; }
+      const cx = X(Q), cy = Y(P);
+      if (!started){ ctx.moveTo(cx, cy); started = true; } else ctx.lineTo(cx, cy);
+      if (cy > mt + 8 && (!best || cy < best.cy)) best = { cx, cy };
+    }
+    ctx.setLineDash(dash); ctx.lineWidth = lw; ctx.strokeStyle = color; ctx.lineCap = 'round';
+    ctx.stroke(); ctx.setLineDash([]);
+    return best;
+  };
+
+  if (showBase){
+    strokeCurve(qdBase, '#b8b1a5', [6, 6], 2);
+    strokeCurve(qsBase, '#b8b1a5', [6, 6], 2);
+  }
+  const dTop = strokeCurve(qdF, '#1d4ed8', [], 3);
+  const sTop = strokeCurve(qsF, '#c2410c', [], 3);
+
+  const e = eqOfAdAs(m, view.Ad, view.As);
+
+  /* --- exceso al precio simulado --- */
+  const qd = Math.max(m.qd(Pd, view.Ad), 0);
+  const qs = Math.max(m.qs(Pd, view.As), 0);
+  const hayExceso = Math.abs(qd - qs) > 0.4 && Pd <= Pmax;
+  if (hayExceso){
+    const xa = X(Math.min(qd, qs)), xb = X(Math.max(qd, qs)), yy = Y(Pd);
+    ctx.fillStyle = qd > qs ? 'rgba(217,119,6,.16)' : 'rgba(185,28,28,.13)';
+    ctx.fillRect(xa, yy - 8, Math.max(xb - xa, 1), 16);
+    ctx.strokeStyle = qd > qs ? '#b45309' : '#b91c1c';
+    ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.moveTo(xa, yy); ctx.lineTo(xb, yy); ctx.stroke();
+    const txt = (qd > qs ? 'exceso de demanda ' : 'exceso de oferta ') + n(Math.abs(qd - qs), 1) + ' u.';
+    if (xb - xa > 70){
+      pill(txt, (xa + xb) / 2, yy - 18, '#fff', qd > qs ? '#8a4b06' : '#8f1d1d', 'center');
+      ctx.strokeStyle = qd > qs ? 'rgba(180,83,9,.35)' : 'rgba(185,28,28,.3)';
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo((xa + xb) / 2, yy - 9); ctx.lineTo((xa + xb) / 2, yy - 4); ctx.stroke();
+    }
+  }
+
+  /* --- precio simulado --- */
+  if (Pd <= Pmax){
+    const yy = Y(Pd);
+    ctx.strokeStyle = '#7c3aed'; ctx.lineWidth = 1.6; ctx.setLineDash([5, 4]);
+    ctx.beginPath(); ctx.moveTo(ml, yy); ctx.lineTo(W - mr, yy); ctx.stroke();
+    ctx.setLineDash([]);
+    const dot = (q, col) => {
+      if (q < 0 || q > Qmax) return;
+      ctx.beginPath(); ctx.arc(X(q), yy, 5.5, 0, Math.PI * 2);
+      ctx.fillStyle = '#fff'; ctx.fill();
+      ctx.lineWidth = 2.6; ctx.strokeStyle = col; ctx.stroke();
+    };
+    dot(qd, '#1d4ed8'); dot(qs, '#c2410c');
+    const clash = Math.abs(yy - Y(e.P)) < 26;
+    pill('P = ' + n(Pd, 2) + ' €', clash ? W - mr - 6 : ml + 4, yy - 14, '#f3ecfe', '#5b21b6', clash ? 'right' : 'left');
+  }
+
+  /* --- equilibrio --- */
+  if (isFinite(e.P) && isFinite(e.Q) && e.P > 0 && e.Q > 0 && e.P <= Pmax * 1.02 && e.Q <= Qmax * 1.02){
+    const ex = X(e.Q), ey = Y(e.P);
+    ctx.strokeStyle = 'rgba(21,26,43,.4)'; ctx.lineWidth = 1.2; ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(ex, ey); ctx.lineTo(ex, mt + ph);
+    ctx.moveTo(ex, ey); ctx.lineTo(ml, ey);
+    ctx.stroke(); ctx.setLineDash([]);
+    ctx.beginPath(); ctx.arc(ex, ey, 12, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(21,26,43,.10)'; ctx.fill();
+    ctx.beginPath(); ctx.arc(ex, ey, 6.5, 0, Math.PI * 2);
+    ctx.fillStyle = '#111827'; ctx.fill();
+    ctx.lineWidth = 2; ctx.strokeStyle = '#fff'; ctx.stroke();
+    ctx.font = '800 12px "Segoe UI",system-ui,sans-serif';
+    ctx.fillStyle = '#111827';
+    const lx = ex + 14 > W - mr - 90 ? ex - 92 : ex + 14;
+    ctx.fillText('E (' + n(e.Q, 0) + ' ; ' + n(e.P, 2) + ')', lx, ey - 10);
+  }
+  ctx.restore();
+
+  /* --- etiquetas de las curvas --- */
+  ctx.font = '800 12.5px "Segoe UI",system-ui,sans-serif';
+  if (dTop){
+    const inner = dTop.cx < W / 2;
+    ctx.textAlign = inner ? 'left' : 'right';
+    ctx.fillStyle = '#1d4ed8';
+    ctx.fillText('D', dTop.cx + (inner ? 10 : -10), dTop.cy + 4);
+  }
+  if (sTop){
+    const inner = sTop.cx > W / 2;
+    ctx.textAlign = inner ? 'right' : 'left';
+    ctx.fillStyle = '#c2410c';
+    ctx.fillText('O', sTop.cx + (inner ? -10 : 10), sTop.cy + 4);
+  }
+  ctx.textAlign = 'left';
+
+  /* --- pastillas P* y Q* en los ejes --- */
+  if (isFinite(e.P) && isFinite(e.Q) && e.P > 0 && e.Q > 0 && e.P <= Pmax * 1.02 && e.Q <= Qmax * 1.02){
+    const t1 = 'P*=' + n(e.P, 2);
+    ctx.font = '800 10px "Segoe UI",system-ui,sans-serif';
+    const w1 = ctx.measureText(t1).width + 11;
+    rr(ml + 4, Y(e.P) - 8, w1, 16, 8);
+    ctx.fillStyle = '#111827'; ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(t1, ml + 4 + w1 / 2, Y(e.P) + 0.5);
+
+    const t2 = 'Q*=' + n(e.Q, 1);
+    const w2 = ctx.measureText(t2).width + 10;
+    rr(X(e.Q) - w2 / 2, mt + ph + 5, w2, 16, 8);
+    ctx.fillStyle = '#111827'; ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.fillText(t2, X(e.Q), mt + ph + 13.5);
+    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+  }
+
+  /* --- hover --- */
+  if (hoverP !== null && hoverP >= 0 && hoverP <= Pmax){
+    const yy = Y(hoverP);
+    ctx.strokeStyle = 'rgba(21,26,43,.28)'; ctx.lineWidth = 1; ctx.setLineDash([3, 3]);
+    ctx.beginPath(); ctx.moveTo(ml, yy); ctx.lineTo(W - mr, yy); ctx.stroke();
+    ctx.setLineDash([]);
+    const a = Math.max(m.qd(hoverP, view.Ad), 0), b = Math.max(m.qs(hoverP, view.As), 0);
+    const lines = ['P = ' + n(hoverP, 2) + ' €', 'Q demandada = ' + n(a, 1), 'Q ofrecida = ' + n(b, 1)];
+    ctx.font = '600 11px "Segoe UI",system-ui,sans-serif';
+    let wmax = 0;
+    lines.forEach(t => { wmax = Math.max(wmax, ctx.measureText(t).width); });
+    const bw = wmax + 18, bh = 54;
+    let bx = W - mr - bw - 6, by = Math.min(Math.max(yy - bh / 2, mt + 4), mt + ph - bh - 4);
+    rr(bx, by, bw, bh, 9);
+    ctx.fillStyle = 'rgba(255,255,255,.97)'; ctx.fill();
+    ctx.strokeStyle = '#e0dbd0'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.fillStyle = '#3f3a33';
+    lines.forEach((t, i) => {
+      ctx.fillStyle = i === 1 ? '#1d4ed8' : i === 2 ? '#c2410c' : '#3f3a33';
+      if (i === 0) ctx.fillStyle = '#3f3a33';
+      ctx.fillText(t, bx + 9, by + 15 + i * 15);
+    });
+  }
+}
+
+/* ==================== redimensionado ==================== */
+function resizeCanvas(){
+  const wrap = cv.parentElement;
+  const w = Math.max(260, wrap.clientWidth);
+  const vh = window.innerHeight || 800;
+  const ancho = window.innerWidth >= 941;
+  // el panel «Qué está pasando» se queda con una parte del alto de la ventana
+  const lect = document.querySelector('.lectura');
+  const L = ancho ? Math.round(Math.min(300, Math.max(110, vh * 0.2))) : 0;
+  if (lect) lect.style.maxHeight = ancho ? L + 'px' : '';
+  let h = Math.min(470, Math.max(250, w * 0.68));
+  if (ancho) h = Math.min(h, Math.max(230, vh - 340 - L));
+  h = Math.round(h);
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  cv.width = Math.round(w * dpr);
+  cv.height = Math.round(h * dpr);
+  cv.style.height = h + 'px';
+  VW = w; VH = h;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  drawAll();
+}
+window.addEventListener('resize', resizeCanvas);
+if (window.ResizeObserver){
+  new ResizeObserver(() => resizeCanvas()).observe(cv.parentElement);
+}
+
+/* ==================== animación de curvas ==================== */
+function animateTo(go){
+  if (animId) cancelAnimationFrame(animId);
+  if (!go || (Math.abs(view.Ad - target.Ad) < 1e-6 && Math.abs(view.As - target.As) < 1e-6)){
+    view.Ad = target.Ad; view.As = target.As; drawAll(); return;
+  }
+  const from = { Ad: view.Ad, As: view.As };
+  const t0 = performance.now(), dur = 340;
+  const step = (t) => {
+    const k = Math.min(1, (t - t0) / dur);
+    const e = 1 - Math.pow(1 - k, 3);
+    view.Ad = from.Ad + (target.Ad - from.Ad) * e;
+    view.As = from.As + (target.As - from.As) * e;
+    drawAll();
+    if (k < 1) animId = requestAnimationFrame(step); else animId = null;
+  };
+  animId = requestAnimationFrame(step);
+}
+
+/* ==================== controles ==================== */
+const sliders = ['Ps', 'Pc', 'R', 'Cf', 'T', 'P'];
+function readX(){
+  return { Ps: +$('#Ps').value, Pc: +$('#Pc').value, R: +$('#R').value, Cf: +$('#Cf').value, T: +$('#T').value };
+}
+function fillSlider(el){
+  const p = (el.value - el.min) / (el.max - el.min) * 100;
+  el.style.setProperty('--fill', p + '%');
+}
+
+function updatePanel(){
+  $('#vPs').textContent = n(x.Ps, 0) + ' €';
+  $('#vPc').textContent = n(x.Pc, 0) + ' €';
+  $('#vR').textContent = n(x.R, 0);
+  $('#vCf').textContent = n(x.Cf, 0) + ' €';
+  $('#vT').textContent = n(x.T, 0);
+  $('#vP').textContent = n(Pd, 2) + ' €';
+
+  const cPs = 4 * (x.Ps - 10), cPc = -4 * (x.Pc - 10), cR = 0.5 * (x.R - 50);
+  const cCf = -2 * (x.Cf - 10), cT = 2 * (x.T - 10);
+
+  $('#aPs').innerHTML = 'Coeficiente <b>+4</b> u. por € · aporta <b>' + sgn(cPs, 1) + '</b> a ΔD';
+  $('#aPc').innerHTML = 'Coeficiente <b>' + MINUS + '4</b> u. por € · aporta <b>' + sgn(cPc, 1) + '</b> a ΔD';
+  $('#aR').innerHTML = 'Coeficiente <b>+0,5</b> u. por punto · aporta <b>' + sgn(cR, 1) + '</b> a ΔD';
+  $('#aCf').innerHTML = 'Coeficiente <b>' + MINUS + '2</b> u. por € · aporta <b>' + sgn(cCf, 1) + '</b> a ΔS';
+  $('#aT').innerHTML = 'Coeficiente <b>+2</b> u. por € · aporta <b>' + sgn(cT, 1) + '</b> a ΔS';
+
+  const dD = DD(x), dS = DS(x);
+  $('#ddVal').textContent = sgn(dD, 1);
+  $('#dsVal').textContent = sgn(dS, 1);
+  $('#ddDir').textContent = eps(dD) ? 'sin desplazar'
+    : dD > 0 ? '→ desplaza a la DERECHA (' + n(dD, 1) + ' u.)' : '← desplaza a la IZQUIERDA (' + n(-dD, 1) + ' u.)';
+  $('#dsDir').textContent = eps(dS) ? 'sin desplazar'
+    : dS > 0 ? '→ desplaza a la DERECHA (' + n(dS, 1) + ' u.)' : '← desplaza a la IZQUIERDA (' + n(-dS, 1) + ' u.)';
+
+  sliders.forEach(id => fillSlider($('#' + id)));
+  document.getElementById('mCurva').setAttribute('aria-pressed', String(modelo === 'curva'));
+  document.getElementById('mLineal').setAttribute('aria-pressed', String(modelo === 'lineal'));
+}
+
+/* ==================== lectura narrativa ==================== */
+const NOMBRE = {
+  Ps: 'Precio del bien sustitutivo', Pc: 'Precio del bien complementario',
+  R: 'Renta', Cf: 'Coste de los factores', T: 'Estado de la técnica'
+};
+const EFECTO = { Ps: 4, Pc: -4, R: 0.5, Cf: -2, T: 2 };
+
+function efecto(dD, dS){
+  const sp = Math.sign(dD - dS), sq = Math.sign(dD + dS);
+  return { sp, sq };
+}
+
+function renderLectura(e){
+  const box = $('#lectura');
+  const dD = DD(x), dS = DS(x);
+  if (!prev){
+    box.innerHTML =
+      '<p>Este es el punto de partida: <b>ΔD = 0</b> y <b>ΔS = 0</b>, así que las curvas actuales coinciden con las iniciales (las de trazo discontinuo). El cruce está en <b>P* = ' + n(e.P, 2) + ' €</b> y <b>Q* = ' + n(e.Q, 1) + ' unidades</b>.</p>' +
+      '<p>Mueve un factor del panel y aquí aparecerá la cadena completa: <b>qué factor → cuántas unidades desplaza → dónde queda el nuevo equilibrio</b>. El deslizador «Precio fijado» no desplaza nada: te mueve <em>a lo largo</em> de las curvas.</p>';
+    return;
+  }
+
+  const cambios = [];
+  if (prev.modelo !== modelo){
+    cambios.push('<li><span class="pill" style="background:#efedfd;color:#4338ca">MODELO</span><span>Pasas de <b>' + MODELS[prev.modelo].nombre +
+      '</b> a <b>' + m.nombre + '</b>. Cambia la forma de las funciones y sus coeficientes, así que el equilibrio y las elasticidades no tienen por qué coincidir: son dos modelos distintos.</span></li>');
+  }
+  if (prev.Pd !== Pd){
+    cambios.push('<li><span class="pill" style="background:#f3ecfe;color:#5b21b6">PRECIO</span><span>Precio fijado: ' +
+      n(prev.Pd, 2) + ' → <b>' + n(Pd, 2) + ' €</b>. Esto <b>no</b> desplaza ninguna curva: te mueves <em>a lo largo</em> de ellas. ' +
+      'Solo cambian las cantidades Q<sub>d</sub> y Q<sub>s</sub>, no la posición de D ni de O.</span></li>');
+  }
+  KEYS.forEach(k => {
+    if (prev.x[k] !== x[k]){
+      const delta = EFECTO[k] * (x[k] - prev.x[k]);
+      const esDem = (k === 'Ps' || k === 'Pc' || k === 'R');
+      cambios.push('<li><span class="pill ' + (esDem ? 'd' : 's') + '">' + (esDem ? 'DEMANDA' : 'OFERTA') + '</span><span><b>' +
+        NOMBRE[k] + '</b>: ' + n(prev.x[k], 0) + ' → <b>' + n(x[k], 0) + '</b>. Coeficiente ' +
+        coef(EFECTO[k]) + ' → aporta <b>' + sgn(delta, 1) + '</b> a Δ' + (esDem ? 'D' : 'S') +
+        ' (ahora Δ' + (esDem ? 'D' : 'S') + ' = ' + sgn(esDem ? dD : dS, 1) + ').</span></li>');
+    }
+  });
+
+  let html = '';
+  if (cambios.length) html += '<ul class="cambios">' + cambios.join('') + '</ul>';
+
+  // desplazamientos acumulados
+  const partes = [];
+  if (!eps(dD)){
+    partes.push('La demanda se ha desplazado <b>' + n(Math.abs(dD), 1) + ' unidades a la ' + (dD > 0 ? 'derecha' : 'izquierda') + '</b> a cada precio');
+  }
+  if (!eps(dS)){
+    partes.push('la oferta se ha desplazado <b>' + n(Math.abs(dS), 1) + ' unidades a la ' + (dS > 0 ? 'derecha' : 'izquierda') + '</b> a cada precio');
+  }
+  if (partes.length) html += '<p>' + partes.join(', y ') + '.</p>';
+
+  // consecuencia en el equilibrio
+  if (prev.e && isFinite(prev.e.P) && isFinite(e.P) && e.P > 0){
+    const dp = e.P - prev.e.P, dq = e.Q - prev.e.Q;
+    if (Math.abs(dp) > 0.005 || Math.abs(dq) > 0.05){
+      html += '<p>El nuevo cruce: <b>P*</b> pasa de ' + n(prev.e.P, 2) + ' € a <b>' + n(e.P, 2) + ' €</b> (' +
+        (dp > 0 ? '▲ sube' : '▼ baja') + ' ' + n(Math.abs(dp), 2) + ') y <b>Q*</b> de ' + n(prev.e.Q, 1) + ' a <b>' +
+        n(e.Q, 1) + '</b> (' + (dq > 0 ? '▲ sube' : '▼ baja') + ' ' + n(Math.abs(dq), 1) + ').</p>';
+    }
+    // explicación causa-efecto
+    const fromX = prev.x, toX = x;
+    const dd = DD(toX) - DD(fromX), ds = DS(toX) - DS(fromX);
+    if (Math.abs(dd) > 0.01 || Math.abs(ds) > 0.01){
+      html += '<div class="why">' + explicar(dd, ds, prev.modelo !== modelo) + '</div>';
+    }
+  }
+
+  // estado al precio simulado
+  const qd = Math.max(m.qd(Pd, target.Ad), 0), qs = Math.max(m.qs(Pd, target.As), 0);
+  const dif = qd - qs;
+  if (Math.abs(dif) > 0.15){
+    html += '<p>Al precio de ' + n(Pd, 2) + ' € el mercado no está en equilibrio: se demandan <b>' + n(qd, 1) +
+      '</b> y se ofrecen <b>' + n(qs, 1) + '</b> unidades' +
+      (dif > 0 ? ' → <b>exceso de demanda</b> de ' + n(dif, 1) + ': el precio tiende a subir.'
+               : ' → <b>exceso de oferta</b> de ' + n(-dif, 1) + ': el precio tiende a bajar.') + '</p>';
+  } else if (Math.abs(Pd - e.P) < 0.06){
+    html += '<p>Con P = ' + n(Pd, 2) + ' € el mercado se vacía: es justo el precio de equilibrio, no hay ni escasez ni excedente.</p>';
+  }
+  if (!html) html = '<p>Sin cambios relevantes.</p>';
+  box.innerHTML = html;
+}
+
+function explicar(dd, ds, cambioModelo){
+  const { sp, sq } = efecto(dd, ds);
+  const demandaLado = Math.abs(dd) < 0.01 ? null : (dd > 0 ? 'derecha' : 'izquierda');
+  const ofertaLado = Math.abs(ds) < 0.01 ? null : (ds > 0 ? 'derecha' : 'izquierda');
+  let t = '';
+  if (demandaLado && !ofertaLado){
+    t = 'La demanda se desplaza a la ' + demandaLado + ' y la oferta no se mueve. ' +
+      (dd > 0 ? 'A cada precio se quiere comprar más, así que el precio sube y también la cantidad intercambiada.'
+              : 'A cada precio se quiere comprar menos, así que el precio baja y la cantidad intercambiada también.');
+  } else if (ofertaLado && !demandaLado){
+    t = 'La oferta se desplaza a la ' + ofertaLado + ' y la demanda no se mueve. ' +
+      (ds > 0 ? 'Producir es más barato, entran más unidades al mercado: la cantidad sube y el precio baja.'
+              : 'Producir es más caro, se retiran unidades del mercado: la cantidad baja y el precio sube.');
+  } else if (demandaLado && ofertaLado){
+    const mismoSentido = demandaLado === ofertaLado;
+    if (mismoSentido){
+      t = 'Se mueven las dos curvas hacia la ' + demandaLado + '. La cantidad intercambiada cambia con claridad, pero el efecto sobre el precio es <b>ambiguo</b>: '
+        + 'depende de cuál de los dos desplazamientos sea mayor. Aquí manda ' + (Math.abs(dd) > Math.abs(ds) ? 'la demanda' : 'la oferta') + '.';
+    } else {
+      t = 'Las curvas se mueven en direcciones opuestas (demanda a la ' + demandaLado + ', oferta a la ' + ofertaLado + '). El precio resultante está más claro que la cantidad: '
+        + 'el efecto sobre Q* es ambiguo y depende de cuál de los dos desplazamientos pese más. Aquí manda ' + (Math.abs(dd) > Math.abs(ds) ? 'la demanda' : 'la oferta') + '.';
+    }
+  } else {
+    t = 'Los desplazamientos se compensan entre sí.';
+  }
+  if (cambioModelo) t += ' (Recuerda: al cambiar de modelo también cambian los coeficientes.)';
+  return t;
+}
+
+/* ==================== tarjetas de derivación ==================== */
+/* ---------- utilidades para las tablas del nivel básico ---------- */
+const ap = (v, d = 1) => (Math.abs(v) < 0.05 ? '0' : (v > 0 ? '+' : MINUS) + n(Math.abs(v), d));
+const suma = arr => arr.map((v, i) => i === 0 ? ap(v) : (v < 0 ? MINUS + ' ' : '+ ') + n(Math.abs(v), 2)).join('');
+
+function filasTabla(qf){
+  const paso = niceStep(axis.Pmax, 6);
+  let out = [];
+  for (let p = paso; p <= axis.Pmax + 1e-9; p += paso){
+    const q = qf(p);
+    if (!isFinite(q) || q < 0) continue;
+    if (q > axis.Qmax * 1.05) continue;
+    out.push([p, q]);
+  }
+  if (out.length < 3){
+    out = [];
+    for (let i = 1; i <= 5; i++){
+      const p = axis.Pmax * i / 5, q = qf(p);
+      if (isFinite(q) && q >= 0) out.push([p, q]);
+    }
+  }
+  return out;
+}
+function tablaQ(filas, etq){
+  let h = '<table class="vals"><thead><tr><th>Precio (€)</th><th>' + etq + '</th></tr></thead><tbody>';
+  filas.forEach(f => {
+    h += '<tr><td>' + n(f[0], 2) + '</td><td class="v">' + n(f[1], 1) + '</td></tr>';
+  });
+  return h + '</tbody></table>';
+}
+
+function renderDeriv(e){
+  const dD = DD(x), dS = DS(x);
+  const Ad = m.Ad(x), As = m.As(x);
+  const curvas = m.tipo === 'curva';
+
+  /* ================= DEMANDA ================= */
+  const filasD = filasTabla(P => m.qd(P, Ad));
+  const demSub = $('#demSub');
+  demSub.innerHTML =
+    '<span class="solo-basico">De dónde sale la tabla de la curva azul</span>' +
+    '<span class="solo-avanzado">Modelo de ' + (curvas ? 'curvas · potencia con elasticidad constante' : 'rectas · función lineal decreciente') + '</span>';
+
+  let demF = '', demT = '';
+
+  // --- nivel básico ---
+  let dB = '<div class="solo-basico">' +
+    '<p>La curva de demanda contesta a una pregunta muy concreta: <b>si el precio fuera cada uno de estos valores, ¿cuántas unidades se querrían comprar?</b></p>' +
+    tablaQ(filasD, 'Se quieren comprar') +
+    '<p>Cada fila de esa tabla es un punto del gráfico. Al unirlos, sale la curva azul.</p>' +
+    (curvas
+      ? '<p>Mira la segunda columna: al principio, un euro más de precio quita <b>muchas</b> unidades; cuando el precio ya es alto, quita <b>muy pocas</b>. Como la bajada no es siempre igual de grande, los puntos no quedan alineados y la línea sale <b>curvada</b>.</p>'
+      : '<p>Mira la segunda columna: cada euro que sube el precio quita <b>siempre las mismas</b> unidades (10). Por eso los puntos quedan alineados y la línea sale <b>recta</b>.</p>') +
+    '<p><b>¿Y cuando la curva se desplaza?</b> Si cambia el precio de otro bien o la renta, todos los números de la segunda columna cambian a la vez y la curva se mueve a la derecha o a la izquierda. Lo que <em>no</em> cambia es la primera columna: desplazarse significa «a cada precio se quiere comprar más (o menos)».</p>' +
+    '</div>';
+
+  if (curvas){
+    dB = dB.replace('</div>', '<p class="note" style="margin-top:10px">La fórmula completa de esta curva usa potencias: Q<sub>d</sub> = ' +
+      n(Ad, 1) + ' · P<sup>' + MINUS + '1,2</sup>. No hace falta saber manejarla: con la tabla y el gráfico ya tienes todo lo necesario. ' +
+      'Por si te ayuda, el «1,2» solo resume la fuerza de la reacción: cuando el precio sube un 1 %, la cantidad baja un 1,2 %.</p></div>');
+  } else {
+    dB = dB.replace('</div>', '<div class="eq">Q<sub>d</sub> = ' + n(Ad, 1) + ' ' + MINUS + ' 10 · P</div>' +
+      '<p>Se lee así: <b>empiezo en ' + n(Ad, 1) + ' unidades y por cada euro de precio quito 10</b>. ' +
+      'Si el precio fuese 0 €, se querrían comprar ' + n(Ad, 1) + '.' +
+      (Ad / 10 <= axis.Pmax ? ' A ' + n(Ad / 10, 1) + ' €, ninguna: ahí la curva toca el eje.' : '') + '</p></div>');
+  }
+
+  // --- nivel avanzado ---
+  if (!curvas){
+    demF = '<div class="solo-avanzado">' +
+      '<div class="eq">Q<sub>d</sub> = <span class="num">100</span> + ΔD − <span class="num">10</span> · P' +
+      '&nbsp;&nbsp;⟹&nbsp;&nbsp;Q<sub>d</sub> = <span class="num">' + n(Ad, 1) + '</span> <span class="num">' + MINUS + ' 10</span> · P</div>' +
+      '<ol class="pasos">' +
+      '<li>El <b>100</b> es la cantidad que se demandaría si el bien fuese gratis (P = 0): la ordenada del eje de cantidades.</li>' +
+      '<li>El <b>10</b> es la pendiente: por cada euro que sube el precio, la cantidad demandada cae 10 unidades. Es una <em>hipótesis</em> del modelo, no un dato medido.</li>' +
+      '<li>El desplazamiento entra sumando: A<sub>d</sub> = 100 + ΔD = 100 + (' + sgn(dD, 1) + ') = <b>' + n(Ad, 1) + '</b>.</li>' +
+      '<li>Con tus valores: Q<sub>d</sub> = ' + n(Ad, 1) + ' − 10·P. A P = ' + n(Pd, 2) + ' € serían <b>' + n(Math.max(m.qd(Pd, Ad), 0), 1) + '</b> unidades.</li>' +
+      '</ol>' +
+      '<p class="note">Al ser una recta, la demanda corta el eje de precios en ' + n(Ad / 10, 1) + ' €: por encima de ese precio nadie compra nada.</p></div>';
+  } else {
+    demF = '<div class="solo-avanzado">' +
+      '<div class="eq">Q<sub>d</sub> = A<sub>d</sub> · P<sup>' + MINUS + '1,2</sup>' +
+      '&nbsp;&nbsp;⟹&nbsp;&nbsp;Q<sub>d</sub> = <span class="num">' + n(Ad, 1) + '</span> · P<sup>' + MINUS + '1,2</sup></div>' +
+      '<div class="eq" style="border-left-color:#1d4ed8">A<sub>d</sub> = <span class="num">343,4</span> · (1 + ΔD / 200) = ' +
+      '<span class="num">343,4</span> · (1 + (' + sgn(dD, 1) + ')/200) = <span class="res">' + n(Ad, 1) + '</span></div>' +
+      '<ol class="pasos">' +
+      '<li>La forma <b>P<sup>' + MINUS + '1,2</sup></b> es una hipérbola: al representarla sale <em>curvada</em>, convexa hacia el origen. No es una recta.</li>' +
+      '<li>El exponente <b>' + MINUS + '1,2</b> no es una pendiente: <em>es exactamente la elasticidad-precio</em> de esta demanda, y vale ' + MINUS + '1,2 en todos sus puntos.</li>' +
+      '<li><b>A<sub>d</sub></b> es la cantidad demandada cuando P = 1 €. En la situación de partida vale 343,4.</li>' +
+      '<li>Los desplazamientos entran <em>multiplicando</em> la escala: A<sub>d</sub> = 343,4 · (1 + ΔD/200). Con ΔD = ' + sgn(dD, 1) + ' queda <b>' + n(Ad, 1) + '</b>.</li>' +
+      '<li>Un ΔD de +200 unidades duplicaría la escala de demanda; uno de ' + MINUS + '200 la anularía. Tus deslizadores no llegan tan lejos.</li>' +
+      '</ol>' +
+      '<p class="note">Consecuencia gráfica: a precios muy bajos la cantidad demandada crece sin límite (la curva se va por arriba) y se va pegando al eje a precios altos. Por eso se dibuja curvada.</p></div>';
+  }
+
+  $('#demFormula').innerHTML = demF;
+  $('#demText').innerHTML = dB + demT;
+
+  /* ================= OFERTA ================= */
+  const filasS = filasTabla(P => m.qs(P, As));
+  $('#ofeSub').innerHTML =
+    '<span class="solo-basico">De dónde sale la tabla de la curva naranja</span>' +
+    '<span class="solo-avanzado">Modelo de ' + (curvas ? 'curvas · potencia con elasticidad constante' : 'rectas · función lineal creciente') + '</span>';
+
+  let oB = '<div class="solo-basico">' +
+    '<p>La curva de oferta responde a otra pregunta: <b>si el precio fuera cada uno de estos valores, ¿cuántas unidades querrían vender las empresas?</b></p>' +
+    tablaQ(filasS, 'Se quieren vender') +
+    '<p>Cada fila es un punto de la curva naranja. Aquí la cantidad <b>sube</b> cuando el precio sube: vender más caro hace rentables producciones que antes no lo eran.</p>' +
+    (curvas
+      ? '<p>Y no sube siempre igual: al principio cuesta arrancar y la cantidad crece despacio; cuando el precio ya es alto, crece muy deprisa. Por eso la línea sale <b>curvada</b>.</p>'
+      : '<p>Sube siempre igual: cada euro de precio añade las mismas 6 unidades. Por eso la línea sale <b>recta</b>.</p>') +
+    '</div>';
+
+  if (!curvas){
+    oB = oB.replace('</div>', '<div class="eq" style="border-left-color:#c2410c">Q<sub>s</sub> = ' + n(As, 1) + ' + 6 · P</div>' +
+      '<p>Se lee así: <b>empiezo en ' + n(As, 1) + ' unidades y cada euro de precio añade 6</b>.</p></div>');
+  } else {
+    oB = oB.replace('</div>', '<p class="note" style="margin-top:10px">Su fórmula usa potencias: Q<sub>s</sub> = ' + n(As, 2) +
+      ' · P<sup>1,5</sup>. Tampoco hay que manejarla: la tabla ya te dice lo que pasa. El «1,5» significa que la cantidad ofrecida reacciona más que el precio (si el precio sube un 1 %, la oferta sube un 1,5 %).</p></div>');
+  }
+
+  let ofF = '';
+  if (!curvas){
+    ofF = '<div class="solo-avanzado">' +
+      '<div class="eq" style="border-left-color:#c2410c">Q<sub>s</sub> = <span class="num">4</span> + ΔS + <span class="num">6</span> · P' +
+      '&nbsp;&nbsp;⟹&nbsp;&nbsp;Q<sub>s</sub> = <span class="num">' + n(As, 1) + '</span> + <span class="num">6</span> · P</div>' +
+      '<ol class="pasos">' +
+      '<li>El <b>6</b> es la sensibilidad al precio: por cada euro más, las empresas quieren vender 6 unidades más.</li>' +
+      '<li>El <b>4</b> es la ordenada base (lo que se ofrecería a precio cero, si fuera técnicamente posible).</li>' +
+      '<li>ΔS entra sumando: A<sub>s</sub> = 4 + ΔS = 4 + (' + sgn(dS, 1) + ') = <b>' + n(As, 1) + '</b>.</li>' +
+      '<li>Con tus valores: Q<sub>s</sub> = ' + n(As, 1) + ' + 6·P. A P = ' + n(Pd, 2) + ' € serían <b>' + n(Math.max(m.qs(Pd, As), 0), 1) + '</b> unidades.</li>' +
+      '</ol></div>';
+  } else {
+    ofF = '<div class="solo-avanzado">' +
+      '<div class="eq" style="border-left-color:#c2410c">Q<sub>s</sub> = A<sub>s</sub> · P<sup>+' + n(m.es, 1) + '</sup>' +
+      '&nbsp;&nbsp;⟹&nbsp;&nbsp;Q<sub>s</sub> = <span class="num">' + n(As, 2) + '</span> · P<sup>' + n(m.es, 1) + '</sup></div>' +
+      '<div class="eq" style="border-left-color:#c2410c">A<sub>s</sub> = <span class="num">2,722</span> · (1 + ΔS / 100) = ' +
+      '<span class="num">2,722</span> · (1 + (' + sgn(dS, 1) + ')/100) = <span class="res">' + n(As, 2) + '</span></div>' +
+      '<ol class="pasos">' +
+      '<li>El exponente <b>+' + n(m.es, 1) + '</b> es la elasticidad-precio de la oferta: si el precio sube un 1 %, la cantidad ofrecida sube un ' + n(m.es, 1) + ' %. Al ser mayor que 1, la oferta es <em>elástica</em> en todo su recorrido.</li>' +
+      '<li><b>A<sub>s</sub></b> es la cantidad ofrecida cuando P = 1 €; en el punto de partida vale 2,722.</li>' +
+      '<li>ΔS entra multiplicando la escala: A<sub>s</sub> = 2,722 · (1 + ΔS/100). Con ΔS = ' + sgn(dS, 1) + ' queda <b>' + n(As, 2) + '</b>.</li>' +
+      '<li>También es una potencia, aunque con exponente mayor que 1: su curvatura es más suave que la de la demanda, pero no es una recta.</li>' +
+      '</ol></div>';
+  }
+  $('#ofeFormula').innerHTML = ofF;
+  $('#ofeText').innerHTML = oB;
+
+  /* ================= DESPLAZAMIENTOS ================= */
+  const filas = [
+    ['P<sub>s</sub> · precio del sustitutivo', 'Demanda', '+4 u./€', 'Si sube el sustitutivo, se compra más del bien X', 4 * (x.Ps - 10), '4 × (' + n(x.Ps, 0) + ' − 10) = ' + ap(4 * (x.Ps - 10))],
+    ['P<sub>c</sub> · precio del complementario', 'Demanda', MINUS + '4 u./€', 'Si sube el complementario, se compra menos del bien X', -4 * (x.Pc - 10), MINUS + '4 × (' + n(x.Pc, 0) + ' − 10) = ' + ap(-4 * (x.Pc - 10))],
+    ['R · renta de los consumidores', 'Demanda', '+0,5 u./punto', 'Con más renta se demanda más (bien normal)', 0.5 * (x.R - 50), '0,5 × (' + n(x.R, 0) + ' − 50) = ' + ap(0.5 * (x.R - 50))],
+    ['C<sub>f</sub> · coste de los factores', 'Oferta', MINUS + '2 u./€', 'Costes más altos: se ofrece menos a cada precio', -2 * (x.Cf - 10), MINUS + '2 × (' + n(x.Cf, 0) + ' − 10) = ' + ap(-2 * (x.Cf - 10))],
+    ['T · estado de la técnica', 'Oferta', '+2 u./€', 'Mejor tecnología: se ofrece más a cada precio', 2 * (x.T - 10), '2 × (' + n(x.T, 0) + ' − 10) = ' + ap(2 * (x.T - 10))]
+  ];
+
+  let tb = '<table class="tabla-coef"><thead><tr><th>Factor</th><th>Curva</th><th>Coeficiente</th><th>Aporte ahora</th></tr></thead><tbody>';
+  filas.forEach(f => {
+    const pill = '<span class="pill ' + (f[1] === 'Demanda' ? 'd' : 's') + '" style="font-size:.66rem;font-weight:800;padding:2px 7px;border-radius:6px">' + f[1] + '</span>';
+    tb += '<tr><td><b>' + f[0] + '</b><br><span style="color:#7b839c;font-size:.8em">' + f[3] + '</span>' +
+      '<span class="solo-basico" style="display:block;font-size:.8em;color:#4b5370;margin-top:3px">Cuenta: ' + f[5] + '</span></td>' +
+      '<td>' + pill + '</td>' +
+      '<td class="c">' + f[2] + '</td>' +
+      '<td class="c">' + ap(f[4]) + '</td></tr>';
+  });
+  tb += '</tbody></table>';
+
+  tb += '<div class="solo-basico">' +
+    '<p>Para saber cuánto se mueve cada curva, el modelo hace cinco multiplicaciones sencillas y luego suma. ' +
+    'Lo único importante es la columna «Cuenta»: <b>cuánto se ha alejado cada factor de su valor de partida</b> multiplicado por su coeficiente.</p>' +
+    '<div class="eq">ΔD = ' + suma([4 * (x.Ps - 10), -4 * (x.Pc - 10), 0.5 * (x.R - 50)]) + ' = <span class="res">' + ap(dD) + '</span></div>' +
+    '<div class="eq" style="border-left-color:#c2410c">ΔS = ' + suma([2 * (x.T - 10), -2 * (x.Cf - 10)]) + ' = <span class="res">' + ap(dS) + '</span></div>' +
+    '<p>' + (Math.abs(dD) < 0.05 && Math.abs(dS) < 0.05
+      ? 'Ahora mismo no hay ningún desplazamiento: las curvas están donde estaban.'
+      : 'Traducido: la demanda se mueve <b>' + n(Math.abs(dD), 1) + ' unidades a la ' + (dD > 0 ? 'derecha' : 'izquierda') +
+        '</b> y la oferta <b>' + n(Math.abs(dS), 1) + ' unidades a la ' + (dS > 0 ? 'derecha' : 'izquierda') + '</b>. ' +
+        'A la derecha = a cada precio se quiere más; a la izquierda = a cada precio se quiere menos.') + '</p>' +
+    '</div>';
+
+  tb += '<div class="solo-avanzado">' +
+    '<div class="eq" style="border-left-color:#4338ca">ΔD = 4·(P<sub>s</sub>' + MINUS + '10) ' + MINUS + ' 4·(P<sub>c</sub>' + MINUS + '10) + 0,5·(R' + MINUS + '50) = <span class="res">' + sgn(dD, 1) + '</span></div>' +
+    '<div class="eq" style="border-left-color:#c2410c">ΔS = 2·(T' + MINUS + '10) ' + MINUS + ' 2·(C<sub>f</sub>' + MINUS + '10) = <span class="res">' + sgn(dS, 1) + '</span></div>' +
+    '<p class="note">' + (m.tipo === 'lineal'
+      ? 'En el modelo de rectas, ΔD y ΔS se <b>suman</b> directamente a la ordenada: un ΔD = +40 mueve la recta de la demanda 40 unidades a la derecha en horizontal.'
+      : 'En el modelo de curvas, ΔD y ΔS se aplican como <b>factores de escala</b>: ΔD = +40 significa multiplicar la escala de demanda por 1 + 40/200 = 1,20 (un 20 % más). El <em>signo</em> del desplazamiento es el mismo en los dos modelos; la forma de aplicarlo, no.') + '</p></div>';
+
+  $('#shiftBody').innerHTML = tb;
+
+  /* ================= EQUILIBRIO ================= */
+  const eqB = $('#eqBody');
+  if (!isFinite(e.P) || e.P <= 0 || e.Q <= 0){
+    eqB.innerHTML = '<p style="color:#b91c1c"><b>Con estos valores no hay equilibrio con precio y cantidad positivos.</b> ' +
+      'Significa que, con las hipótesis actuales del modelo, las curvas no se cruzan dentro de la zona económicamente posible. Prueba a relajar algún factor.</p>';
+  } else {
+    // tabla de tanteo (nivel básico), común a los dos modelos
+    const stp = Math.max(0.5, Math.round(e.P / 6 * 2) / 2);
+    const precios = [-2, -1, 0, 1, 2].map(k => Math.max(0, e.P + k * stp));
+    let tt = '<table class="vals wide"><thead><tr><th>Precio (€)</th><th>Se quieren comprar</th><th>Se quieren vender</th><th>Diferencia</th><th>Qué significa</th></tr></thead><tbody>';
+    precios.forEach(p => {
+      const qd = Math.max(m.qd(p, Ad), 0), qs = Math.max(m.qs(p, As), 0), dif = qd - qs;
+      const esEq = Math.abs(dif) < Math.max(0.4, 0.01 * Math.max(qd, qs));
+      tt += '<tr' + (esEq ? ' class="hi"' : '') + '><td>' + n(p, 2) + '</td><td>' + n(qd, 1) + '</td><td>' + n(qs, 1) + '</td><td><b>' + ap(dif) + '</b></td><td>' +
+        (esEq ? '<span class="ok">se cruzan ✓</span>' : dif > 0 ? 'falta producto → el precio sube' : 'sobra producto → el precio baja') +
+        '</td></tr>';
+    });
+    tt += '</tbody></table>';
+
+    let bas = '<div class="solo-basico">' +
+      '<p>El equilibrio es el precio en el que <b>lo que se quiere comprar y lo que se quiere vender coincide</b>. ' +
+      'Se puede encontrar probando precios y mirando cuánto sobra o cuánto falta:</p>' + tt +
+      '<p>Por debajo de ' + n(e.P, 2) + ' € falta producto, así que el precio sube. Por encima sobra producto, así que el precio baja. ' +
+      'El único precio en el que no falta ni sobra nada es <b>' + n(e.P, 2) + ' €</b>, y ahí se intercambian <b>' + n(e.Q, 1) + ' unidades</b>.</p>';
+
+    if (!curvas){
+      bas += '<p><b>¿Y se puede calcular sin ir probando?</b> Sí, con dos restas y dos divisiones:</p>' +
+        '<ol class="pasos">' +
+        '<li>Si el precio fuese 0 €, se querrían comprar <b>' + n(Ad, 1) + '</b> y se querrían vender <b>' + n(As, 1) + '</b>: faltarían <b>' + n(Ad - As, 1) + '</b> unidades.</li>' +
+        '<li>Cada euro de subida cierra ese hueco en <b>16</b> unidades: 10 que dejan de demandarse + 6 que aparecen de más.</li>' +
+        '<li>Reparto el hueco: <b>' + n(Ad - As, 1) + ' ÷ 16 = ' + n(e.P, 2) + ' €</b>. Ese es el precio de equilibrio.</li>' +
+        '<li>Y la cantidad: a ' + n(e.P, 2) + ' € se ofrecen ' + n(As, 1) + ' + 6 × ' + n(e.P, 2) + ' = <b>' + n(e.Q, 1) + '</b> unidades.</li>' +
+        '</ol>';
+    } else {
+      bas += '<p><b>¿Y se puede calcular sin ir probando?</b> Con una curva, el hueco no se cierra siempre a la misma velocidad (al principio mucho, después poco), ' +
+        'así que no hay una única división que valga. Se localiza con la tabla —el cambio de lado está entre dos precios consecutivos— y el valor exacto es <b>' +
+        n(e.P, 2) + ' €</b>. En el nivel 2 tienes la cuenta completa.</p>';
+    }
+    bas += '</div>';
+
+    let adv;
+    if (!curvas){
+      const A = Ad - As;
+      adv = '<div class="solo-avanzado">' +
+        '<p>Partimos de la condición de equilibrio y sustituimos tus datos:</p>' +
+        '<div class="eq">Q<sub>d</sub> = Q<sub>s</sub> &nbsp;⟹&nbsp; <span class="num">' + n(Ad, 1) + '</span> ' + MINUS + ' 10·P = <span class="num">' + n(As, 1) + '</span> + 6·P</div>' +
+        '<ol class="pasos">' +
+        '<li>Agrupamos: las P a un lado y los números al otro → <b>' + n(Ad, 1) + ' ' + MINUS + ' ' + n(As, 1) + ' = 10·P + 6·P</b>, es decir, <b>' + n(A, 1) + ' = 16·P</b>.</li>' +
+        '<li>El <b>16</b> sale de sumar las dos sensibilidades (10 + 6): cada euro de subida reduce lo demandado 10 y aumenta lo ofrecido 6, así que el desajuste se cierra a razón de 16 unidades por euro.</li>' +
+        '<li>Despejamos el precio: <b>P* = ' + n(A, 1) + ' / 16 = <span class="res">' + n(e.P, 2) + ' €</span></b>.</li>' +
+        '<li>Sustituimos en la oferta (o en la demanda, da igual): Q* = ' + n(As, 1) + ' + 6 · ' + n(e.P, 2) + ' = <b>' + n(e.Q, 1) + '</b>.</li>' +
+        '<li>Comprobación por el otro lado: Q<sub>d</sub> = ' + n(Ad, 1) + ' ' + MINUS + ' 10 · ' + n(e.P, 2) + ' = <b>' + n(Ad - 10 * e.P, 1) + '</b>. Coincide ✔</li>' +
+        '</ol></div>';
+    } else {
+      adv = '<div class="solo-avanzado">' +
+        '<p>Partimos de la condición de equilibrio y sustituimos tus datos:</p>' +
+        '<div class="eq" style="border-left-color:#4338ca"><span class="num">' + n(Ad, 1) + '</span> · P<sup>' + MINUS + n(m.ed, 1) + '</sup> = <span class="num">' + n(As, 2) + '</span> · P<sup>' + n(m.es, 1) + '</sup></div>' +
+        '<ol class="pasos">' +
+        '<li>Multiplicamos los dos lados por P<sup>' + n(m.ed, 1) + '</sup> para quitar el exponente negativo: <b>' + n(Ad, 1) + ' = ' + n(As, 2) + ' · P<sup>' + n(m.ed + m.es, 1) + '</sup></b>.</li>' +
+        '<li>El <b>' + n(m.ed + m.es, 1) + '</b> es la suma de las dos elasticidades (' + n(m.ed, 1) + ' + ' + n(m.es, 1) + '): es el exponente que aparece al despejar.</li>' +
+        '<li>Despejamos la potencia: P<sup>' + n(m.ed + m.es, 1) + '</sup> = ' + n(Ad, 1) + ' / ' + n(As, 2) + ' = <b>' + n(Ad / As, 2) + '</b>.</li>' +
+        '<li>Raíz: <b>P* = ' + n(Ad / As, 2) + '<sup>1/' + n(m.ed + m.es, 1) + '</sup> = <span class="res">' + n(e.P, 2) + ' €</span></b>.</li>' +
+        '<li>Y la cantidad: Q* = ' + n(As, 2) + ' · ' + n(e.P, 2) + '<sup>' + n(m.es, 1) + '</sup> = <b>' + n(e.Q, 1) + '</b> unidades.</li>' +
+        '<li>Comprobación por la demanda: Q<sub>d</sub> = ' + n(Ad, 1) + ' · ' + n(e.P, 2) + '<sup>' + MINUS + n(m.ed, 1) + '</sup> = <b>' + n(Ad * Math.pow(e.P, -m.ed), 1) + '</b>. Coincide ✔</li>' +
+        '</ol></div>';
+    }
+    eqB.innerHTML = bas + adv;
+  }
+
+  /* ================= EXCESOS ================= */
+  const qd = Math.max(m.qd(Pd, Ad), 0), qs = Math.max(m.qs(Pd, As), 0), dif = qd - qs;
+  let ex = '<div class="eq">Q<sub>d</sub>(' + n(Pd, 2) + ') = <span class="num">' + n(qd, 1) + '</span> &nbsp;·&nbsp; Q<sub>s</sub>(' + n(Pd, 2) + ') = <span class="num">' + n(qs, 1) + '</span> &nbsp;·&nbsp; Diferencia = <span class="res">' + ap(dif) + '</span></div>';
+
+  if (Math.abs(dif) < 0.15){
+    ex += '<p><b>Estás en el precio de equilibrio</b> (' + n(Pd, 2) + ' € ≈ P* = ' + n(e.P, 2) + ' €). Nadie quiere cambiar de decisión: todo lo que se ofrece se vende.</p>';
+  } else if (dif > 0){
+    ex += '<div class="solo-basico"><p>Al precio de <b>' + n(Pd, 2) + ' €</b> se quieren comprar <b>' + n(qd, 1) + '</b> unidades, pero solo hay <b>' + n(qs, 1) + '</b> a la venta: ' +
+      '<b>faltan ' + n(dif, 1) + '</b>. Dicho de otro modo, por cada 100 unidades que la gente quiere comprar solo hay <b>' + n(qs / Math.max(qd, 0.001) * 100, 0) + '</b>.</p>' +
+      '<p>Cuando falta producto, algunos compradores ofrecen pagar un poco más para conseguirlo. Por eso el precio <b>sube</b>, y deja de subir cuando llega a ' + n(e.P, 2) + ' €. En el gráfico es la franja coloreada entre las dos curvas.</p></div>' +
+      '<div class="solo-avanzado"><p><b>Exceso de demanda (escasez) de ' + n(dif, 1) + ' unidades.</b> A ' + n(Pd, 2) + ' € hay compradores dispuestos a pagar más que no encuentran producto. ' +
+      'Algunos ofrecerán pagar algo más y el precio <b>tenderá a subir</b> hacia P* = ' + n(e.P, 2) + ' €. En el gráfico es la franja sombreada entre Q<sub>d</sub> y Q<sub>s</sub>.</p></div>';
+  } else {
+    ex += '<div class="solo-basico"><p>Al precio de <b>' + n(Pd, 2) + ' €</b> se quieren vender <b>' + n(qs, 1) + '</b> unidades, pero solo se quieren comprar <b>' + n(qd, 1) + '</b>: ' +
+      '<b>sobran ' + n(-dif, 1) + '</b>. Dicho de otro modo, de cada 100 unidades puestas a la venta solo se compran <b>' + n(qd / Math.max(qs, 0.001) * 100, 0) + '</b>.</p>' +
+      '<p>Cuando sobra producto, las empresas bajan el precio para vender lo que se les acumula. Por eso el precio <b>baja</b>, y deja de bajar cuando llega a ' + n(e.P, 2) + ' €.</p></div>' +
+      '<div class="solo-avanzado"><p><b>Exceso de oferta (excedente) de ' + n(-dif, 1) + ' unidades.</b> A ' + n(Pd, 2) + ' € las empresas producen más de lo que los consumidores quieren comprar: se acumulan existencias. ' +
+      'Para vender, bajarán el precio, que <b>tenderá a caer</b> hacia P* = ' + n(e.P, 2) + ' €.</p></div>';
+  }
+  $('#excBody').innerHTML = ex;
+}
+
+/* ==================== elasticidades ==================== */
+function clasifPrecio(v){
+  const a = Math.abs(v);
+  if (!isFinite(a)) return { t: 'no calculable', c: 'warn' };
+  if (Math.abs(a - 1) < 0.02) return { t: 'unitaria', c: 'warn' };
+  return a > 1 ? { t: 'elástica', c: 'bad' } : { t: 'inelástica', c: 'ok' };
+}
+function clasifRenta(v){
+  if (!isFinite(v)) return { t: 'n/d', c: 'warn' };
+  if (v < 0) return { t: 'bien inferior', c: 'bad' };
+  if (v <= 1) return { t: 'normal de 1ª necesidad', c: 'ok' };
+  return { t: 'normal de lujo', c: 'warn' };
+}
+function clasifCruzada(v, tipo){
+  if (!isFinite(v)) return { t: 'n/d', c: 'warn' };
+  if (Math.abs(v) < 0.05) return { t: 'independientes', c: 'warn' };
+  if (tipo === 'sust'){
+    return v > 0 ? { t: 'sustitutivos', c: 'ok' } : { t: 'complementarios (revisa el signo)', c: 'bad' };
+  }
+  return v < 0 ? { t: 'complementarios', c: 'ok' } : { t: 'sustitutivos (revisa el signo)', c: 'bad' };
+}
+
+function renderElast(x, e){
+  if (!isFinite(e.P) || e.P <= 0 || !(e.Q > 0)){
+    $('#elastCards').innerHTML = '<div class="card pad"><p style="margin:0;color:#b91c1c">Las elasticidades solo se pueden calcular cuando hay un equilibrio con precio y cantidad positivos.</p></div>';
+    $('#elastCuenta').innerHTML = '';
+    $('#cmpTable').innerHTML = '';
+    $('#cmpNote').textContent = '';
+    return;
+  }
+  const eD = elasticidad(P => m.qd(P, m.Ad(x)), e.P);
+  const eO = elasticidad(P => m.qs(P, m.As(x)), e.P);
+  const eR = elasticidad(r => m.qd(e.P, m.Ad(Object.assign({}, x, { R: r }))), x.R);
+  const ePs = elasticidad(p => m.qd(e.P, m.Ad(Object.assign({}, x, { Ps: p }))), x.Ps);
+  const ePc = elasticidad(p => m.qd(e.P, m.Ad(Object.assign({}, x, { Pc: p }))), x.Pc);
+
+  const card = (cfg) => {
+    const mag = Math.min(Math.abs(cfg.v) / 3, 1) * 100;
+    return '<div class="ecard">' +
+      '<div class="head"><h4>' + cfg.nombre + '</h4><span class="chip-estado ' + cfg.est.c + '">' + cfg.est.t + '</span></div>' +
+      '<div class="who">' + cfg.sub + '</div>' +
+      '<div class="val">' + (isFinite(cfg.v) ? n(cfg.v, 2) : '—') + '</div>' +
+      '<div class="f">' + cfg.f + '</div>' +
+      '<div class="bar"><span class="fill" style="width:' + mag + '%"></span><span class="tick" style="left:33.33%"></span></div>' +
+      '<div class="lbl"><span>0</span><span>|ε| = 1</span><span>3</span></div>' +
+      '<p class="interp">' + cfg.txt + '</p>' +
+      '</div>';
+  };
+  // fórmula en palabras (nivel 1) + fórmula simbólica (nivel 2)
+  const f2 = (sub, num, den) =>
+`<span class="solo-basico">ε<sub>${sub}</sub> =
+  <span class="frac"><span>cambio % de la cantidad</span><span>cambio % de ${den}</span></span></span>
+ <span class="solo-avanzado">ε<sub>${sub}</sub> =
+  <span class="frac"><span>ΔQ/Q</span><span>Δ${num}/${num}</span></span> =
+  <span class="frac"><span>(dQ/d${num}) · ${num}*</span><span>Q*</span></span></span>`;
+
+  const EST = {
+    d: clasifPrecio(eD), o: clasifPrecio(eO), r: clasifRenta(eR),
+    s: clasifCruzada(ePs, 'sust'), c: clasifCruzada(ePc, 'comp')
+  };
+
+  let html = '';
+  html += card({
+    nombre: 'Elasticidad-precio de la demanda', sub: 'en el equilibrio (P* = ' + n(e.P, 2) + ' €, Q* = ' + n(e.Q, 1) + ')',
+    v: eD, est: EST.d, f: f2('d', 'P', 'del precio'),
+    txt: 'Si el precio sube un 1 %, la cantidad demandada cambia un <b>' + n(Math.abs(eD), 2) + ' %</b> en sentido contrario. ' +
+      (Math.abs(eD) > 1 ? 'Reacciona <b>más</b> que proporcionalmente: demanda elástica.' : Math.abs(eD) < 1 ? 'Reacciona <b>menos</b> que proporcionalmente: demanda inelástica.' : 'Reacciona en la misma proporción: elasticidad unitaria.')
+  });
+  html += card({
+    nombre: 'Elasticidad-precio de la oferta', sub: 'en el equilibrio',
+    v: eO, est: EST.o, f: f2('s', 'P', 'del precio'),
+    txt: 'Si el precio sube un 1 %, la cantidad ofrecida cambia un <b>' + n(Math.abs(eO), 2) + ' %</b>. ' +
+      (eO > 1 ? 'Los productores reaccionan más que proporcionalmente: oferta elástica.' : 'Los productores reaccionan poco: oferta inelástica (capacidad limitada a corto plazo).')
+  });
+  html += card({
+    nombre: 'Elasticidad-renta', sub: 'R = ' + n(x.R, 0) + ' puntos de índice',
+    v: eR, est: EST.r, f: f2('R', 'R', 'de la renta'),
+    txt: 'Si la renta sube un 1 %, la demanda cambia un <b>' + n(Math.abs(eR), 2) + ' %</b>. ' +
+      (eR < 0 ? 'Al aumentar la renta se consume menos: es un <b>bien inferior</b>.'
+             : eR <= 1 ? 'Aumenta, pero menos que la renta: <b>bien normal de primera necesidad</b>.'
+                      : 'Aumenta más que la renta: <b>bien normal de lujo</b>.')
+  });
+  html += card({
+    nombre: 'Elasticidad cruzada · sustitutivo', sub: 'P<sub>s</sub> = ' + n(x.Ps, 0) + ' €',
+    v: ePs, est: EST.s, f: f2('Ps', 'P<sub>s</sub>', 'del precio del sustitutivo'),
+    txt: 'El signo es <b>' + (ePs > 0 ? 'positivo' : 'negativo') + '</b>: si el sustitutivo se encarece un 1 %, la demanda del bien X cambia un ' + n(ePs, 2) + ' %. ' +
+      (ePs > 0 ? 'Son <b>sustitutivos</b>: al pagar más por el otro bien, se sustituye por este.' : 'El signo no cuadra con la definición de sustitutivo.')
+  });
+  html += card({
+    nombre: 'Elasticidad cruzada · complementario', sub: 'P<sub>c</sub> = ' + n(x.Pc, 0) + ' €',
+    v: ePc, est: EST.c, f: f2('Pc', 'P<sub>c</sub>', 'del precio del complementario'),
+    txt: 'El signo es <b>' + (ePc < 0 ? 'negativo' : 'positivo') + '</b>: si el complementario se encarece un 1 %, la demanda del bien X cambia un ' + n(ePc, 2) + ' %. ' +
+      (ePc < 0 ? 'Son <b>complementarios</b>: se consumen juntos, así que encarecer uno reduce el otro.' : 'El signo no cuadra con la definición de complementario.')
+  });
+  $('#elastCards').innerHTML = html;
+
+  /* ---------- la cuenta paso a paso (nivel básico) ---------- */
+  const h = 0.005;                       // 0,5 %
+  const p1 = e.P * (1 + h);
+  const q0 = m.qd(e.P, m.Ad(x)), q1x = m.qd(p1, m.Ad(x));
+  const dqPct = Math.abs((q1x - q0) / q0 * 100);
+  const dqR = Math.round(dqPct * 100) / 100;
+  const coc = dqR / (h * 100);
+  $('#elastCuenta').innerHTML =
+    '<div class="card pad solo-basico" style="margin-bottom:14px">' +
+    '<h3 style="font-size:.95rem;margin-bottom:6px">La cuenta, paso a paso, con tus números</h3>' +
+    '<p style="font-size:.86rem;color:#4b5370">Tomamos el precio de equilibrio y lo subimos medio punto porcentual. Miramos qué le pasa a la cantidad y dividimos los dos porcentajes.</p>' +
+    '<ol class="pasos">' +
+    '<li>Partimos del equilibrio: <b>P* = ' + n(e.P, 2) + ' €</b> y <b>Q* = ' + n(q0, 1) + '</b> unidades.</li>' +
+    '<li>Subimos el precio un 0,5 %: de ' + n(e.P, 2) + ' € a <b>' + n(p1, 2) + ' €</b>.</li>' +
+    '<li>Con ese precio, la cantidad demandada baja de ' + n(q0, 1) + ' a <b>' + n(q1x, 1) + '</b>. Eso es un cambio del <b>' + n(dqR, 2) + ' %</b>.</li>' +
+    '<li>Dividimos los dos porcentajes: <b>' + n(dqR, 2) + ' % ÷ 0,50 % = ' + n(coc, 2) + '</b>. Ese es el valor de la elasticidad.</li>' +
+    '<li>Como ' + n(coc, 2) + (coc > 1 ? ' es mayor que 1, la cantidad cambia <em>más</em> que el precio: la demanda es <b>elástica</b>.' : ' es menor que 1, la cantidad cambia <em>menos</em> que el precio: la demanda es <b>inelástica</b>.') + '</li>' +
+    '</ol>' +
+    '<p class="note" style="margin-bottom:0">Se usa un cambio muy pequeño (0,5 %) porque la elasticidad describe la reacción ante un cambio <em>pequeño</em>. Con cambios grandes el resultado varía según el punto de partida.</p>' +
+    '</div>';
+
+  /* ---------- comparación recta vs curva ---------- */
+  const mLin = MODELS.lineal, mCur = MODELS.curva;
+  const eL = eqOfAdAs(mLin, mLin.Ad(x), mLin.As(x));
+  const eC = eqOfAdAs(mCur, mCur.Ad(x), mCur.As(x));
+  const filas = [['0,8 · P*', 0.8], ['P* (equilibrio)', 1], ['1,25 · P*', 1.25]];
+  let t = '<thead><tr><th>Precio evaluado</th>' +
+    '<th>Recta: Q = A<sub>d</sub> ' + MINUS + ' 10·P' + (modelo === 'lineal' ? ' <span class="tagA">actual</span>' : '') + '</th>' +
+    '<th>Curva: Q = A<sub>d</sub>·P<sup>' + MINUS + n(mCur.ed, 1) + '</sup>' + (modelo === 'curva' ? ' <span class="tagA">actual</span>' : '') + '</th></tr></thead><tbody>';
+  filas.forEach(f => {
+    const pL = eL.P * f[1], pC = eC.P * f[1];
+    const vL = elasticidad(P => mLin.qd(P, mLin.Ad(x)), pL);
+    const vC = elasticidad(P => mCur.qd(P, mCur.Ad(x)), pC);
+    t += '<tr' + (f[1] === 1 ? ' class="active"' : '') + '><td>' + f[0] + '</td>' +
+      '<td>' + n(vL, 2) + '</td><td>' + n(vC, 2) + '</td></tr>';
+  });
+  t += '</tbody>';
+  $('#cmpTable').innerHTML = t;
+
+  const vL1 = elasticidad(P => mLin.qd(P, mLin.Ad(x)), eL.P * 0.8);
+  const vL2 = elasticidad(P => mLin.qd(P, mLin.Ad(x)), eL.P * 1.25);
+  $('#cmpNote').innerHTML =
+    '<span class="solo-basico">En la <b>recta</b>, el número cambia según el punto: ' + n(vL1, 2) + ' cuando el precio es bajo y ' + n(vL2, 2) + ' cuando ya es alto. ' +
+    'La razón es sencilla: el mismo euro de subida pesa mucho más cuando el precio de partida es bajo. En la <b>curva</b>, en cambio, sale ' + MINUS + n(mCur.ed, 2) + ' en los tres casos: reacciona siempre igual.</span>' +
+    '<span class="solo-avanzado">En la <b>recta</b> la elasticidad pasa de ' + n(vL1, 2) + ' a ' + n(vL2, 2) +
+    ' según el punto: la pendiente es constante, pero P/Q no. En la <b>curva isoelástica</b> vale ' + MINUS + n(mCur.ed, 2) + ' en los tres casos. ' +
+    'Cada columna está evaluada en el equilibrio de su propio modelo, porque los dos modelos no dan el mismo P*.</span>';
+}
+
+/* ==================== logros ==================== */
+const LOGROS = [
+  { k: 'excesoD', t: 'Provoca un exceso de demanda (precio por debajo de P*)' },
+  { k: 'excesoS', t: 'Provoca un exceso de oferta (precio por encima de P*)' },
+  { k: 'desplD', t: 'Desplaza la demanda a la derecha (ΔD > 0)' },
+  { k: 'desplS', t: 'Desplaza la oferta a la izquierda (ΔS < 0)' },
+  { k: 'inelastica', t: 'Consigue que la demanda sea inelástica (|ε| < 1)' },
+  { k: 'comparar', t: 'Compara el modelo de rectas con el de curvas' }
+];
+function renderLogros(){
+  $('#logros').innerHTML = LOGROS.map(l =>
+    '<li class="logro' + (logros[l.k] ? ' done' : '') + '"><span class="bx">' +
+    '<svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M1.5 6.5 4.2 9.2 10.5 2.8" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+    '</span><span class="t">' + l.t + '</span></li>').join('');
+}
+
+/* ==================== quiz ==================== */
+const QUIZ = [
+  { q: 'Sube el precio del bien sustitutivo y no se mueve nada más. ¿Qué le ocurre a la demanda del bien X?',
+    o: ['Se desplaza a la derecha', 'Se desplaza a la izquierda', 'Nos movemos a lo largo de ella'],
+    a: 0,
+    e: 'P<sub>s</sub> entra en la demanda con coeficiente +4: cada euro de subida añade 4 unidades demandadas a cada precio. La curva entera se mueve a la derecha. Compruébalo con el escenario «Sube el sustitutivo».' },
+  { q: '¿Qué provoca un movimiento <em>a lo largo</em> de la curva de demanda, y no un desplazamiento?',
+    o: ['Un cambio en la renta', 'Un cambio en el precio del propio bien', 'Una mejora de la técnica'],
+    a: 1,
+    e: 'Solo el precio del propio bien mueve la cantidad demandada sobre la curva. Cualquier otra variable (renta, precios de otros bienes…) desplaza la curva entera. En el taller, ese es el papel del deslizador «Precio fijado».' },
+  { q: 'Sube el precio del bien complementario. ¿Qué pasa con la demanda del bien X?',
+    o: ['Aumenta (se desplaza a la derecha)', 'Disminuye (se desplaza a la izquierda)', 'No cambia'],
+    a: 1,
+    e: 'Los complementarios se consumen juntos: si uno se encarece, se consume menos del otro. En el modelo, el coeficiente es ' + MINUS + '4 por euro.' },
+  { q: 'Suben los costes de los factores de producción. ¿Qué le pasa a la oferta?',
+    o: ['Se desplaza a la izquierda (disminuye)', 'Se desplaza a la derecha (aumenta)', 'Se mueve a lo largo de la curva'],
+    a: 0,
+    e: 'Un coste mayor reduce la cantidad que las empresas quieren ofrecer a cada precio: la curva se desplaza a la izquierda. Es un desplazamiento, no un movimiento sobre la curva.' },
+  { q: 'El precio de mercado está por encima de P*. ¿Qué situación se produce y hacia dónde va el precio?',
+    o: ['Exceso de demanda; el precio tiende a subir', 'Exceso de oferta; el precio tiende a bajar', 'Equilibrio; el precio no cambia'],
+    a: 1,
+    e: 'A un precio alto, los productores ofrecen más de lo que los consumidores quieren comprar. Sobra producto (exceso de oferta) y el precio tiende a bajar hasta P*.' },
+  { q: 'En el modelo «Curvas», la elasticidad-precio de la demanda…',
+    o: ['Es distinta en cada punto de la curva', 'Es la misma en todos los puntos (curva isoelástica)', 'Vale siempre cero'],
+    a: 1,
+    e: '<span class="solo-basico">En la curva, la cantidad reacciona siempre en la misma proporción: si el precio sube un 1 %, la cantidad baja un 1,2 %, tanto si partes de 4 € como de 10 €. En una recta no: el mismo euro de subida pesa mucho más cuando el precio de partida es bajo. Compruébalo en la tabla comparativa de la sección 4.</span>' +
+       '<span class="solo-avanzado">Para Q = A·P<sup>' + MINUS + '1,2</sup>, la elasticidad vale exactamente ' + MINUS + '1,2 en todos los puntos. En cambio, en una recta la elasticidad cambia: la pendiente es constante, pero P/Q no. Compruébalo en la tabla comparativa.</span>' },
+  { q: 'Una elasticidad-renta de +0,3 indica que el bien es…',
+    o: ['Inferior', 'Normal de primera necesidad', 'Normal de lujo'],
+    a: 1,
+    e: 'El signo es positivo, luego es un bien normal (al subir la renta se consume más). Como 0 < ε ≤ 1, la cantidad crece menos que la renta: es de primera necesidad. Por debajo de 0 sería inferior; por encima de 1, de lujo.' },
+  { q: 'Sube el precio del bien complementario y, a la vez, suben los costes de producción. ¿Qué pasa con P*?',
+    o: ['Sube con seguridad', 'Baja con seguridad', 'Depende: los dos efectos empujan P* en sentidos opuestos'],
+    a: 2,
+    e: 'La subida del complementario desplaza la demanda a la izquierda (empuja P* hacia abajo) y la subida de costes desplaza la oferta a la izquierda (empuja P* hacia arriba). El resultado depende de cuál de los dos desplazamientos sea mayor. Lo que <em>sí</em> baja con seguridad es Q*: los dos movimientos la reducen. Ese es el razonamiento que hay que hacer siempre antes de contestar.' }
+];
+
+function renderQuiz(){
+  $('#quiz').innerHTML = QUIZ.map((q, i) =>
+    '<div class="qbox" id="qb' + i + '">' +
+    '<p class="q"><span class="qn">' + (i + 1) + '</span><span>' + q.q + '</span></p>' +
+    '<div class="opts">' + q.o.map((o, j) =>
+      '<label class="opt" data-q="' + i + '" data-o="' + j + '"><input type="radio" name="q' + i + '" value="' + j + '"><span>' + o + '</span></label>'
+    ).join('') + '</div>' +
+    '<button class="btn-check" data-i="' + i + '">Comprobar</button>' +
+    '<div class="fb" id="fb' + i + '"></div></div>'
+  ).join('');
+}
+document.getElementById('quiz').addEventListener('click', ev => {
+  const b = ev.target.closest('button[data-i]');
+  if (!b) return;
+  const i = +b.dataset.i;
+  const sel = document.querySelector('input[name="q' + i + '"]:checked');
+  const fb = $('#fb' + i);
+  if (!sel){ fb.className = 'fb show no'; fb.innerHTML = 'Selecciona una respuesta antes de comprobar.'; return; }
+  const ok = +sel.value === QUIZ[i].a;
+  document.querySelectorAll('#qb' + i + ' .opt').forEach((el, j) => {
+    el.classList.remove('correct', 'wrong');
+    if (j === QUIZ[i].a) el.classList.add('correct');
+    else if (j === +sel.value) el.classList.add('wrong');
+  });
+  fb.className = 'fb show ' + (ok ? 'ok' : 'no');
+  fb.innerHTML = '<b>' + (ok ? 'Correcto.' : 'No exactamente.') + '</b> ' + QUIZ[i].e;
+  if (ok) quizOk.add(i); else quizOk.delete(i);
+  $('#score').textContent = quizOk.size + ' de ' + QUIZ.length + ' correctas';
+});
+
+/* ==================== render principal ==================== */
+function render(animate){
+  x = readX();
+  Pd = +$('#P').value;
+  m = MODELS[modelo];
+
+  target.Ad = m.Ad(x);
+  target.As = m.As(x);
+  chooseAxis();
+
+  const e = eqOfAdAs(m, target.Ad, target.As);
+  const valid = isFinite(e.P) && isFinite(e.Q) && e.P > 0 && e.Q > 0;
+
+  updatePanel();
+
+  // KPIs
+  $('#kP').innerHTML = valid ? n(e.P, 2) + ' <small>€</small>' : '—';
+  $('#kQ').innerHTML = valid ? n(e.Q, 1) + ' <small>u.</small>' : '—';
+  const st = $('#kState'), stb = $('#kStateBox');
+  stb.className = 'kpi state';
+  const qd = Math.max(m.qd(Pd, target.Ad), 0), qs = Math.max(m.qs(Pd, target.As), 0);
+  const dif = qd - qs;
+  if (!valid){ st.textContent = 'sin equilibrio'; stb.classList.add('glut'); }
+  else if (Math.abs(dif) < 0.15){ st.textContent = 'equilibrio ✓'; stb.classList.add('eq'); }
+  else if (dif > 0){ st.textContent = 'exceso de demanda'; stb.classList.add('short'); }
+  else { st.textContent = 'exceso de oferta'; stb.classList.add('glut'); }
+
+  // logros
+  if (dif > 0.5) logros.excesoD = true;
+  if (dif < -0.5) logros.excesoS = true;
+  if (DD(x) > 5) logros.desplD = true;
+  if (DS(x) < -5) logros.desplS = true;
+  const eDv = elasticidad(P => m.qd(P, m.Ad(x)), e.P);
+  if (isFinite(eDv) && Math.abs(eDv) < 1) logros.inelastica = true;
+  renderLogros();
+
+  renderLectura(e);
+  renderDeriv(e);
+  renderElast(x, e);
+
+  animateTo(animate);
+
+  prev = { x: Object.assign({}, x), modelo: modelo, e: { P: e.P, Q: e.Q }, Pd: Pd };
+}
+
+/* ==================== nivel de explicación ==================== */
+function setNivel(nv){
+  document.body.classList.toggle('nivel1', nv === 1);
+  document.body.classList.toggle('nivel2', nv === 2);
+  document.querySelectorAll('[data-n]').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.n === nv)));
+}
+document.querySelectorAll('[data-n]').forEach(b => {
+  b.addEventListener('click', () => setNivel(+b.dataset.n));
+});
+setNivel(1);
+
+/* ==================== eventos ==================== */
+sliders.forEach(id => {
+  const el = $('#' + id);
+  el.addEventListener('input', () => render(true));
+});
+
+document.querySelectorAll('.modelo button').forEach(b => {
+  b.addEventListener('click', () => {
+    if (modelo === b.dataset.m) return;
+    modelo = b.dataset.m;
+    logros.comparar = true;
+    render(true);
+  });
+});
+
+const ESC = {
+  oliva: { Ps: 20 }, complementario: { Pc: 20 }, renta: { R: 80 }, costes: { Cf: 20 }, tecnica: { T: 20 }
+};
+document.querySelectorAll('.preset').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.preset').forEach(o => o.classList.remove('on'));
+    b.classList.add('on');
+    x = Object.assign({}, BASE);
+    const ch = ESC[b.dataset.s];
+    Object.keys(ch).forEach(k => { $('#' + k).value = ch[k]; });
+    render(true);
+  });
+});
+$('#reset').addEventListener('click', () => {
+  document.querySelectorAll('.preset').forEach(o => o.classList.remove('on'));
+  KEYS.forEach(k => { $('#' + k).value = BASE[k]; });
+  $('#P').value = 6;
+  render(true);
+});
+$('#toggleBase').addEventListener('click', (ev) => {
+  showBase = !showBase;
+  ev.currentTarget.setAttribute('aria-pressed', String(showBase));
+  drawAll();
+});
+
+cv.addEventListener('mousemove', ev => {
+  const r = cv.getBoundingClientRect();
+  const py = ev.clientY - r.top;
+  const ml = 58, mr = 18, mt = 16, mb = 44;
+  const ph = VH - mt - mb;
+  if (py < mt || py > mt + ph){ hoverP = null; drawAll(); return; }
+  hoverP = (mt + ph - py) / ph * axis.Pmax;
+  drawAll();
+});
+cv.addEventListener('mouseleave', () => { hoverP = null; drawAll(); });
+
+/* ==================== arranque ==================== */
+renderQuiz();
+resizeCanvas();
+render(false);
+})();
+</script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a57b047e09863ffd',t:'MTc5NDIwODQzNA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a57b047e09863ffd',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
