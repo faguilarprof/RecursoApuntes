@@ -100,13 +100,17 @@ body.exam .res:not(.rev){filter:blur(7px);cursor:pointer;user-select:none}
   <div class="campo"><label>Grupo de cotización</label><select id="grupo" onchange="cambiaGrupo()"></select></div>
   <div class="campo"><label>Tipo de contrato</label>
     <select id="contrato" onchange="cambiaContrato()"><option value="ind">Indefinido</option><option value="temp">Duración determinada</option></select></div>
-  <div class="campo"><label>Jornada (%)</label><input type="number" id="jornada" value="100" min="1" max="100" step="5" oninput="recalc()"> <span class="fx">100 % = completa; el salario se reduce proporcionalmente</span></div>
+  <div class="campo"><label>Horas semanales contratadas</label><input type="number" id="hSem" value="40" min="1" step="0.5" oninput="recalc()"> h/semana <span class="fx">jornada completa del convenio:</span> <input type="number" id="hSemFC" value="40" min="1" step="0.5" oninput="recalc()"> h/semana</div>
+  <div class="campo"><label>Jornada resultante</label><input type="number" id="jornada" value="100" readonly tabindex="-1"> % <span class="fx">se calcula sola (horas contratadas ÷ jornada completa). Si es inferior a 100 %, el contrato es a <b>tiempo parcial</b>: el salario se reduce proporcionalmente y la base mínima se calcula por horas</span></div>
+  <div class="box cc" id="bloqueParcial" style="display:none"><strong>⏱️ Contrato a tiempo parcial: la base mínima se calcula por horas</strong>
+    <div class="campo"><label>Horas mensuales a jornada completa</label><input type="number" id="hFC" value="176" min="1" step="1" oninput="recalc()"> h <span class="fx">referencia para obtener las horas ordinarias del mes (176 h en el ejemplo del material)</span></div>
+    <div id="infoParcial"></div></div>
   <div class="campo"><label>Periodo de liquidación</label><input type="month" id="periodo" value="2026-12" onchange="cambiaPeriodo()"> <span id="indMes"></span></div>
   <div class="box cc"><strong>💡 AT/EP según CNAE.</strong> Esta empresa (CNAE 1411) cotiza por contingencias profesionales a un tipo propio, editable abajo. Cambia el supuesto y comprueba cómo varía el coste.</div>
   <details><summary>⚙️ Tipos y bases de cotización (editables)</summary>
     <p class="fx">Porcentajes de partida para el periodo elegido. Edítalos para simular otros supuestos y verifícalos con la normativa vigente antes de usarlos en clase.</p>
     <div class="tbl"><table id="tiposTbl"></table></div>
-    <h4>Bases mínimas y máxima del año</h4><p class="fx">Cámbialas cuando se publique una nueva Orden de cotización; cada año guarda sus propios valores.</p>
+    <h4>Bases mínimas y máxima del año</h4><p class="fx">Cámbialas cuando se publique una nueva Orden de cotización; cada año guarda sus propios valores. Las bases por hora se usan solo en contratos a tiempo parcial.</p>
     <div class="tbl"><table id="basesTbl"></table></div>
   </details>
   <div class="nav"><span></span><button onclick="go(2)">Siguiente →</button></div>
@@ -115,16 +119,15 @@ body.exam .res:not(.rev){filter:blur(7px);cursor:pointer;user-select:none}
 <!-- 2 -->
 <div class="step" id="step2">
   <h2>2. Devengos: lo que se «gana» (¡juega con los valores!)</h2>
-  <div id="bloqueMensual"><div class="campo"><label>Salario base (jornada completa)</label><input type="number" id="salBase" value="1000" min="0" step="50" oninput="recalc()"> €</div>
+  <div id="bloqueMensual"><div class="campo"><label>Salario base (jornada completa)</label><input type="number" id="salBase" value="1100" min="0" step="50" oninput="recalc()"> €</div>
   <div class="campo"><label>Plus convenio</label><input type="number" id="plus" value="200" min="0" step="50" oninput="recalc()"> €</div>
   <div class="campo"><label>Antigüedad (trienios)</label><input type="number" id="antig" value="0" min="0" step="10" oninput="recalc()"> €</div></div>
   <div id="bloqueDiario" style="display:none">
-    <div class="box cc"><strong>📅 Grupos 8 a 11: retribución y cotización por días</strong><br><span class="fx">El salario se fija por día y la base de cotización también es diaria: se divide la remuneración del mes entre los días de alta y se compara con el mínimo y el máximo diarios.</span></div>
+    <div class="box cc"><strong>📅 Grupos 8 a 11: retribución y cotización por días</strong><br><span class="fx">El salario se devenga por los <b>días reales del mes</b> (28, 29, 30 o 31), así que devengos, deducciones y costes cambian de un mes a otro (míralo en la visión anual). La base de cotización también es diaria: se divide la remuneración del mes entre los días de alta y se compara con el mínimo y el máximo diarios. En los grupos 1 a 7, en cambio, la mensualidad es fija (30 días en mes completo).</span></div>
     <div class="campo"><label>Salario base diario</label><input type="number" id="sbD" value="40" min="0" step="1" oninput="recalc()"> €/día</div>
     <div class="campo"><label>Plus convenio diario</label><input type="number" id="plD" value="8" min="0" step="0.5" oninput="recalc()"> €/día</div>
     <div class="campo"><label>Antigüedad diaria</label><input type="number" id="anD" value="0" min="0" step="0.5" oninput="recalc()"> €/día</div>
-    <div class="campo"><label>Días retribuidos en el mes</label><input type="number" id="diasPag" value="31" min="0" max="31" step="1" oninput="recalc()"> días <span class="fx">los días sin sueldo (permiso no retribuido…) no se pagan</span></div>
-    <div class="campo"><label>Días de alta en el mes</label><input type="number" id="diasAlta" value="31" min="1" max="31" step="1" oninput="recalc()"> días <span class="fx">días naturales cotizados; se rellena según el mes</span></div>
+    <div class="campo"><label>Días sin retribuir en el mes</label><input type="number" id="diasSin" value="0" min="0" max="31" step="1" oninput="recalc()"> días <span class="fx">permiso no retribuido, etc. Solo afectan al mes elegido en el paso 1</span></div>
     <div class="box ot" id="infoDiario"></div>
   </div>
   <div class="box ot">
@@ -138,6 +141,9 @@ body.exam .res:not(.rev){filter:blur(7px);cursor:pointer;user-select:none}
     <div id="mesesPagas"></div>
     <div class="box cc" id="infoPagas"></div>
   </div>
+  <div class="box ot" id="bloqueComp" style="display:none"><h3 style="margin-top:0">🕒 Horas complementarias (solo tiempo parcial)</h3>
+    <div class="campo"><label>Horas complementarias este mes</label><input type="number" id="hComp" value="0" min="0" step="1" oninput="recalc()"> h <span class="fx">se pagan como ordinarias (sin recargo)</span></div>
+    <div class="box cc" id="infoComp"></div></div>
   <div class="box ot"><h3 style="margin-top:0">⏱️ Horas extra</h3>
   <div class="campo"><label>Horas anuales de convenio</label><input type="number" id="hAnu" value="1800" min="1" step="10" oninput="recalc()"> h <span class="fx">jornada ordinaria anual a tiempo completo</span></div>
   <div class="campo"><label>Valor de la hora ordinaria</label><select id="hModo" onchange="recalc()"><option value="auto">Calculado</option><option value="man">Manual</option></select> <input type="number" id="hMan" value="10" min="0" step="0.1" oninput="recalc()"> € <span class="fx">(solo si eliges manual)</span></div>
@@ -155,15 +161,18 @@ body.exam .res:not(.rev){filter:blur(7px);cursor:pointer;user-select:none}
     <div class="campo"><label>Otros gastos justificados</label><input type="number" id="locJust" value="0" min="0" step="5" oninput="recalc()"> € <span class="fx">transporte público, peajes, aparcamiento… (exentos)</span></div>
     <div class="campo"><label>Gastos sin justificar</label><input type="number" id="locSin" value="0" min="0" step="5" oninput="recalc()"> € <span class="fx">cotizan y tributan</span></div>
     <div class="box cc" id="infoLoc"></div></div>
-  <div class="box ot"><h3 style="margin-top:0">➕ Otros pluses</h3><div id="listaPluses"></div><button class="sec" onclick="addPlus()">+ Añadir plus</button></div>
+  <div class="box ot"><h3 style="margin-top:0">➕ Otros pluses</h3><p class="fx"><b>Salarial:</b> retribuye el trabajo; cotiza y tributa. <b>Extrasalarial que cotiza y tributa:</b> compensa gastos del trabajador (quebranto de moneda, desgaste de herramientas, ropa de trabajo…), pero no está excluido de la base de cotización (art. 147 LGSS) ni exento en IRPF; no es salario, aunque cotice y tribute. <b>No salarial exento:</b> el que la norma excluye de cotización, como el plus de transporte dentro de los límites o las indemnizaciones por traslado, despido o fallecimiento.</p><div id="listaPluses"></div><button class="sec" onclick="addPlus()">+ Añadir plus</button></div>
   <div class="box ot"><h3 style="margin-top:0">🎁 Salario en especie</h3>
     <div class="campo"><label>Valor de la retribución en especie</label><input type="number" id="espV" value="0" min="0" step="10" oninput="recalc()"> € <span class="fx">seguro médico, vehículo, vivienda…</span></div>
     <div class="campo"><label>Ingreso a cuenta</label><select id="espRep" onchange="recalc()"><option value="rep">Repercutido al trabajador</option><option value="norep">No repercutido (lo asume la empresa)</option></select></div>
     <div class="box ir" id="infoEsp"></div></div>
   <div class="box ot">
     <div class="row"><span>Devengos totales este mes</span><b class="res" id="totDev"></b></div>
-    <div class="row"><span>De los cuales, salariales</span><b id="totSal"></b></div>
-    <div class="row"><span>Extrasalariales (dietas justificadas)</span><b id="totExtra"></b></div>
+    <div id="desg" style="display:none">
+      <div class="row"><span>De los cuales, salariales</span><b id="totSal"></b></div>
+      <div class="row"><span>Extrasalariales (percepciones no salariales, coticen o no)</span><b id="totExtra"></b></div>
+    </div>
+    <div class="fx" id="desgMsg">🔒 El desglose entre salarial y extrasalarial aparece al resolver el mini-reto de abajo.</div>
   </div>
   <div class="box he"><h4 style="margin-top:0">🤔 Mini-reto</h4>
     <p>¿Cuánto del total devengado es <strong>salarial</strong>?</p><div id="opcionesReto"></div>
@@ -196,8 +205,6 @@ body.exam .res:not(.rev){filter:blur(7px);cursor:pointer;user-select:none}
     <p><strong>Devengos (<span id="txtDev"></span>) – Deducciones (<span id="txtDed"></span>) = <span class="res" id="liq"></span></strong></p></div>
   <div class="box kob"><h3 style="margin-top:0" class="bad">🏢 Cuota patronal</h3><div id="patBox"></div>
     <p><strong>Cuota patronal total ≈ <span class="res" id="patTotal"></span></strong></p></div>
-  <div class="box cc"><strong>Coste laboral del mes</strong> (devengos + cuota patronal): <b class="res" id="costeBruto"></b><br>
-    <span class="fx" id="reparto"></span></div>
   <div class="nav"><button onclick="go(3)">← Anterior</button><button onclick="go(5)">Siguiente →</button></div>
 </div>
 
@@ -209,19 +216,20 @@ body.exam .res:not(.rev){filter:blur(7px);cursor:pointer;user-select:none}
   <div class="campo"><label>Se aplica sobre</label>
     <select id="bonifBase" onchange="recalc()"><option value="tot">Cuota patronal total (simplificado)</option><option value="cc">Solo contingencias comunes</option></select></div>
   <ul class="box cc" style="list-style:none">
-    <li>Devengos: <b id="devRes"></b></li><li>Líquido: <b id="liqRes"></b></li>
+    <li>Devengos: <b id="devRes"></b></li>
     <li>Cuota patronal sin bonificar: <b id="patRes"></b></li><li>Ahorro mensual: <b id="ahorro"></b></li></ul>
   <div class="box he"><h4 style="margin-top:0">🎯 Retos finales</h4>
-    <div class="campo"><label>¿Cuánto cobra Ana (líquido)?</label><input type="number" id="retoLiq" step="0.01"> €</div>
-    <div class="campo"><label>Coste total para la empresa tras bonificar (devengos + cuota – ahorro)</label><input type="number" id="reto" step="0.01"> €</div>
+    <div class="campo"><label>Coste real para la empresa tras bonificar (devengos + cuota patronal – ahorro)</label><input type="number" id="reto" step="0.01"> €</div>
+    <div class="campo"><label>De cada 100 € de ese coste real, ¿cuántos llegan al trabajador como líquido?</label><input type="number" id="retoPct" step="0.1"> € <span class="fx">pista: el líquido lo calculaste en el paso 4</span></div>
     <button onclick="checkReto()">Comprobar</button> <div id="retoOk"></div></div>
+  <div class="box cc" id="resBon" style="display:none"></div>
   <div class="nav"><button onclick="go(4)">← Anterior</button><button onclick="go(6)">Visión anual →</button></div>
 </div>
 
 <!-- 6 -->
 <div class="step" id="step6">
   <h2>6. Visión anual: ¿qué pasa en los 12 meses?</h2>
-  <p class="fx">Mismos supuestos, mes a mes. Los meses con paga extra aparecen sombreados.</p>
+  <p class="fx">Mismos supuestos, mes a mes. Los meses con paga extra aparecen sombreados. En los grupos 8 a 11 se devenga por los días reales de cada mes, por lo que los importes varían; los días sin retribuir solo se aplican al mes elegido en el paso 1.</p>
   <div class="tbl"><table id="anual"></table></div>
   <div class="box cc" id="anualRes"></div>
   <div class="nav"><button onclick="go(5)">← Anterior</button><button onclick="go(7)">Recibo de salarios →</button></div>
@@ -248,6 +256,7 @@ const M=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Sept
 const fmt=x=>new Intl.NumberFormat('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2}).format(x)+' €';
 const pc=x=>new Intl.NumberFormat('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2}).format(x)+' %';
 const r2=x=>Math.round(x*100)/100;
+const fh=h=>new Intl.NumberFormat('es-ES',{maximumFractionDigits:2}).format(h);
 const GRUPOS=['Ingenieros y licenciados','Ingenieros técnicos, peritos y ayudantes titulados','Jefes administrativos y de taller','Ayudantes no titulados','Oficiales administrativos','Subalternos','Auxiliares administrativos','Oficiales de primera y segunda','Oficiales de tercera y especialistas','Peones','Trabajadores menores de 18 años'];
 let R={ccT:4.70,ccE:23.60,meiT:.15,meiE:.75,paroT:1.55,paroE:5.50,fpT:.10,fpE:.60,fogE:.20,atE:2.60,hexT:4.70,hexE:23.60,fmT:2.00,fmE:12.00,tope:5101.20,min:47.48};
 const TIPOS=[['Contingencias comunes','ccT','ccE'],['MEI','meiT','meiE'],['Desempleo','paroT','paroE'],['Formación profesional','fpT','fpE'],['FOGASA',null,'fogE'],['AT/EP (CNAE)',null,'atE'],['Horas extra normales','hexT','hexE'],['Horas extra fuerza mayor','fmT','fmE']];
@@ -259,25 +268,27 @@ const ESC={
  'Caso base (Ana)':{},
  'Pagas prorrateadas':{prorr:'si'},
  'Contrato temporal':{contrato:'temp'},
- 'Jornada parcial al 50 %':{jornada:50},
+ 'Jornada parcial al 50 %':{hSem:20,hHoras:0},
+ 'Tiempo parcial 65 % (grupo 3): sube a la base mínima por horas':{grupo:3,hSem:26,hFC:176,salBase:1100,plus:200,numPagas:2,hHoras:0,dieta:0},
+ 'Tiempo parcial con horas complementarias':{grupo:5,hSem:20,hFC:176,salBase:2200,plus:0,hComp:12,numPagas:2,hHoras:0,dieta:0},
  'Salario alto (supera el tope)':{grupo:1,salBase:4800,plus:600,hHoras:0,dieta:0,irpfT:24,numPagas:2},
- 'Cobra menos que la base mínima (grupo 5)':{grupo:5,salBase:900,plus:0,antig:0,numPagas:2,prorr:'si',hHoras:0,dieta:0},
- 'Peón con días sin retribuir (grupo 10)':{grupo:10,sbD:40,plD:0,diasPag:15,hHoras:0,dieta:0},
- 'Locomoción y otros pluses':{kmLoc:200,tarKm:0.30,locJust:25,locSin:20,pl:[{n:'Plus de nocturnidad',v:80,t:'s'},{n:'Plus de transporte (no salarial)',v:30,t:'n'}]},
+ 'Cobra menos que la base mínima (grupo 2)':{grupo:2,salBase:1300,plus:100,antig:0,numPagas:2,prorr:'si',hHoras:0,dieta:0},
+ 'Peón con días sin retribuir (grupo 10)':{grupo:10,sbD:40,plD:0,diasSin:16,hHoras:0,dieta:0},
+ 'Locomoción y otros pluses':{kmLoc:200,tarKm:0.30,locJust:25,locSin:20,pl:[{n:'Plus de nocturnidad',v:80,t:'s'},{n:'Plus de transporte (no salarial)',v:30,t:'n'},{n:'Quebranto de moneda',v:25,t:'e'}]},
  'Salario en especie repercutido':{espV:120,espRep:'rep'},
  'Salario en especie no repercutido':{espV:120,espRep:'norep'},
  'Sin pagas ni extras':{numPagas:0,hHoras:0,dieta:0,ant:0},
  'Contratada con bonificación (40 %)':{bonifTipo:'40',bonif:40}
 };
 function cargarEscenario(k){
-  const base={empresa:'Confecciones Rodríguez S.L.',kmLoc:0,tarKm:0.26,limKm:0.26,locJust:0,locSin:0,espV:0,espRep:'rep',grupo:8,sbD:40,plD:8,anD:0,diasPag:31,salBase:1000,plus:200,antig:0,numPagas:2,prorr:'no',conc:'1',hHoras:10,hRec:1.5,hAnu:1800,hModo:'auto',hexTipo:'n',dieta:60,dietaExc:0,irpfT:11,ant:100,otras:0,jornada:100,contrato:'ind',bonif:40,bonifBase:'tot'};
+  const base={empresa:'Confecciones Rodríguez S.L.',kmLoc:0,tarKm:0.26,limKm:0.26,locJust:0,locSin:0,espV:0,espRep:'rep',grupo:8,sbD:40,plD:8,anD:0,diasSin:0,salBase:1100,plus:200,antig:0,numPagas:2,prorr:'no',conc:'1',hHoras:10,hRec:1.5,hAnu:1800,hFC:176,hComp:0,hModo:'auto',hexTipo:'n',dieta:60,dietaExc:0,irpfT:11,ant:100,otras:0,hSem:40,hSemFC:40,contrato:'ind',bonif:40,bonifBase:'tot'};
   Object.entries({...base,...ESC[k]}).forEach(([i,v])=>{ if($(i)) $(i).value=v; });
   if($('bonifTipo')) $('bonifTipo').value=String($('bonif').value==40?'40':($('bonif').value==0?'0':'100'));
   PL=(ESC[k].pl||[]).map(p=>({...p}));pintaPluses();buildMeses();setMin();toggleDaily();cambiaContrato();
 }
 function aleatorio(){
   const p=(a,b,s)=>a+s*Math.floor(Math.random()*((b-a)/s+1));
-  $('salBase').value=p(800,2400,50);$('sbD').value=p(30,90,5);$('plD').value=p(0,20,2);$('diasPag').value=p(20,31,1);$('plus').value=p(0,500,50);$('hHoras').value=p(0,20,2);$('dieta').value=p(0,120,10);
+  $('salBase').value=p(800,2400,50);$('sbD').value=p(30,90,5);$('plD').value=p(0,20,2);$('diasSin').value=p(0,8,1);$('plus').value=p(0,500,50);$('hHoras').value=p(0,20,2);$('dieta').value=p(0,120,10);
   $('ant').value=p(0,200,50);$('irpfT').value=p(2,18,1);$('numPagas').value=[2,2,3,4][Math.floor(Math.random()*4)];
   $('prorr').value=Math.random()<.3?'si':'no';$('periodo').value='2026-'+String(1+Math.floor(Math.random()*12)).padStart(2,'0');
   buildMeses();cambiaPeriodo();go(2);
@@ -297,7 +308,7 @@ function cambiaContrato(){
 function cambiaPeriodo(){
   const y=parseInt($('periodo').value.split('-')[0]);
   if(y!==lastYear){if(AÑOS[y])Object.assign(R,AÑOS[y]);lastYear=y;setMin();buildTipos();}
-  lastYear=y;{const mm=parseInt($('periodo').value.split('-')[1]);if(mm)$('diasAlta').value=new Date(y,mm,0).getDate();}recalc();
+  lastYear=y;recalc();
 }
 
 /* ---------- pagas extras ---------- */
@@ -310,40 +321,51 @@ function buildMeses(){
 function getMeses(){return [...document.querySelectorAll('.mp')].map(s=>+s.value)}
 
 /* ---------- bases, límites de cotización y recibo ---------- */
-const MINS={2025:{1:1929,2:1599.6,3:1391.7,47:1381.2,d:46.04,tope:4909.5},2026:{1:1989.3,2:1649.7,3:1435.2,47:1424.4,d:47.48,tope:5101.2}};
-function setMin(){const g=+$('grupo').value,t=MINS[lastYear]||(MINS[lastYear]={...MINS[2026]});R.min=g>=8?t.d:g>=4?t[47]:t[g];R.tope=t.tope}
+const MINS={2025:{1:1929,2:1599.6,3:1391.7,47:1381.2,d:46.04,h1:11.62,h2:9.64,h3:8.38,h47:8.32,tope:4909.5},2026:{1:1989.3,2:1649.7,3:1435.2,47:1424.4,d:47.48,h1:11.98,h2:9.94,h3:8.65,h47:8.58,tope:5101.2}};
+function setMin(){const g=+$('grupo').value,t=MINS[lastYear]||(MINS[lastYear]={...MINS[2026]});R.min=g>=8?t.d:g>=4?t[47]:t[g];R.minH=g>=4?t.h47:t['h'+g];R.tope=t.tope}
 function buildBases(){
-  const y=lastYear,B=MINS[y]||(MINS[y]={...MINS[2026]}),f=[['Grupo 1','1','€/mes'],['Grupo 2','2','€/mes'],['Grupo 3','3','€/mes'],['Grupos 4 a 7','47','€/mes'],['Grupos 8 a 11','d','€/día']];
+  const y=lastYear,B=MINS[y]||(MINS[y]={...MINS[2026]}),f=[['Grupo 1','1','€/mes'],['Grupo 2','2','€/mes'],['Grupo 3','3','€/mes'],['Grupos 4 a 7','47','€/mes'],['Grupos 8 a 11','d','€/día'],['Tiempo parcial · grupo 1','h1','€/hora'],['Tiempo parcial · grupo 2','h2','€/hora'],['Tiempo parcial · grupo 3','h3','€/hora'],['Tiempo parcial · grupos 4 a 11','h47','€/hora']];
   $('basesTbl').innerHTML=`<tr><th>Año ${y}</th><th>Base mínima</th></tr>`+f.map(([l,k,u])=>`<tr><td>${l}</td><td><input type='number' step='0.01' data-b='${k}' value='${B[k]}'> ${u}</td></tr>`).join('')+`<tr><td>Base máxima (todos los grupos)</td><td><input type='number' step='0.01' data-b='tope' value='${B.tope}'> €/mes<br><span class='fx'>en grupos 8 a 11 se divide entre 30: ${fmt(B.tope/30).replace(' €','')} €/día</span></td></tr>`;
   $('basesTbl').querySelectorAll('input').forEach(i=>i.oninput=()=>{B[i.dataset.b]=parseFloat(i.value)||0;setMin();recalc()});
 }
 function toggleDaily(){const d=+$('grupo').value>=8;$('bloqueMensual').style.display=d?'none':'';$('bloqueDiario').style.display=d?'':'none'}
 function cambiaGrupo(){setMin();toggleDaily();buildTipos();recalc()}
-function pers(){
+function syncJ(){const f=n('hSemFC')||40,h=Math.min(n('hSem')||f,f);$('jornada').value=Math.round(h/f*1e6)/1e4}
+function diasMes(m){const y=parseInt(($('periodo').value||'2026-12').split('-')[0]);return new Date(y,m,0).getDate()}
+function pers(m,aus){
+  syncJ();
+  m=m||parseInt(($('periodo').value||'2026-12').split('-')[1])||12;const dias=diasMes(m);if(aus===undefined)aus=n('diasSin');
   const g=+$('grupo').value,daily=g>=8,j=n('jornada')/100,N=parseInt($('numPagas').value)||0,c=$('conc').value;
   let sb,pl,an,bp,anual,dia=0,dp=0;
-  if(daily){dp=n('diasPag');const a=n('sbD')*j,b=n('plD')*j,d=n('anD')*j;dia=a+b+d;sb=a*dp;pl=b*dp;an=d*dp;bp=N?(c==='1'?a:c==='2'?a+b:dia)*30:0;anual=dia*365+bp*N}
+  if(daily){dp=Math.max(0,dias-aus);const a=n('sbD')*j,b=n('plD')*j,d=n('anD')*j;dia=a+b+d;sb=a*dp;pl=b*dp;an=d*dp;bp=N?(c==='1'?a:c==='2'?a+b:dia)*30:0;anual=dia*365+bp*N}
   else{sb=n('salBase')*j;pl=n('plus')*j;an=n('antig')*j;bp=N?(c==='1'?sb:c==='2'?sb+pl:sb+pl+an):0;anual=(sb+pl+an)*12+bp*N}
-  return {g,daily,j,N,sb,pl,an,bp,mens:sb+pl+an,anual,dia,dp};
+  const parcial=j<1,hFC=n('hFC'),hOrd=r2(hFC*j),hComp=parcial?n('hComp'):0;
+  return {g,daily,j,N,sb,pl,an,bp,mens:sb+pl+an,anual,dia,dp,dias,parcial,hFC,hOrd,hComp,hrs:hOrd+hComp};
 }
 function limita(v,P){
-  const dias=Math.max(1,n('diasAlta')),mn=R.min*P.j,mx=P.daily?R.tope/30:R.tope,u=P.daily?v/dias:v;
+  const dias=P.dias;
+  if(P.parcial){ // tiempo parcial: base mensual; mínimo = horas realmente trabajadas × base mínima por hora; máximo sin reducir
+    const mn=r2(P.hrs*R.minH),mx=R.tope,e=v<mn?'min':v>mx?'max':'ok',uf=Math.min(Math.max(v,mn),mx);
+    return {e,u:v,uf,mn,mx,dias,base:r2(uf)};
+  }
+  const mn=R.min*P.j,mx=P.daily?R.tope/30:R.tope,u=P.daily?v/dias:v;
   const e=u<mn?'min':u>mx?'max':'ok',uf=Math.min(Math.max(u,mn),mx);
   return {e,u,uf,mn,mx,dias,base:r2(P.daily?uf*dias:uf)};
 }
 function marca(l){return l.e==='min'?` ⚠️ <span class='fx'>elevada a la base mínima</span>`:l.e==='max'?` ⚠️ <span class='fx'>limitada a la base máxima</span>`:''}
 function limitesHTML(x){
-  const P=x.P,a=x.lc,b=x.lp,u=P.daily?'€/día':'€/mes',f=v=>fmt(v).replace(' €',' '+u);
+  const P=x.P,a=x.lc,b=x.lp,u=(P.daily&&!P.parcial)?'€/día':'€/mes',f=v=>fmt(v).replace(' €',' '+u);
   const st=(l,t)=>l.e==='ok'?`✅ ${t}: ${f(l.u)} → dentro de los límites.`:l.e==='min'?`⬆️ ${t}: ${f(l.u)} está por debajo del mínimo → se cotiza por ${f(l.mn)}.`:`✂️ ${t}: ${f(l.u)} supera el máximo → se cotiza solo por ${f(l.mx)}.`;
   const hay=a.e!=='ok'||b.e!=='ok',mn=a.e==='min'||b.e==='min',mx=a.e==='max'||b.e==='max';
   const up=Math.max(0,a.base-x.crudoCC),ex=Math.max(0,x.crudoCC-a.base,x.crudoCC+x.hx-b.base);
-  const t1=mn?`<p><b>Qué ocurre por debajo del mínimo:</b> empresa y trabajador cotizan como mínimo por la base mínima del grupo, aunque se cobre menos. Aquí la base sube ${fmt(up)} sobre la remuneración real, así que las cuotas pesan más sobre el sueldo y el coste de la empresa aumenta.${P.j<1?' En jornada parcial el mínimo se aplica en proporción a la jornada (simplificación: la norma usa una base mínima por hora).':''}</p>`:'';
-  const t2=mx?`<p><b>Qué ocurre por encima del máximo:</b> solo se cotiza hasta el tope. El exceso (${fmt(ex)}) no cotiza ni computa para pensión o prestaciones, pero sí tributa en IRPF. Desde 2025 existe además una cotización adicional de solidaridad sobre ese exceso, que esta app no calcula.</p>`:'';
+  const t1=mn?`<p><b>Qué ocurre por debajo del mínimo:</b> empresa y trabajador cotizan como mínimo por la base mínima del grupo, aunque se cobre menos. Aquí la base sube ${fmt(up)} sobre la remuneración real, así que las cuotas pesan más sobre el sueldo y el coste de la empresa aumenta.${P.parcial?` En tiempo parcial el mínimo no es un importe mensual fijo: se obtiene multiplicando las horas realmente trabajadas (${fh(P.hrs)} h) por la base mínima por hora del grupo (${fmt(R.minH)}/h).`:''}</p>`:'';
+  const t2=mx?`<p><b>Qué ocurre por encima del máximo:</b> solo se cotiza hasta el tope. El exceso (${fmt(ex)}) no cotiza ni computa para pensión o prestaciones, pero sí tributa en IRPF. ${P.parcial?' En tiempo parcial la base máxima no se reduce por trabajar menos horas: es la misma que a jornada completa.':''} Desde 2025 existe además una cotización adicional de solidaridad sobre ese exceso, que esta app no calcula.</p>`:'';
+  const tp=P.parcial?`<details><summary>📘 Tiempo parcial: cómo se calcula la base (Orden PJC/297/2026)</summary><ol><li><b>BCCC del mes</b> = retribución de las horas ordinarias y complementarias + prorrata de los conceptos de devengo superior al mensual (pagas extra, etc.). Cambia de un mes a otro según las horas trabajadas y lo devengado.</li><li><b>Base mínima mensual</b> = horas realmente trabajadas × base mínima por hora del grupo = ${fh(P.hrs)} h × ${fmt(R.minH)} = <b>${fmt(a.mn)}</b>.</li><li>Si la BCCC es inferior a ese mínimo se cotiza por el mínimo; si supera la base máxima general (${fmt(R.tope)}), se cotiza por la máxima.</li><li><b>Horas complementarias:</b> se computan como ordinarias (retribución y horas del mínimo). <b>Horas extraordinarias</b> (solo por fuerza mayor, con carácter general): no entran en la BCCC, sí en la base de contingencias profesionales, y llevan cotización adicional.</li><li><b>Efectos para la pensión:</b> desde el 1-10-2023 cada día trabajado a tiempo parcial cuenta como día completo para acreditar los periodos de cotización, pero la cuantía puede ser menor porque las bases suelen serlo.</li></ol></details>`:'';
   return `<div class='box ${hay?'he':'okb'}'><h4 style='margin-top:0'>🚦 Verificación de límites de cotización</h4>
-<div class='fx'>Grupo ${P.g} (${P.daily?'base diaria':'base mensual'}) · mínimo ${f(a.mn)}${P.j<1?` (al ${Math.round(P.j*100)} % de jornada)`:''} · máximo ${f(a.mx)}</div>
-${P.daily?`<div class='fx'>Base diaria = remuneración del mes ${fmt(x.crudoCC)} ÷ ${a.dias} días de alta = ${f(a.u)}</div>`:''}
-<p>${st(a,'Contingencias comunes')}<br>${st(b,'Contingencias profesionales (incluye horas extra)')}</p>${t1}${t2}
-<details><summary>¿Cuándo puede ocurrir?</summary><ul><li><b>Por debajo del mínimo:</b> salarios cercanos al SMI (el mínimo de los grupos 4 a 11 equivale al SMI incrementado en un sexto), jornada parcial, grupos 1 a 3 con sueldos inferiores al mínimo de su categoría y, en los grupos 8 a 11, ausencias sin sueldo con el trabajador de alta (menos días retribuidos que días de alta).</li><li><b>Por encima del máximo:</b> salarios altos, sobre todo en el grupo 1. Las horas extra no suman a la base de contingencias comunes pero sí a la profesional, y pueden llevarla al tope aunque la común no llegue.</li><li><b>Ojo con las pagas:</b> cobrar una paga extra en su mes no dispara la base de ese mes, porque su prorrata ya está incluida en todas las bases.</li></ul></details></div>`;
+<div class='fx'>Grupo ${P.g} (${P.parcial?'tiempo parcial · base mensual con mínimo por horas':P.daily?'base diaria':'base mensual'}) · mínimo ${P.parcial?`${fh(P.hrs)} h × ${fmt(R.minH)}/h = ${f(a.mn)}`:f(a.mn)} · máximo ${f(a.mx)}</div>
+${(P.daily&&!P.parcial)?`<div class='fx'>Base diaria = remuneración del mes ${fmt(x.crudoCC)} ÷ ${a.dias} días de alta = ${f(a.u)}</div>`:''}
+<p>${st(a,'Contingencias comunes')}<br>${st(b,'Contingencias profesionales (incluye horas extra)')}</p>${t1}${t2}${tp}
+<details><summary>¿Cuándo puede ocurrir?</summary><ul><li><b>Por debajo del mínimo:</b> salarios cercanos al SMI (el mínimo de los grupos 4 a 11 equivale al SMI incrementado en un sexto), tiempo parcial con retribución baja para las horas trabajadas (el mínimo se calcula por horas), grupos 1 a 3 con sueldos inferiores al mínimo de su categoría y, en los grupos 8 a 11, ausencias sin sueldo con el trabajador de alta (menos días retribuidos que días de alta).</li><li><b>Por encima del máximo:</b> salarios altos, sobre todo en el grupo 1. Las horas extra no suman a la base de contingencias comunes pero sí a la profesional, y pueden llevarla al tope aunque la común no llegue.</li><li><b>Ojo con las pagas:</b> cobrar una paga extra en su mes no dispara la base de ese mes, porque su prorrata ya está incluida en todas las bases.</li></ul></details></div>`;
 }
 function reciboHTML(x,m){
   const y=+(($('periodo').value||'2026-12').split('-')[0]),dm=new Date(y,m,0).getDate(),P=x.P,mes=M[m-1].toLowerCase();
@@ -353,24 +375,24 @@ function reciboHTML(x,m){
   const rows=sec('I. DEVENGOS')+sub('1. Percepciones salariales')+
    r('Salario base'+(P.daily?` (${fmt(n('sbD')*P.j)}/día × ${P.dp} días)`:''),null,null,x.sb)+
    r('Complementos salariales: plus convenio',null,null,x.pl)+r('Complementos salariales: antigüedad',null,null,x.an)+r('Complementos salariales: dietas sin justificar',null,null,n('dietaExc'))+r('Complementos salariales: gastos de locomoción sin justificar',null,null,x.X.locSal)+x.X.S.map(p=>r('Complemento salarial: '+(e(p.n)||'otro plus'),null,null,+p.v||0)).join('')+
-   r(`Horas extraordinarias (${n('hHoras')} h)`,null,null,x.hx)+
+   (P.parcial?r(`Horas complementarias (${fh(P.hComp)} h)`,null,null,x.hc):'')+r(`Horas extraordinarias (${n('hHoras')} h)`,null,null,x.hx)+
    r(x.pagaMes?'Gratificaciones extraordinarias (paga del mes)':'Gratificaciones extraordinarias (prorrata en nómina)',null,null,x.pagaMes+x.prorNom)+
    r('Salario en especie'+(x.espDev?(x.X.rep?' (ingreso a cuenta repercutido)':' (incluye ingreso a cuenta no repercutido)'):''),null,null,x.espDev)+
-   sub('2. Percepciones no salariales')+r('Indemnizaciones o suplidos: dietas justificadas',null,null,n('dieta'))+r('Indemnizaciones o suplidos: gastos de locomoción justificados',null,null,x.X.locEx)+r('Prestaciones e indemnizaciones de la Seguridad Social',null,null,0)+r('Indemnizaciones por traslados, suspensiones o despidos',null,null,0)+(x.X.N.length?x.X.N.map(p=>r('Otras percepciones no salariales: '+(e(p.n)||'otro plus'),null,null,+p.v||0)).join(''):r('Otras percepciones no salariales',null,null,0))+
+   sub('2. Percepciones no salariales')+r('Indemnizaciones o suplidos: dietas justificadas',null,null,n('dieta'))+r('Indemnizaciones o suplidos: gastos de locomoción justificados',null,null,x.X.locEx)+r('Prestaciones e indemnizaciones de la Seguridad Social',null,null,0)+r('Indemnizaciones por traslados, suspensiones o despidos',null,null,0)+(x.X.N.length?x.X.N.map(p=>r('Otras percepciones no salariales: '+(e(p.n)||'otro plus'),null,null,+p.v||0)).join(''):(x.X.E.length?'':r('Otras percepciones no salariales',null,null,0)))+x.X.E.map(p=>r('Percepción extrasalarial que cotiza y tributa: '+(e(p.n)||'otro concepto'),null,null,+p.v||0)).join('')+
    r('A. TOTAL DEVENGADO',null,null,x.devengos,'tot')+
    sec('II. DEDUCCIONES')+sub('1. Aportación del trabajador a la Seguridad Social y conceptos de recaudación conjunta')+x.ded.map(ln).join('')+
    sub('2. Impuesto sobre la renta de las personas físicas')+r('Retención IRPF',x.baseIRPF,n('irpfT'),x.irpf)+
    r('3. Anticipos',null,null,n('ant'))+r('4. Valor de los productos recibidos en especie'+(!x.X.rep&&x.espDev?' (incluye ingreso a cuenta)':''),null,null,x.espDev)+(x.X.rep&&x.IC?r('Ingreso a cuenta repercutido (retribución en especie)',x.X.espV,n('irpfT'),x.IC):'')+r('5. Otras deducciones',null,null,n('otras'))+
    r('B. TOTAL A DEDUCIR',null,null,x.totalDed,'tot')+r('LÍQUIDO TOTAL A PERCIBIR (A – B)',null,null,x.liquido,'liq')+
    sec('DETERMINACIÓN DE LAS BASES DE COTIZACIÓN, DE LA BASE SUJETA A RETENCIÓN DEL IRPF Y APORTACIÓN DE LA EMPRESA')+
-   sub('1. Base de cotización por contingencias comunes')+r('Remuneración mensual',null,null,x.sb+x.pl+x.an+x.de)+r('Prorrata de pagas extraordinarias',null,null,x.prorrata)+r('Total sin límites',null,null,x.crudoCC)+r('Base aplicada tras mínimos y máximos',null,null,x.baseCC,'tot')+x.pat.slice(0,2).map(ln).join('')+
+   sub('1. Base de cotización por contingencias comunes')+r('Remuneración mensual'+(P.parcial?' (incl. horas complementarias)':''),null,null,x.sb+x.pl+x.an+x.de+x.dx+x.hc)+r('Prorrata de pagas extraordinarias',null,null,x.prorrata)+r('Total sin límites',null,null,x.crudoCC)+(P.parcial?r(`Base mínima por horas (${fh(P.hrs)} h × ${fmt(R.minH)})`,null,null,x.lc.mn):'')+r('Base aplicada tras mínimos y máximos',null,null,x.baseCC,'tot')+x.pat.slice(0,2).map(ln).join('')+
    sub('2. Base de cotización por contingencias profesionales y conceptos de recaudación conjunta')+r('Base de cotización (AT/EP, desempleo, FP, FOGASA)',null,null,x.baseCP,'tot')+[5,2,3,4,6].map(i=>ln(x.pat[i])).join('')+
    r('TOTAL APORTACIÓN DE LA EMPRESA',null,null,x.patTotal,'tot')+(x.ahorro>0?r('Bonificaciones',null,null,-x.ahorro)+r('Aportación de la empresa tras bonificar',null,null,x.patTotal-x.ahorro,'tot'):'')+
    sub('3. Base sujeta a retención del IRPF')+r('Base IRPF',null,null,x.baseIRPF,'tot');
   return `<div class='hd'><h3>RECIBO INDIVIDUAL DE SALARIOS</h3><div>${M[m-1]} ${y}</div></div>
 <div class='two'><div class='cardr'><h4>EMPRESA</h4><div><b>Nombre:</b> ${v('empresa')}</div><div><b>Domicilio:</b> ${v('dom')}</div><div><b>CIF:</b> ${v('cif')}</div><div><b>C.C.C.:</b> ${v('ccc')}</div></div>
 <div class='cardr'><h4>TRABAJADOR/A</h4><div><b>Nombre:</b> ${v('trabajador')}</div><div><b>NIF:</b> ${v('nif')} · <b>N.º afiliación SS:</b> ${v('afil')}</div><div><b>Categoría:</b> ${v('cat')} · <b>Puesto:</b> ${v('puesto')}</div><div><b>Grupo de cotización:</b> ${P.g} · <b>Antigüedad:</b> ${fa($('fant').value)}</div></div></div>
-<div style='margin:6px 0 8px;font-size:11px'><b>Periodo de liquidación:</b> del 1 al ${dm} de ${mes} de ${y} · <b>Total días:</b> ${dm}</div>
+<div style='margin:6px 0 8px;font-size:11px'><b>Periodo de liquidación:</b> del 1 al ${dm} de ${mes} de ${y} · <b>Total días:</b> ${P.daily?dm:30}${P.parcial?` · <b>Jornada:</b> ${Math.round(P.j*100)} % (tiempo parcial)`:''}</div>
 <table>${rows}</table>
 <div class='sign'><div>Firma y sello de la empresa<br><br>${dm} de ${mes} de ${y}</div><div>Recibí<br>(firma del trabajador/a)</div></div>
 <p style='font-size:9.5px;color:#667;margin:10px 0 0'>Documento con fines didácticos. Sigue la estructura del modelo oficial de recibo individual de salarios; los importes son orientativos.</p>`;
@@ -392,12 +414,12 @@ async function descargarPDF(){
 let PL=[];
 function extras(){
   const km=n('kmLoc'),tar=n('tarKm'),lim=n('limKm'),kmEx=r2(km*Math.min(tar,lim)),kmExc=r2(km*Math.max(0,tar-lim)),lj=n('locJust'),ls=n('locSin');
-  const S=PL.filter(p=>p.t==='s'),N=PL.filter(p=>p.t!=='s'),sum=a=>a.reduce((s,p)=>s+(+p.v||0),0);
-  return {kmEx,kmExc,locEx:kmEx+lj,locSal:kmExc+ls,S,N,otS:sum(S),otN:sum(N),espV:n('espV'),rep:$('espRep').value==='rep'};
+  const S=PL.filter(p=>p.t==='s'),E=PL.filter(p=>p.t==='e'),N=PL.filter(p=>p.t!=='s'&&p.t!=='e'),sum=a=>a.reduce((s,p)=>s+(+p.v||0),0);
+  return {kmEx,kmExc,locEx:kmEx+lj,locSal:kmExc+ls,S,E,N,otS:sum(S),otE:sum(E),otN:sum(N),espV:n('espV'),rep:$('espRep').value==='rep'};
 }
 function pintaPluses(){
   const a=s=>String(s||'').replace(/[&<>']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;'}[c]));
-  $('listaPluses').innerHTML=PL.map((p,i)=>`<div class='campo'><input type='text' placeholder='Nombre del plus' value='${a(p.n)}' oninput='PL[${i}].n=this.value;recalc()' style='width:190px'> <input type='number' min='0' step='10' value='${p.v}' oninput='PL[${i}].v=parseFloat(this.value)||0;recalc()'> € <select onchange='PL[${i}].t=this.value;recalc()'><option value='s' ${p.t==='s'?'selected':''}>Salarial (cotiza y tributa)</option><option value='n' ${p.t==='n'?'selected':''}>No salarial (exento)</option></select> <button class='sec' style='margin:0;padding:.25rem .6rem' onclick='PL.splice(${i},1);pintaPluses();recalc()'>✕</button></div>`).join('')||`<p class='fx'>Sin otros pluses. Añade los que necesites.</p>`;
+  $('listaPluses').innerHTML=PL.map((p,i)=>`<div class='campo'><input type='text' placeholder='Nombre (p. ej. quebranto de moneda)' value='${a(p.n)}' oninput='PL[${i}].n=this.value;recalc()' style='width:190px'> <input type='number' min='0' step='10' value='${p.v}' oninput='PL[${i}].v=parseFloat(this.value)||0;recalc()'> € <select onchange='PL[${i}].t=this.value;recalc()'><option value='s' ${p.t==='s'?'selected':''}>Salarial (cotiza y tributa)</option><option value='e' ${p.t==='e'?'selected':''}>Extrasalarial (cotiza y tributa)</option><option value='n' ${p.t==='n'?'selected':''}>No salarial (exento)</option></select> <button class='sec' style='margin:0;padding:.25rem .6rem' onclick='PL.splice(${i},1);pintaPluses();recalc()'>✕</button></div>`).join('')||`<p class='fx'>Sin otros pluses. Añade los que necesites.</p>`;
 }
 function addPlus(){PL.push({n:'',v:50,t:'s'});pintaPluses();recalc()}
 /* ---------- valor de la hora ordinaria ---------- */
@@ -408,14 +430,14 @@ function valorHora(){
 }
 /* ---------- motor de cálculo (un mes) ---------- */
 function calc(m,sinAnt){
-  const P=pers(),{j,sb,pl,an}=P,X=extras(),hx=r2(n('hHoras')*valorHora().v*n('hRec')),di=n('dieta')+X.locEx+X.otN,de=n('dietaExc')+X.locSal+X.otS;
+  const P=pers(m,sinAnt?0:undefined),{j,sb,pl,an}=P,X=extras(),hc=P.parcial?r2(P.hComp*valorHora().v):0,hx=r2(n('hHoras')*valorHora().v*n('hRec')),di=n('dieta')+X.locEx+X.otN,de=n('dietaExc')+X.locSal+X.otS,dx=X.otE;
   const N=P.N,pro=$('prorr').value==='si';
   const bp=P.bp;
   const prorrata=bp*N/12,pagaMes=(!pro&&getMeses().includes(m))?bp:0,prorNom=pro?prorrata:0;
-  const IC=r2(X.espV*n('irpfT')/100),espDev=X.espV+(X.rep?0:IC),devengos=sb+pl+an+hx+di+de+prorNom+pagaMes+espDev, salarial=devengos-di;
-  const crudoCC=sb+pl+an+de+prorrata+espDev;            // la prorrata SIEMPRE integra la base
+  const IC=r2(X.espV*n('irpfT')/100),espDev=X.espV+(X.rep?0:IC),devengos=sb+pl+an+hc+hx+di+dx+de+prorNom+pagaMes+espDev, salarial=devengos-di-dx;
+  const crudoCC=sb+pl+an+hc+de+dx+prorrata+espDev;            // la prorrata SIEMPRE integra la base
   const lc=limita(crudoCC,P),lp=limita(crudoCC+hx,P),baseCC=lc.base,baseCP=lp.base,baseHE=hx;
-  const baseIRPF=sb+pl+an+hx+de+prorNom+pagaMes;
+  const baseIRPF=sb+pl+an+hc+hx+de+dx+prorNom+pagaMes;
   const fm=$('hexTipo').value==='fm', hT=fm?R.fmT:R.hexT, hE=fm?R.fmE:R.hexE;
   const L=(g,l,b,t)=>({g,l,b,t,i:r2(b*t/100)});
   const ded=[L('cc','Contingencias comunes',baseCC,R.ccT),L('cc','MEI',baseCC,R.meiT),L('cp','Desempleo',baseCP,R.paroT),L('cp','Formación profesional',baseCP,R.fpT),L('he','Horas extra'+(fm?' (fuerza mayor)':''),baseHE,hT)];
@@ -424,12 +446,14 @@ function calc(m,sinAnt){
   const totalDed=sum(ded)+irpf+(sinAnt?0:n('ant'))+n('otras')+espDev+(X.rep?IC:0),patTotal=sum(pat);
   const bBase=$('bonifBase').value==='cc'?pat.filter(x=>x.g==='cc').reduce((s,x)=>s+x.i,0):patTotal;
   const ahorro=r2(bBase*n('bonif')/100);
-  return {sb,pl,an,hx,di,de,pagaMes,prorrata,prorNom,devengos,salarial,crudoCC,baseCC,baseCP,baseHE,baseIRPF,ded,pat,irpf,totalDed,patTotal,liquido:devengos-totalDed,ahorro,coste:devengos+patTotal-ahorro,costeBruto:devengos+patTotal,lc,lp,P,X,IC,espDev};
+  return {sb,pl,an,hc,hx,di,dx,de,pagaMes,prorrata,prorNom,devengos,salarial,crudoCC,baseCC,baseCP,baseHE,baseIRPF,ded,pat,irpf,totalDed,patTotal,liquido:devengos-totalDed,ahorro,coste:devengos+patTotal-ahorro,costeBruto:devengos+patTotal,lc,lp,P,X,IC,espDev};
 }
 
 /* ---------- pintar ---------- */
 const lineHTML=(x,pat)=>`<div class="row"><span>${x.l} (${pc(x.t)})<br><span class="fx">${pc(x.t)} × ${fmt(x.b)}</span></span><b>${fmt(x.i)}</b></div>`;
 function recalc(){
+  syncJ();
+  {const tp=n('jornada')<100;$('bloqueParcial').style.display=tp?'':'none';$('bloqueComp').style.display=tp?'':'none'}
   const per=$('periodo').value||'2025-12',m=parseInt(per.split('-')[1]),N=parseInt($('numPagas').value)||0;
   const esPaga=getMeses().includes(m)&&N>0&&$('prorr').value==='no';
   $('indMes').innerHTML=esPaga?`<span class="tag">📅 ${M[m-1]} · mes de paga extra</span>`:`<b>${M[m-1]}</b>`;
@@ -441,16 +465,29 @@ function recalc(){
   $('recibo').innerHTML=reciboHTML(x,m);
   {const X=x.X;$('infoLoc').innerHTML=`<span class='fx'>Kilometraje: ${n('kmLoc')} km × ${fmt(Math.min(n('tarKm'),n('limKm')))} = ${fmt(X.kmEx)} exento${X.kmExc?` · exceso sobre el límite: ${fmt(X.kmExc)}`:''}</span><br><b>Exento: ${fmt(X.locEx)}</b> (extrasalarial) · <b>Sujeto: ${fmt(X.locSal)}</b> (se suma a la base de cotización y al IRPF)`;
   $('infoEsp').innerHTML=X.espV?`<b>Ingreso a cuenta:</b> ${fmt(X.espV)} × ${pc(n('irpfT'))} = ${fmt(x.IC)}<br><span class='fx'>${X.rep?`Se repercute: se descuenta al trabajador en nómina, así que su líquido baja ${fmt(x.IC)}.`:`No se repercute: lo asume la empresa. Se suma a la retribución (aquí también a la base de cotización) y eleva el coste en ${fmt(x.IC)}; el líquido no cambia.`} Simplificación didáctica: el valor se toma tal cual lo indicas.</span>`:`<span class='fx'>Sin retribución en especie. Indica un valor para ver el ingreso a cuenta (valor × tipo de retención).</span>`;}
-  $('infoDiario').innerHTML=x.P.daily?`<strong>Salario del mes:</strong> ${fmt(x.P.dia)}/día × ${x.P.dp} días = ${fmt(x.sb+x.pl+x.an)}<br><span class='fx'>Paga extra = 30 días de salario (${fmt(x.P.bp)}). Se supone que el salario diario ya incluye domingos y festivos.</span>`:'';
+  $('infoDiario').innerHTML=x.P.daily?`<strong>${M[m-1]} tiene ${x.P.dias} días</strong> (todos de alta; se retribuyen ${x.P.dp}).<br><strong>Salario del mes:</strong> ${fmt(x.P.dia)}/día × ${x.P.dp} días = ${fmt(x.sb+x.pl+x.an)}<br><span class='fx'>Paga extra = 30 días de salario (${fmt(x.P.bp)}). Se supone que el salario diario ya incluye domingos y festivos.</span>`:'';
   const vh=valorHora(),man=$('hModo').value==='man';
-  $('infoHora').innerHTML=`<strong>Hora ordinaria: ${fmt(vh.v)}</strong>${man?' (introducida a mano)':''}<br><span class="fx">Se obtiene dividiendo lo que cobra el trabajador en un año por las horas que trabaja ordinariamente en ese año:<br>Salario anual = ${vh.daily?`(${fmt(vh.dia)} al día × 365 días; paga extra = 30 días)`:`(${fmt(vh.mens)} al mes × 12)`} + (${vh.N} pagas × ${fmt(vh.bp)}) = <b>${fmt(vh.anual)}</b><br>Horas anuales = ${vh.h.toLocaleString('es-ES')} h (convenio × jornada)<br>Hora ordinaria = ${fmt(vh.anual)} ÷ ${vh.h.toLocaleString('es-ES')} h = <b>${fmt(vh.auto)}/h</b>${man?' · calculado, aunque uses el valor manual':''}</span>`;
+  $('infoHora').innerHTML=`<strong>Hora ordinaria: ${fmt(vh.v)}</strong>${man?' (introducida a mano)':''}<br><span class="fx">Se obtiene dividiendo lo que cobra el trabajador en un año entre las horas que trabaja ordinariamente en ese año:<br>
+① Retribución ordinaria del año = ${vh.daily?`${fmt(vh.dia)} al día × 365 días = <b>${fmt(vh.dia*365)}</b>`:`${fmt(vh.mens)} al mes × 12 meses = <b>${fmt(vh.mens*12)}</b>`}<br>
+② Pagas extra = ${vh.N?`${vh.N} × ${fmt(vh.bp)}${vh.daily?` (cada paga = 30 días × ${fmt(vh.bp/30)})`:''} = <b>${fmt(vh.N*vh.bp)}</b>`:'no hay'}<br>
+③ Salario anual = ① + ② = ${fmt(vh.daily?vh.dia*365:vh.mens*12)} + ${fmt(vh.N*vh.bp)} = <b>${fmt(vh.anual)}</b><br>
+④ Horas anuales = ${vh.h.toLocaleString('es-ES')} h (convenio × jornada)<br>
+⑤ Hora ordinaria = ③ ÷ ④ = ${fmt(vh.anual)} ÷ ${vh.h.toLocaleString('es-ES')} h = <b>${fmt(vh.auto)}/h</b>${man?' · calculado, aunque uses el valor manual':''}</span>`;
   $('infoHex').innerHTML=`<strong>Importe de las horas extra: ${fmt(x.hx)}</strong><br><span class="fx">${n('hHoras')} h × ${fmt(vh.v)} (hora ordinaria) × ${n('hRec')} (recargo) = ${fmt(x.hx)}. Referencia legal: la hora extra no puede pagarse por debajo de la ordinaria y el límite es de 80 h/año, salvo convenio o compensación con descanso.</span>`;
-  $('totDev').textContent=fmt(x.devengos);$('totSal').textContent=fmt(x.salarial);$('totExtra').textContent=fmt(x.di);
+  {const Q=x.P;
+  $('infoParcial').innerHTML=Q.parcial?`<span class="fx">Horas ordinarias del mes = ${fh(Q.hFC)} h × ${Math.round(Q.j*100)} % = <b>${fh(Q.hOrd)} h</b>${Q.hComp?` + ${fh(Q.hComp)} h complementarias = <b>${fh(Q.hrs)} h</b>`:''}.<br>Base mínima del mes = ${fh(Q.hrs)} h × ${fmt(R.minH)}/h (grupo ${Q.g}, ${lastYear}) = <b>${fmt(x.lc.mn)}</b>. No es un porcentaje del mínimo de jornada completa: depende de las horas realmente trabajadas.</span>`:'';
+  $('infoComp').innerHTML=Q.parcial?`<b>Retribución de las horas complementarias: ${fmt(x.hc)}</b><br><span class="fx">${fh(Q.hComp)} h × ${fmt(valorHora().v)} (hora ordinaria, sin recargo). Se computan como ordinarias: suman a la base de contingencias comunes y a las horas que fijan la base mínima.${Q.hComp>0.3*Q.hOrd?`<br>⚠️ Superan el 30 % de las horas ordinarias contratadas (${fh(0.3*Q.hOrd)} h), límite general de las horas complementarias pactadas (art. 12 ET; el convenio puede ampliarlo hasta el 60 %).`:''}</span>`:'';
+  if(Q.parcial&&$('hexTipo').value==='n')$('infoHex').innerHTML+=`<br><b class="bad">⚠️ En tiempo parcial las horas extraordinarias solo pueden hacerse, con carácter general, por fuerza mayor.</b> <span class="fx">Para trabajo adicional ordinario usa horas complementarias (cotizan en la base de contingencias comunes); elige «Fuerza mayor» o pon 0 h.</span>`;}
+  $('totDev').textContent=fmt(x.devengos);$('totSal').textContent=fmt(x.salarial);$('totExtra').textContent=fmt(x.di+x.dx);
+  {const dg=(it,tot,lbl)=>`<div class="fx" style="margin-top:.35rem">`+it.filter(a=>Math.abs(a[1])>=.005).map(a=>`<div class="row"><span>${a[0]}</span><span>${fmt(a[1])}</span></div>`).join('')+`<div class="row"><span><b>${lbl}</b></span><b>${fmt(tot)}</b></div></div>`;
+  const lim=l=>l.e==='ok'?'':`<div class="fx"><div class="row"><span>${l.e==='min'?'⬆️ Se eleva al mínimo':'✂️ Se limita al máximo'} (paso de abajo, «Verificación de límites»)</span><b>${fmt(l.base)}</b></div></div>`;
+  const cc=[['Salario base',x.sb],['Plus convenio',x.pl],['Antigüedad',x.an],['Horas complementarias',x.hc],['Otros conceptos salariales (pluses, dietas y gastos sin justificar)',x.de],['Extrasalariales que cotizan (quebranto de moneda, prendas…)',x.dx],['Retribución en especie',x.espDev],['Prorrata de pagas extra (siempre, se cobren como se cobren)',x.prorrata]];
+  const vh2=valorHora();
   $('basesBox').innerHTML=
-   `<div class="box cc"><b>Base de contingencias comunes: ${fmt(x.baseCC)}</b>${marca(x.lc)}<br><span class="fx">Salario base + plus + antigüedad + dietas sin justificar + prorrata de pagas (siempre). Se usa para CC y MEI.</span></div>
-    <div class="box cp"><b>Base de contingencias profesionales: ${fmt(x.baseCP)}</b>${marca(x.lp)}<br><span class="fx">Base CC + horas extra. Se usa para desempleo, FP, FOGASA y AT/EP.</span></div>
-    <div class="box he"><b>Base de horas extra: ${fmt(x.baseHE)}</b><br><span class="fx">Solo el importe de las horas extra.</span></div>
-    <div class="box ir"><b>Base IRPF: ${fmt(x.baseIRPF)}</b><br><span class="fx">Todo lo salarial que se cobra este mes (incluida la paga completa si toca). No lleva dietas justificadas ni prorrata si la paga no se prorratea.</span></div>`;
+   `<div class="box cc"><b>Base de contingencias comunes: ${fmt(x.baseCC)}</b>${marca(x.lc)}<br><span class="fx">Se usa para CC y MEI.</span>${dg(cc,x.crudoCC,'Suma de conceptos')}${lim(x.lc)}</div>
+    <div class="box cp"><b>Base de contingencias profesionales: ${fmt(x.baseCP)}</b>${marca(x.lp)}<br><span class="fx">Se usa para desempleo, FP, FOGASA y AT/EP.</span>${dg([['Conceptos de la base de contingencias comunes (sin límites)',x.crudoCC],['Horas extraordinarias',x.hx]],x.crudoCC+x.hx,'Suma')}${lim(x.lp)}</div>
+    <div class="box he"><b>Base de horas extra: ${fmt(x.baseHE)}</b><br><span class="fx">Solo el importe de las horas extra: ${n('hHoras')} h × ${fmt(vh2.v)} (hora ordinaria) × ${n('hRec')} (recargo) = ${fmt(x.hx)}</span></div>
+    <div class="box ir"><b>Base IRPF: ${fmt(x.baseIRPF)}</b><br><span class="fx">Todo lo salarial que se cobra este mes. No lleva las dietas y gastos justificados (exentos) ni la prorrata si la paga no se prorratea.</span>${dg([['Salario base',x.sb],['Plus convenio',x.pl],['Antigüedad',x.an],['Horas complementarias',x.hc],['Horas extraordinarias',x.hx],['Otros conceptos salariales (pluses, dietas y gastos sin justificar)',x.de],['Extrasalariales que tributan (quebranto de moneda, prendas…)',x.dx],['Paga extra cobrada este mes',x.pagaMes],['Prorrata de pagas en la nómina',x.prorNom]],x.baseIRPF,'Suma')}</div>`;}
   const grp=(g,t,cls)=>{const a=x.ded.filter(d=>d.g===g);return `<div class="box ${cls}"><h4 style="margin-top:0">${t}</h4>${a.map(d=>lineHTML(d)).join('')}</div>`};
   $('dedBox').innerHTML='<h3>Deducciones del trabajador</h3>'+grp('cc',`Sobre base de contingencias comunes (${fmt(x.baseCC)})`,'cc')+grp('cp',`Sobre base de contingencias profesionales (${fmt(x.baseCP)})`,'cp')+grp('he',`Sobre base de horas extra (${fmt(x.baseHE)})`,'he');
   $('irpfTxt').innerHTML=`IRPF (${pc(n('irpfT'))})<br><span class="fx">${pc(n('irpfT'))} × ${fmt(x.baseIRPF)}</span>`;$('irpfImp').textContent=fmt(x.irpf);
@@ -458,36 +495,40 @@ function recalc(){
   $('txtDev').textContent=fmt(x.devengos);$('txtDed').textContent=fmt(x.totalDed);$('liq').textContent=fmt(x.liquido);
   const pg=(g,t,cls)=>`<div class="box ${cls}"><h4 style="margin-top:0">${t}</h4>${x.pat.filter(d=>d.g===g).map(d=>lineHTML(d)).join('')}</div>`;
   $('patBox').innerHTML=pg('cc',`Sobre base CC (${fmt(x.baseCC)})`,'cc')+pg('cp',`Sobre base CP (${fmt(x.baseCP)})`,'cp')+pg('he',`Sobre base de horas extra (${fmt(x.baseHE)})`,'he');
-  $('patTotal').textContent=fmt(x.patTotal);$('costeBruto').textContent=fmt(x.costeBruto);
-  $('reparto').textContent=x.costeBruto?`De cada 100 € que cuesta la nómina, ${fmt(x.liquido/x.costeBruto*100).replace(' €','')} € llegan al bolsillo del trabajador; el resto va a Seguridad Social y Hacienda.`:'';
-  $('devRes').textContent=fmt(x.devengos);$('liqRes').textContent=fmt(x.liquido);$('patRes').textContent=fmt(x.patTotal);$('ahorro').textContent=fmt(x.ahorro);
+  $('patTotal').textContent=fmt(x.patTotal);
+  $('devRes').textContent=fmt(x.devengos);$('patRes').textContent=fmt(x.patTotal);$('ahorro').textContent=fmt(x.ahorro);
+  {const pct=x.coste?x.liquido/x.coste*100:0;
+  $('resBon').innerHTML=`<strong>Coste laboral real del mes</strong> = devengos ${fmt(x.devengos)} + cuota patronal ${fmt(x.patTotal)} − bonificación ${fmt(x.ahorro)} = <b class="res">${fmt(x.coste)}</b><br><span class="fx">De cada 100 € que cuesta realmente la nómina a la empresa (ya descontada la bonificación), <b>${fmt(pct).replace(' €','')} €</b> llegan al trabajador como líquido. El resto son cotizaciones a la Seguridad Social (del trabajador y de la empresa, netas de bonificación), retención de IRPF y otras deducciones${n('ant')>0?`; el anticipo (${fmt(n('ant'))}) ya lo cobró antes el trabajador`:''}.</span>`;
+  const kr=[x.coste,x.liquido].join();if(window._kr!==kr){window._kr=kr;$('resBon').style.display='none';$('retoOk').innerHTML=''}}
   if(nRecalc++===0||!window._k||window._k!==[x.salarial,x.devengos].join())opciones(x);window._k=[x.salarial,x.devengos].join();
   anual();
 }
 function opciones(x){
-  const o=[x.sb+x.hx,x.sb+x.pl,x.devengos,x.salarial].filter((v,i,a)=>a.findIndex(w=>Math.abs(w-v)<.01)===i);
+  const o=[x.sb+x.hx,x.sb+x.pl,x.devengos,x.salarial].concat(x.dx>0?[x.devengos-x.di]:[]).filter((v,i,a)=>a.findIndex(w=>Math.abs(w-v)<.01)===i);
   while(o.length<4)o.push(x.salarial+50*(o.length));
   o.sort(()=>Math.random()-.5);
-  $('opcionesReto').innerHTML=o.map((v,i)=>`<label class="opcion"><input type="radio" name="od" value="${v}"> ${fmt(v)}</label>`).join('');$('devOk').textContent='';
+  $('opcionesReto').innerHTML=o.map((v,i)=>`<label class="opcion"><input type="radio" name="od" value="${v}"> ${fmt(v)}</label>`).join('');$('devOk').textContent='';$('desg').style.display='none';$('desgMsg').style.display='';
 }
 function checkDev(){
   const m=parseInt(($('periodo').value||'2025-12').split('-')[1]),x=calc(m),s=document.querySelector('input[name=od]:checked');
   if(!s){$('devOk').innerHTML='<span class="bad">Elige una opción</span>';return}
-  $('devOk').innerHTML=Math.abs(s.value-x.salarial)<.01?`<span class="good">✅ ¡Correcto! Lo salarial es ${fmt(x.salarial)}: todo menos las dietas justificadas (extrasalariales).</span>`:`<span class="bad">❌ No. Lo salarial es ${fmt(x.salarial)}: salario base + plus + antigüedad + horas extra + pagas + dietas sin justificar. Las dietas justificadas quedan fuera.</span>`;
+  $('desg').style.display='';$('desgMsg').style.display='none';
+  $('devOk').innerHTML=Math.abs(s.value-x.salarial)<.01?`<span class="good">✅ ¡Correcto! Lo salarial es ${fmt(x.salarial)}: todo menos las percepciones extrasalariales (dietas y gastos justificados, plus no salarial, quebranto de moneda…), aunque alguna de ellas cotice o tribute.</span>`:`<span class="bad">❌ No. Lo salarial es ${fmt(x.salarial)}: salario base + plus + antigüedad + horas extra + pagas + dietas sin justificar. Las percepciones extrasalariales quedan fuera, cotice o no alguna de ellas.</span>`;
 }
 function checkReto(){
-  const x=calc(parseInt(($('periodo').value||'2025-12').split('-')[1])),l=$('retoLiq').value,c=$('reto').value,o=[];
-  if(l!=='')o.push(Math.abs(l-x.liquido)<.5?`<span class="good">✔️ Líquido correcto (${fmt(x.liquido)}).</span>`:`<span class="bad">❌ Líquido: revisa devengos – deducciones (pista: ${fmt(x.devengos)} – deducciones).</span>`);
-  if(c!=='')o.push(Math.abs(c-x.coste)<.5?`<span class="good">✔️ Coste correcto (${fmt(x.coste)}).</span>`:`<span class="bad">❌ Coste: devengos + cuota patronal – ahorro por bonificación. Inténtalo de nuevo.</span>`);
+  const x=calc(parseInt(($('periodo').value||'2025-12').split('-')[1])),c=$('reto').value,p=$('retoPct').value,o=[],pct=x.coste?x.liquido/x.coste*100:0;
+  if(c!=='')o.push(Math.abs(c-x.coste)<.5?`<span class="good">✔️ Coste real correcto (${fmt(x.coste)}).</span>`:`<span class="bad">❌ Coste: devengos + cuota patronal – ahorro por bonificación. Inténtalo de nuevo.</span>`);
+  if(p!=='')o.push(Math.abs(p-pct)<.15?`<span class="good">✔️ Correcto: ${fmt(pct).replace(' €','')} € de cada 100 €.</span>`:`<span class="bad">❌ Porcentaje: líquido (paso 4) ÷ coste real × 100. Inténtalo de nuevo.</span>`);
   $('retoOk').innerHTML=o.length?o.join('<br>'):'<span class="bad">Escribe al menos una respuesta.</span>';
+  if(o.length)$('resBon').style.display='';
 }
 function anual(){
   const y=parseInt(($('periodo').value||'2025-12').split('-')[0]);
   const mo=getMeses(),pro=$('prorr').value==='si',rows=[];let T={d:0,l:0,p:0,c:0,ded:0};
   const pm=parseInt(($('periodo').value||'2025-12').split('-')[1]);T.a=0;T.b=0;for(let m=1;m<=12;m++){const x=calc(m,m!==pm);rows.push([m,x]);T.d+=x.devengos;T.l+=x.liquido;T.p+=x.patTotal;T.c+=x.coste;T.ded+=x.totalDed;T.a+=x.ahorro;T.b+=x.costeBruto}
   const mx=Math.max(...rows.map(r=>r[1].liquido),1);
-  $('anual').innerHTML='<thead><tr><th>Mes</th><th>Devengos</th><th>Deducciones</th><th>Líquido</th><th>Base CC</th><th>Cuota patronal</th><th>Bonificación</th><th>Coste empresa</th><th></th></tr></thead><tbody>'+rows.map(([m,x])=>`<tr class="${x.pagaMes?'pe':''}"><td>${M[m-1]}</td><td>${fmt(x.devengos)}</td><td>${fmt(x.totalDed)}</td><td>${fmt(x.liquido)}</td><td>${fmt(x.baseCC)}${x.lc.e==='min'?' (↑ mín.)':x.lc.e==='max'?' (↓ tope)':''}</td><td>${fmt(x.patTotal)}</td><td>${fmt(x.ahorro)}</td><td>${fmt(x.coste)}</td><td style="width:90px"><div class="bar" style="width:${x.liquido/mx*100}%"></div></td></tr>`).join('')+`</tbody><tfoot><tr><td>Total año</td><td>${fmt(T.d)}</td><td>${fmt(T.ded)}</td><td>${fmt(T.l)}</td><td></td><td>${fmt(T.p)}</td><td>${fmt(T.a)}</td><td>${fmt(T.c)}</td><td></td></tr></tfoot>`;
-  $('anualRes').innerHTML=`<strong>Coste anual para la empresa:</strong> ${fmt(T.c)} = devengos ${fmt(T.d)} + cuota patronal ${fmt(T.p)} – bonificación ${fmt(T.a)}<br><strong>Líquido anual:</strong> ${fmt(T.l)}<br><span class="fx">Sin bonificación, cada euro de coste laboral deja ${fmt(T.b?T.l/T.b*100:0).replace(' €','')} céntimos en el bolsillo del trabajador (${y}). El anticipo se descuenta una sola vez, en el mes elegido en el paso 1.</span>${(k=>k?`<br>⚠️ En ${k} meses la base de cotización se ajusta al mínimo o al tope (ver paso 3).`:'')(rows.filter(r=>r[1].lc.e!=='ok').length)}`;
+  $('anual').innerHTML='<thead><tr><th>Mes</th>'+(rows[0][1].P.daily?'<th>Días</th>':'')+'<th>Devengos</th><th>Deducciones</th><th>Líquido</th><th>Base CC</th><th>Cuota patronal</th><th>Bonificación</th><th>Coste empresa</th><th></th></tr></thead><tbody>'+rows.map(([m,x])=>`<tr class="${x.pagaMes?'pe':''}"><td>${M[m-1]}</td>${x.P.daily?`<td>${x.P.dias}</td>`:''}<td>${fmt(x.devengos)}</td><td>${fmt(x.totalDed)}</td><td>${fmt(x.liquido)}</td><td>${fmt(x.baseCC)}${x.lc.e==='min'?' (↑ mín.)':x.lc.e==='max'?' (↓ tope)':''}</td><td>${fmt(x.patTotal)}</td><td>${fmt(x.ahorro)}</td><td>${fmt(x.coste)}</td><td style="width:90px"><div class="bar" style="width:${x.liquido/mx*100}%"></div></td></tr>`).join('')+`</tbody><tfoot><tr><td>Total año</td>${rows[0][1].P.daily?`<td>${rows.reduce((a,r)=>a+r[1].P.dias,0)}</td>`:''}<td>${fmt(T.d)}</td><td>${fmt(T.ded)}</td><td>${fmt(T.l)}</td><td></td><td>${fmt(T.p)}</td><td>${fmt(T.a)}</td><td>${fmt(T.c)}</td><td></td></tr></tfoot>`;
+  $('anualRes').innerHTML=`<strong>Coste anual para la empresa:</strong> ${fmt(T.c)} = devengos ${fmt(T.d)} + cuota patronal ${fmt(T.p)} – bonificación ${fmt(T.a)}<br><strong>Líquido anual:</strong> ${fmt(T.l)}<br><span class="fx">Tras bonificar, de cada 100 € de coste real para la empresa, ${fmt(T.c?T.l/T.c*100:0).replace(' €','')} € llegan al bolsillo del trabajador (${y}). El anticipo se descuenta una sola vez, en el mes elegido en el paso 1.</span>${(k=>k?`<br>⚠️ En ${k} meses la base de cotización se ajusta al mínimo o al tope (ver paso 3).`:'')(rows.filter(r=>r[1].lc.e!=='ok').length)}`;
 }
 
 /* ---------- navegación ---------- */
