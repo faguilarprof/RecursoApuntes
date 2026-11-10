@@ -211,10 +211,13 @@ body.exam .res:not(.rev){filter:blur(7px);cursor:pointer;user-select:none}
 <!-- 5 -->
 <div class="step" id="step5">
   <h2>5. Bonificaciones: cuando la cuota patronal «baja»</h2>
-  <div class="campo"><label>Bonificación (%)</label><input type="number" id="bonif" value="40" min="0" max="100" step="5" oninput="recalc()"> %
-    <select id="bonifTipo" onchange="$('bonif').value=this.value;recalc()"><option value="40">40 % · parado larga duración</option><option value="0">Sin bonificación</option><option value="100">100 % · supuesto de prueba</option></select></div>
-  <div class="campo"><label>Se aplica sobre</label>
+  <div class="campo"><label>Tipo de bonificación</label>
+    <select id="bonifModo" onchange="cambiaBonifModo()"><option value="pct">Porcentaje sobre la cuota patronal</option><option value="fija">Cuantía fija</option></select></div>
+  <div class="campo"><label id="bonifLbl">Bonificación (%)</label><input type="number" id="bonif" value="40" min="0" step="5" oninput="syncPreset();recalc()"> <span id="bonifUd">%</span><select id="bonifPer" style="display:none" onchange="bonifUI();recalc()"><option value="anual">€/año</option><option value="mes">€/mes</option></select>
+    <select id="bonifTipo" onchange="aplicaPreset(this.value)"><option value="">Personalizada</option><option value="pct|0">Sin bonificación</option><option value="anual|1300">Desempleado larga duración · hombre (1.300 €/año, 3 años)</option><option value="anual|1500">Desempleado larga duración · mujer (1.500 €/año, 3 años)</option><option value="pct|40">40 % · ejemplo porcentual</option><option value="pct|100">100 % · supuesto de prueba</option></select></div>
+  <div class="campo"><label id="bonifBaseLbl">Se aplica sobre</label>
     <select id="bonifBase" onchange="recalc()"><option value="tot">Cuota patronal total (simplificado)</option><option value="cc">Solo contingencias comunes</option></select></div>
+  <div class="box ot" id="infoBonif"></div>
   <ul class="box cc" style="list-style:none">
     <li>Devengos: <b id="devRes"></b></li>
     <li>Cuota patronal sin bonificar: <b id="patRes"></b></li><li>Ahorro mensual: <b id="ahorro"></b></li></ul>
@@ -278,12 +281,19 @@ const ESC={
  'Salario en especie repercutido':{espV:120,espRep:'rep'},
  'Salario en especie no repercutido':{espV:120,espRep:'norep'},
  'Sin pagas ni extras':{numPagas:0,hHoras:0,dieta:0,ant:0},
- 'Contratada con bonificación (40 %)':{bonifTipo:'40',bonif:40}
+ 'Bonificación porcentual de ejemplo (40 %)':{bonifModo:'pct',bonif:40},
+ 'Desempleado de larga duración, hombre (1.300 €/año)':{bonifModo:'fija',bonifPer:'anual',bonif:1300,bonifBase:'cc'},
+ 'Desempleada de larga duración, mujer (1.500 €/año)':{bonifModo:'fija',bonifPer:'anual',bonif:1500,bonifBase:'cc'}
 };
+const bmodoEf=()=>$('bonifModo').value==='pct'?'pct':$('bonifPer').value;
+function bonifUI(){const f=$('bonifModo').value==='fija';$('bonifLbl').textContent=f?'Cuantía de la bonificación':'Bonificación (%)';$('bonifUd').style.display=f?'none':'';$('bonifPer').style.display=f?'':'none';$('bonif').step=f?10:5;if(f)$('bonif').removeAttribute('max');else $('bonif').max=100;$('bonifBaseLbl').textContent=f?'Límite: no puede superar':'Se aplica sobre';syncPreset()}
+function syncPreset(){const k=bmodoEf()+'|'+$('bonif').value,t=$('bonifTipo');t.value=[...t.options].some(o=>o.value===k)?k:''}
+function cambiaBonifModo(){bonifUI();recalc()}
+function aplicaPreset(v){if(!v)return;const [m,x]=v.split('|');$('bonifModo').value=m==='pct'?'pct':'fija';if(m!=='pct'){$('bonifPer').value=m;$('bonifBase').value='cc'}$('bonif').value=x;bonifUI();recalc()}
 function cargarEscenario(k){
-  const base={empresa:'Confecciones Rodríguez S.L.',kmLoc:0,tarKm:0.26,limKm:0.26,locJust:0,locSin:0,espV:0,espRep:'rep',grupo:8,sbD:40,plD:8,anD:0,diasSin:0,salBase:1100,plus:200,antig:0,numPagas:2,prorr:'no',conc:'1',hHoras:10,hRec:1.5,hAnu:1800,hFC:176,hComp:0,hModo:'auto',hexTipo:'n',dieta:60,dietaExc:0,irpfT:11,ant:100,otras:0,hSem:40,hSemFC:40,contrato:'ind',bonif:40,bonifBase:'tot'};
+  const base={empresa:'Confecciones Rodríguez S.L.',kmLoc:0,tarKm:0.26,limKm:0.26,locJust:0,locSin:0,espV:0,espRep:'rep',grupo:8,sbD:40,plD:8,anD:0,diasSin:0,salBase:1100,plus:200,antig:0,numPagas:2,prorr:'no',conc:'1',hHoras:10,hRec:1.5,hAnu:1800,hFC:176,hComp:0,hModo:'auto',hexTipo:'n',dieta:60,dietaExc:0,irpfT:11,ant:100,otras:0,hSem:40,hSemFC:40,contrato:'ind',bonifModo:'pct',bonifPer:'anual',bonif:40,bonifBase:'tot'};
   Object.entries({...base,...ESC[k]}).forEach(([i,v])=>{ if($(i)) $(i).value=v; });
-  if($('bonifTipo')) $('bonifTipo').value=String($('bonif').value==40?'40':($('bonif').value==0?'0':'100'));
+  bonifUI();
   PL=(ESC[k].pl||[]).map(p=>({...p}));pintaPluses();buildMeses();setMin();toggleDaily();cambiaContrato();
 }
 function aleatorio(){
@@ -445,8 +455,8 @@ function calc(m,sinAnt){
   const irpf=r2(baseIRPF*n('irpfT')/100),sum=a=>a.reduce((s,x)=>s+x.i,0);
   const totalDed=sum(ded)+irpf+(sinAnt?0:n('ant'))+n('otras')+espDev+(X.rep?IC:0),patTotal=sum(pat);
   const bBase=$('bonifBase').value==='cc'?pat.filter(x=>x.g==='cc').reduce((s,x)=>s+x.i,0):patTotal;
-  const ahorro=r2(bBase*n('bonif')/100);
-  return {sb,pl,an,hc,hx,di,dx,de,pagaMes,prorrata,prorNom,devengos,salarial,crudoCC,baseCC,baseCP,baseHE,baseIRPF,ded,pat,irpf,totalDed,patTotal,liquido:devengos-totalDed,ahorro,coste:devengos+patTotal-ahorro,costeBruto:devengos+patTotal,lc,lp,P,X,IC,espDev};
+  const bmodo=bmodoEf(),bval=n('bonif'),teor=bmodo==='pct'?bBase*bval/100:bmodo==='anual'?bval/12:bval,ahorro=r2(Math.min(teor,bBase)),topeada=teor>bBase+.005;
+  return {sb,pl,an,hc,hx,di,dx,de,pagaMes,prorrata,prorNom,devengos,salarial,crudoCC,baseCC,baseCP,baseHE,baseIRPF,ded,pat,irpf,totalDed,patTotal,liquido:devengos-totalDed,ahorro,bBase,teor,topeada,bmodo,bval,coste:devengos+patTotal-ahorro,costeBruto:devengos+patTotal,lc,lp,P,X,IC,espDev};
 }
 
 /* ---------- pintar ---------- */
@@ -497,6 +507,7 @@ function recalc(){
   $('patBox').innerHTML=pg('cc',`Sobre base CC (${fmt(x.baseCC)})`,'cc')+pg('cp',`Sobre base CP (${fmt(x.baseCP)})`,'cp')+pg('he',`Sobre base de horas extra (${fmt(x.baseHE)})`,'he');
   $('patTotal').textContent=fmt(x.patTotal);
   $('devRes').textContent=fmt(x.devengos);$('patRes').textContent=fmt(x.patTotal);$('ahorro').textContent=fmt(x.ahorro);
+  $('infoBonif').innerHTML=`<strong>Ahorro mensual:</strong> ${x.bmodo==='pct'?`${pc(x.bval)} × ${fmt(x.bBase)} = ${fmt(x.teor)}`:x.bmodo==='anual'?`${fmt(x.bval)} al año ÷ 12 meses = ${fmt(x.teor)} al mes`:`${fmt(x.bval)} al mes`}${x.topeada?`<br>⚠️ <b>Solo se bonifica hasta ${fmt(x.bBase)}</b>: la bonificación no puede superar la cuota sobre la que se aplica.`:''}<br><span class="fx">${x.bmodo==='pct'?'Bonificación porcentual: el ahorro cambia si cambia la cuota.':'Cuantía fija: el ahorro es el mismo todos los meses mientras dure (p. ej. 3 años) y no depende del sueldo, salvo que supere la cuota sobre la que se aplica. Por redondeo, el total anual puede diferir en céntimos de la cuantía anual.'}</span>`;
   {const pct=x.coste?x.liquido/x.coste*100:0;
   $('resBon').innerHTML=`<strong>Coste laboral real del mes</strong> = devengos ${fmt(x.devengos)} + cuota patronal ${fmt(x.patTotal)} − bonificación ${fmt(x.ahorro)} = <b class="res">${fmt(x.coste)}</b><br><span class="fx">De cada 100 € que cuesta realmente la nómina a la empresa (ya descontada la bonificación), <b>${fmt(pct).replace(' €','')} €</b> llegan al trabajador como líquido. El resto son cotizaciones a la Seguridad Social (del trabajador y de la empresa, netas de bonificación), retención de IRPF y otras deducciones${n('ant')>0?`; el anticipo (${fmt(n('ant'))}) ya lo cobró antes el trabajador`:''}.</span>`;
   const kr=[x.coste,x.liquido].join();if(window._kr!==kr){window._kr=kr;$('resBon').style.display='none';$('retoOk').innerHTML=''}}
@@ -558,7 +569,7 @@ $('calcKeys').innerHTML=['7','8','9','/','4','5','6','*','1','2','3','-','0','.'
 $('tabs').innerHTML=TT.map((t,i)=>`<button onclick="go(${i+1})">${t}</button>`).join('');
 $('escenario').innerHTML=Object.keys(ESC).map(k=>`<option>${k}</option>`).join('');
 $('grupo').innerHTML=GRUPOS.map((g,i)=>`<option value="${i+1}" ${i===7?'selected':''}>Grupo ${i+1} · ${g} (${i<7?'base mensual':'base diaria'})</option>`).join('');
-pintaPluses();setMin();toggleDaily();buildTipos();buildMeses();recalc();go(1);
+pintaPluses();setMin();toggleDaily();buildTipos();buildMeses();bonifUI();recalc();go(1);
 </script>
 </body>
 </html>
