@@ -69,6 +69,10 @@ body.exam .res:not(.rev){filter:blur(7px);cursor:pointer;user-select:none}
 #recibo tr.liq td{background:#e9f9ee;color:#1e7e34;font-weight:700;font-size:14px;border-top:2px solid #1e7e34}
 #recibo .sign{display:flex;gap:12px;margin-top:14px}
 #recibo .sign div{flex:1;border:1px dashed #9aa5b1;border-radius:6px;height:76px;padding:6px 10px;font-size:11px;color:#667}
+#nbArchivos button{margin:.2rem .3rem .2rem 0}#nbFile{display:none}
+@media print{#nbArchivos{display:none!important}}
+#nbBiblioteca button{margin:.2rem .3rem .2rem 0}#nbLocalList{max-width:100%;min-width:0}#nbBiblioteca button:disabled{opacity:.5;cursor:default}#nbLocalName{box-sizing:border-box}#nbBiblioteca summary{padding:.2rem 0}
+@media print{#nbBiblioteca{display:none!important}}
 </style>
 
 
@@ -84,6 +88,23 @@ body.exam .res:not(.rev){filter:blur(7px);cursor:pointer;user-select:none}
   <button class="sec" onclick="toggleCalc()">📟 Calculadora</button>
   
 </div>
+<div id="nbArchivos" class="box ot">
+<button class="sec" type="button" onclick="nbReset()">Nuevo supuesto · borrar datos</button>
+<button class="sec" type="button" onclick="nbSave()">Guardar JSON</button>
+<button class="sec" type="button" onclick="document.getElementById('nbFile').click()">Cargar JSON</button>
+<input type="file" id="nbFile" accept=".json,application/json" hidden onchange="nbLoad(this)">
+<p id="nbStatus" class="fx" role="status" aria-live="polite">Nuevo supuesto borra los datos del enunciado, no los tipos ni las tablas de bases. Guarda un JSON antes de borrar si quieres conservarlo. Usa datos ficticios.</p>
+</div>
+<details id="nbBiblioteca" class="box ot">
+<summary>Nóminas guardadas en este navegador</summary>
+<div class="campo"><label for="nbLocalName">Nombre de la nómina</label><input type="text" id="nbLocalName" maxlength="120" placeholder="Ej.: Ana · diciembre · jornada parcial"></div>
+<button class="sec" type="button" onclick="nbLocalSave()">Guardar nómina en este navegador</button>
+<div class="campo"><label for="nbLocalList">Nóminas guardadas</label><select id="nbLocalList" onchange="nbLocalSelect()"><option value="">Selecciona una nómina…</option></select></div>
+<button class="sec" type="button" id="nbLocalLoadButton" onclick="nbLocalLoad()" disabled>Cargar nómina seleccionada</button>
+<button class="sec" type="button" id="nbLocalDeleteButton" onclick="nbLocalDelete()" disabled>Eliminar nómina seleccionada</button>
+<p class="fx" id="nbLocalStatus" role="status" aria-live="polite"></p>
+<p class="fx">Guardado manual en Local Storage: solo en este navegador, perfil y dispositivo. No se envía a ningún servidor. Borrar los datos del navegador elimina estas copias; el modo privado y algunas vistas previas pueden impedir conservarlas. Al abrir un HTML local, el almacenamiento puede depender de su ubicación: utiliza siempre el mismo archivo y guarda también copias JSON. En equipos compartidos, usa datos ficticios.</p>
+</details>
 <div class="tabs" id="tabs"></div>
 
 <!-- 1 -->
@@ -332,7 +353,7 @@ function getMeses(){return [...document.querySelectorAll('.mp')].map(s=>+s.value
 
 /* ---------- bases, límites de cotización y recibo ---------- */
 const MINS={2025:{1:1929,2:1599.6,3:1391.7,47:1381.2,d:46.04,h1:11.62,h2:9.64,h3:8.38,h47:8.32,tope:4909.5},2026:{1:1989.3,2:1649.7,3:1435.2,47:1424.4,d:47.48,h1:11.98,h2:9.94,h3:8.65,h47:8.58,tope:5101.2}};
-function setMin(){const g=+$('grupo').value,t=MINS[lastYear]||(MINS[lastYear]={...MINS[2026]});R.min=g>=8?t.d:g>=4?t[47]:t[g];R.minH=g>=4?t.h47:t['h'+g];R.tope=t.tope}
+function setMin(){const g=+$('grupo').value,t=MINS[lastYear]||(MINS[lastYear]={...MINS[2026]});if(!g){R.min=0;R.minH=0;R.tope=t.tope;return}R.min=g>=8?t.d:g>=4?t[47]:t[g];R.minH=g>=4?t.h47:t['h'+g];R.tope=t.tope}
 function buildBases(){
   const y=lastYear,B=MINS[y]||(MINS[y]={...MINS[2026]}),f=[['Grupo 1','1','€/mes'],['Grupo 2','2','€/mes'],['Grupo 3','3','€/mes'],['Grupos 4 a 7','47','€/mes'],['Grupos 8 a 11','d','€/día'],['Tiempo parcial · grupo 1','h1','€/hora'],['Tiempo parcial · grupo 2','h2','€/hora'],['Tiempo parcial · grupo 3','h3','€/hora'],['Tiempo parcial · grupos 4 a 11','h47','€/hora']];
   $('basesTbl').innerHTML=`<tr><th>Año ${y}</th><th>Base mínima</th></tr>`+f.map(([l,k,u])=>`<tr><td>${l}</td><td><input type='number' step='0.01' data-b='${k}' value='${B[k]}'> ${u}</td></tr>`).join('')+`<tr><td>Base máxima (todos los grupos)</td><td><input type='number' step='0.01' data-b='tope' value='${B.tope}'> €/mes<br><span class='fx'>en grupos 8 a 11 se divide entre 30: ${fmt(B.tope/30).replace(' €','')} €/día</span></td></tr>`;
@@ -571,5 +592,174 @@ $('escenario').innerHTML=Object.keys(ESC).map(k=>`<option>${k}</option>`).join('
 $('grupo').innerHTML=GRUPOS.map((g,i)=>`<option value="${i+1}" ${i===7?'selected':''}>Grupo ${i+1} · ${g} (${i<7?'base mensual':'base diaria'})</option>`).join('');
 pintaPluses();setMin();toggleDaily();buildTipos();buildMeses();bonifUI();recalc();go(1);
 </script>
-</body>
+<script>
+
+/* Solo gestión de datos. No reemplaza ni envuelve recalc(), calc(), go(), checkDev() o checkReto(). */
+const nbIds=[...document.querySelectorAll('.step input[id],.step select[id]')].filter(e=>!e.readOnly&&e.id!=='limKm').map(e=>e.id);
+const nbRateKeys=Object.keys(R),nbBaseKeys=Object.keys(MINS[2026]);
+const nbOutputs=['indMes','infoPagas','infoLoc','infoEsp','infoDiario','infoHora','infoHex','infoComp','infoParcial','totDev','totSal','totExtra','opcionesReto','devOk','basesBox','limitesBox','dedBox','irpfTxt','irpfImp','totalDed','pctDed','txtDev','txtDed','liq','patBox','patTotal','devRes','patRes','ahorro','infoBonif','retoOk','resBon','anual','anualRes','recibo'];
+function nbMsg(t){$('nbStatus').textContent=t}
+function nbBlankOption(el,text='Selecciona…'){
+ if(![...el.options].some(o=>o.value==='')){const v=el.value,o=document.createElement('option');o.value='';o.textContent=text;o.disabled=true;el.prepend(o);el.value=v;}
+}
+function nbReset(){
+ if(!confirm('Se borrarán los datos del enunciado, la configuración del supuesto y las respuestas. Se conservarán los porcentajes de cotización, todas las tablas de bases y el límite exento por kilómetro. ¿Continuar?'))return;
+ nbIds.forEach(id=>{const e=$(id);if(e.tagName==='SELECT')nbBlankOption(e);e.value=''});
+ nbBlankOption($('escenario'),'Supuesto propio');$('escenario').value='';
+ PL=[];pintaPluses();buildMeses();
+ // min/minH are the derived minimum for the selected group, NOT the regulatory tables.
+ // With no group selected there is no applicable group minimum yet; MINS remains intact.
+ R.min=0;R.minH=0;
+ nRecalc=0;window._k=null;window._kr=null;
+ document.body.classList.remove('exam');$('btnExam').textContent='🙈 Modo examen: no';document.querySelectorAll('.res').forEach(e=>e.classList.remove('rev'));
+ $('calcDisplay').value='';$('calc').style.display='none';bonifUI();toggleDaily();
+ // Use the unmodified renderer, then clear only this empty worksheet once.
+ // No recurring validation gate and no visibility changes to deductions.
+ recalc();nbOutputs.forEach(id=>{if($(id))$(id).innerHTML=''});$('jornada').value='';
+ $('desg').style.display='none';$('desgMsg').style.display='';$('resBon').style.display='none';
+ go(1);
+ nbMsg('Supuesto en blanco. Introduce grupo, periodo, contrato y jornada, y después los importes. Mientras falten datos, los cálculos son provisionales. Los tipos y las tablas de bases se han conservado.');
+}
+function nbSnapshot(){return {formato:'nomina-basica-2026-supuesto',version:1,fechaGuardado:new Date().toISOString(),datos:Object.fromEntries(nbIds.map(id=>[id,$(id).value])),mesesPagas:getMeses(),pluses:PL.map(p=>({n:p.n,v:+p.v,t:p.t})),parametros:{tipos:{...R},bases:JSON.parse(JSON.stringify(MINS)),limiteKm:$('limKm').value,ano:lastYear}};}
+function nbSave(){
+ const name=prompt('Nombre del archivo (sin .json):','supuesto-'+($('periodo').value||'nuevo'));
+ if(name===null)return;
+ const safe=(name.trim()||'supuesto').replace(/\.json$/i,'').replace(/[\\/:*?"<>|\x00-\x1f]/g,'-').slice(0,100);
+ try{
+  const state=nbValidate(nbSnapshot());
+  const url=URL.createObjectURL(new Blob([JSON.stringify(state,null,2)],{type:'application/json;charset=utf-8'})),a=document.createElement('a');
+  a.href=url;a.download=safe+'.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);
+  nbMsg('Archivo preparado: '+safe+'.json. Incluye los datos, pluses, meses de extras, tipos y bases. Revisa las descargas de tu navegador.');
+ }catch(e){alert('No se pudo guardar el supuesto: '+e.message)}
+}
+function nbValidate(s){
+ const obj=v=>v&&typeof v==='object'&&!Array.isArray(v),num=v=>typeof v==='number'&&Number.isFinite(v)&&v>=0&&v<=1e12;
+ if(!obj(s)||s.formato!=='nomina-basica-2026-supuesto'||s.version!==1||!obj(s.datos)||!obj(s.parametros))throw Error('El archivo no pertenece a esta versión de la aplicación.');
+ for(const id of nbIds){const el=$(id),v=s.datos[id];
+  if(typeof v!=='string'||v.length>10000)throw Error('Campo ausente o no válido: '+id);
+  if(el.tagName==='SELECT'&&v!==''&&![...el.options].some(o=>o.value===v))throw Error('Opción no válida: '+id);
+  if(el.type==='number'&&v!==''&&(!Number.isFinite(+v)||Math.abs(+v)>1e12))throw Error('Número no válido: '+id);
+  if(el.type==='month'&&v!==''&&!/^\d{4}-(0[1-9]|1[0-2])$/.test(v))throw Error('Periodo no válido.');
+  if(el.type==='date'&&v!==''&&(!/^\d{4}-\d{2}-\d{2}$/.test(v)||isNaN(Date.parse(v))||new Date(v).toISOString().slice(0,10)!==v))throw Error('Fecha no válida.');
+ }
+ if(Object.keys(s.datos).some(id=>!nbIds.includes(id)))throw Error('Hay campos no reconocidos.');
+ const p=s.parametros;
+ if(!Number.isInteger(p.ano)||p.ano<1900||p.ano>9999)throw Error('Año de parámetros no válido.');
+ if(s.datos.periodo&&+s.datos.periodo.slice(0,4)!==p.ano)throw Error('El año del periodo no coincide con el de los parámetros.');
+ if(!obj(p.tipos)||!nbRateKeys.every(k=>num(p.tipos[k])))throw Error('Tipos no válidos.');
+ if(!obj(p.bases)||!obj(p.bases[p.ano])||Object.keys(p.bases).length>200)throw Error('Bases no válidas.');
+ for(const [y,b]of Object.entries(p.bases))if(!/^\d{4}$/.test(y)||!obj(b)||!nbBaseKeys.every(k=>num(b[k])))throw Error('Tabla de bases incompleta.');
+ if(typeof p.limiteKm!=='string'||p.limiteKm===''||!Number.isFinite(+p.limiteKm)||+p.limiteKm<0)throw Error('Límite por kilómetro no válido.');
+ if(!Array.isArray(s.mesesPagas)||s.mesesPagas.length!==Number(s.datos.numPagas)||!s.mesesPagas.every(m=>Number.isInteger(m)&&m>=1&&m<=12))throw Error('Meses de extras no válidos.');
+ if(!Array.isArray(s.pluses)||s.pluses.length>100||!s.pluses.every(p=>obj(p)&&typeof p.n==='string'&&p.n.length<=10000&&num(p.v)&&['s','e','n'].includes(p.t)))throw Error('Pluses no válidos.');
+ return s;
+}
+function nbApply(s){
+ nbValidate(s);const p=s.parametros;
+ // Direct assignment avoids contract/year change handlers overwriting saved parameters.
+ nbIds.forEach(id=>{const e=$(id);if(e.tagName==='SELECT')nbBlankOption(e);e.value=s.datos[id]});
+ for(const k of nbRateKeys)R[k]=p.tipos[k];
+ Object.keys(MINS).forEach(y=>delete MINS[y]);
+ for(const [y,b]of Object.entries(p.bases))MINS[y]=Object.fromEntries(nbBaseKeys.map(k=>[k,b[k]]));
+ lastYear=p.ano;$('limKm').value=p.limiteKm;
+ PL=s.pluses.map(p=>({n:p.n,v:p.v,t:p.t}));pintaPluses();buildMeses();document.querySelectorAll('.mp').forEach((e,i)=>e.value=String(s.mesesPagas[i]));
+ bonifUI();$('bonifTipo').value=s.datos.bonifTipo;buildTipos();toggleDaily();
+ nbBlankOption($('escenario'),'Supuesto propio / cargado');$('escenario').value='';nRecalc=0;window._k=null;window._kr=null;
+ document.querySelectorAll('.res').forEach(e=>e.classList.remove('rev'));recalc();go(1);
+}
+async function nbLoad(input){
+ try{
+  const f=input.files[0];if(!f)return;
+  if(f.size>2*1024*1024)throw Error('El tamaño máximo es 2 MB.');
+  const state=nbValidate(JSON.parse(await f.text()));
+  if(!confirm('Se sustituirán los datos y parámetros actuales por los guardados en este JSON. ¿Continuar?'))return;
+  const previous=nbSnapshot();try{nbApply(state)}catch(e){nbApply(previous);throw e}
+  nbMsg('Supuesto recuperado: '+f.name+'. Se han restaurado también sus tipos y bases.');
+ }catch(e){nbMsg('No se ha cargado el archivo: '+e.message);alert('No se ha cargado el archivo: '+e.message)}finally{input.value=''}
+}
+
+</script>
+<script>
+
+/* Biblioteca local: usa las mismas instantáneas JSON verificadas, sin modificar el cálculo. */
+const nbLocalKey='nomina-basica:biblioteca:v1';
+function nbLocalMessage(t){$('nbLocalStatus').textContent=t}
+function nbLocalRead(){
+ const raw=window.localStorage.getItem(nbLocalKey);
+ if(raw===null)return {version:1,items:[]};
+ let lib;try{lib=JSON.parse(raw)}catch{throw Error('Los datos locales no se pueden leer. No se han sobrescrito ni borrado.');}
+ if(!lib||lib.version!==1||!Array.isArray(lib.items))throw Error('Formato de biblioteca local no compatible. No se han modificado los datos guardados.');
+ const ids=new Set();
+ for(const r of lib.items){
+  if(!r||typeof r.id!=='string'||!r.id||ids.has(r.id)||typeof r.name!=='string'||!r.name.trim()||r.name.length>120||typeof r.updated!=='string'||!Number.isFinite(Date.parse(r.updated))||typeof r.created!=='string'||!Number.isFinite(Date.parse(r.created)))throw Error('Una entrada local está dañada. No se ha sobrescrito la biblioteca.');
+  ids.add(r.id);nbValidate(r.state);
+ }
+ return lib;
+}
+function nbLocalError(e){
+ let t=e?.message||'No se ha podido acceder al almacenamiento local.';
+ if(e?.name==='QuotaExceededError')t='No queda espacio local suficiente. No se ha guardado esta versión. Exporta un JSON y elimina alguna copia local que ya no necesites.';
+ if(e?.name==='SecurityError')t='El navegador bloquea Local Storage en esta vista. Abre el HTML descargado o utiliza Guardar JSON.';
+ nbLocalMessage(t);
+}
+function nbLocalRender(selected=''){
+ const lib=nbLocalRead(),list=$('nbLocalList');list.replaceChildren();
+ const blank=document.createElement('option');blank.value='';blank.textContent=lib.items.length?'Selecciona una nómina…':'No hay nóminas guardadas';list.append(blank);
+ [...lib.items].sort((a,b)=>b.updated.localeCompare(a.updated)).forEach(r=>{const o=document.createElement('option');o.value=r.id;o.textContent=r.name+' · '+new Date(r.updated).toLocaleString('es-ES');list.append(o)});
+ list.value=lib.items.some(r=>r.id===selected)?selected:'';
+ $('nbLocalLoadButton').disabled=!list.value;$('nbLocalDeleteButton').disabled=!list.value;
+ return lib.items.length;
+}
+function nbLocalSelect(){
+ const id=$('nbLocalList').value;$('nbLocalLoadButton').disabled=!id;$('nbLocalDeleteButton').disabled=!id;
+ if(!id)return;
+ try{const r=nbLocalRead().items.find(r=>r.id===id);if(!r)throw Error('Esta nómina ya no está guardada. Actualiza la lista.');$('nbLocalName').value=r.name;nbLocalMessage('Seleccionada «'+r.name+'». Seleccionarla no modifica el ejercicio: pulsa Cargar para recuperarla.');}catch(e){nbLocalError(e)}
+}
+function nbLocalSave(){
+ const name=$('nbLocalName').value.trim();
+ if(!name){nbLocalMessage('Escribe un nombre para identificar esta nómina.');$('nbLocalName').focus();return;}
+ if(name.length>120){nbLocalMessage('El nombre no puede superar los 120 caracteres.');return;}
+ try{
+  const state=nbValidate(nbSnapshot()),lib=nbLocalRead();
+  const same=lib.items.find(r=>r.name.toLocaleLowerCase('es')===name.toLocaleLowerCase('es'));
+  if(same&&!confirm('Ya existe una nómina llamada «'+same.name+'». ¿Quieres sustituir sus datos por los actuales?'))return;
+  // Read again after confirmation: a different tab could have updated the library.
+  const current=nbLocalRead();
+  const nowSame=current.items.find(r=>r.name.toLocaleLowerCase('es')===name.toLocaleLowerCase('es'));
+  if((nowSame?.id||null)!==(same?.id||null)||(same&&nowSame.updated!==same.updated))throw Error('La biblioteca ha cambiado en otra pestaña. Vuelve a pulsar Guardar para confirmar la versión actual.');
+  const now=new Date().toISOString(),id=same?.id||(globalThis.crypto?.randomUUID?crypto.randomUUID():'nomina-'+Date.now()+'-'+Math.random().toString(36).slice(2));
+  const record={id,name,created:same?.created||now,updated:now,state};
+  current.items=current.items.filter(r=>r.id!==id);current.items.push(record);
+  // localStorage.setItem is atomic: a quota failure leaves the previous library untouched.
+  window.localStorage.setItem(nbLocalKey,JSON.stringify(current));
+  nbLocalRender(id);$('nbLocalName').value=name;nbLocalMessage('Nómina «'+name+'» '+(same?'actualizada':'guardada')+' en este navegador. Los cambios posteriores requieren volver a guardar.');
+ }catch(e){nbLocalError(e)}
+}
+function nbLocalLoad(){
+ const id=$('nbLocalList').value;if(!id)return;
+ try{
+  const r=nbLocalRead().items.find(r=>r.id===id);if(!r)throw Error('Esta nómina ya no está guardada.');
+  nbValidate(r.state);
+  if(!confirm('¿Cargar «'+r.name+'»? Se sustituirán los datos y parámetros del ejercicio actual. Guarda antes los cambios que quieras conservar.'))return;
+  const previous=nbSnapshot();try{nbApply(r.state)}catch(e){nbApply(previous);throw e}
+  $('nbLocalName').value=r.name;nbLocalMessage('Nómina «'+r.name+'» recuperada con sus datos, pluses, tipos y bases.');
+  nbMsg('Nómina local recuperada: '+r.name+'.');
+ }catch(e){nbLocalError(e)}
+}
+function nbLocalDelete(){
+ const id=$('nbLocalList').value;if(!id)return;
+ try{
+  const r=nbLocalRead().items.find(r=>r.id===id);if(!r)throw Error('Esta nómina ya no está guardada.');
+  if(!confirm('¿Eliminar del navegador la nómina «'+r.name+'»? No se borrará el ejercicio abierto ni ningún archivo JSON.'))return;
+  const lib=nbLocalRead(),latest=lib.items.find(x=>x.id===id);
+  if(latest&&latest.updated!==r.updated)throw Error('La nómina se ha actualizado en otra pestaña. Vuelve a seleccionarla antes de eliminar.');
+  lib.items=lib.items.filter(r=>r.id!==id);window.localStorage.setItem(nbLocalKey,JSON.stringify(lib));
+  nbLocalRender();$('nbLocalName').value='';nbLocalMessage('Se ha eliminado la copia local de «'+r.name+'». El ejercicio abierto no ha cambiado.');
+ }catch(e){nbLocalError(e)}
+}
+window.addEventListener('storage',e=>{if(e.key===nbLocalKey||e.key===null){try{nbLocalRender($('nbLocalList').value);nbLocalMessage('Lista actualizada por un cambio en otra pestaña. El ejercicio abierto no ha cambiado.');}catch(err){nbLocalError(err)}}});
+try{const count=nbLocalRender();nbLocalMessage(count?count+' nómina(s) disponible(s). Selecciona una para cargarla.':'Escribe un nombre y pulsa Guardar para conservar la nómina actual.');}catch(e){nbLocalError(e)}
+
+</script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5d22d312d130370',t:'MTc5NTEyMjM2Mw=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5d22d312d130370',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
