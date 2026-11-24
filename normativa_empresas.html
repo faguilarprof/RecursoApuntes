@@ -233,6 +233,17 @@
       .feedback-card { box-shadow: none; border: none; padding: 0; }
       .feedback-card::before { display: none; }
     }
+
+    .norma-link { margin: 18px 0 0; }
+    .norma-link a {
+      display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px;
+      border: 1px solid var(--accent); border-radius: 10px; background: #fff;
+      color: var(--primary); font-weight: 650; font-size: .95rem; text-decoration: none;
+      transition: background .15s;
+    }
+    .norma-link a:hover { background: var(--accent-soft); }
+    .norma-link a:focus-visible { outline: 3px solid rgba(10, 147, 150, .32); outline-offset: 2px; }
+    .norma-link svg { width: 16px; height: 16px; flex: none; }
   </style>
 </head>
 <body>
@@ -260,15 +271,16 @@
           <select id="criterio" aria-describedby="criterio-help">
             <option value="">-- Selecciona --</option>
             <option value="general" data-label="General">📋 General</option>
-            <option value="contabilidad" data-label="Contabilidad">💰 Contabilidad</option>
+            <option value="civil" data-label="Civil">🏛️ Civil</option>
             <option value="mercantil" data-label="Mercantil">⚖️ Mercantil</option>
-            <option value="laboral" data-label="Laboral y Seguridad Social">👷 Laboral y Seguridad Social</option>
-            <option value="cese" data-label="Cese de empresas">🚪 Cese de empresas</option>
+            <option value="contabilidad" data-label="Contabilidad">💰 Contabilidad</option>
             <option value="fiscal" data-label="Fiscal">📊 Fiscal</option>
-            <option value="contratacion" data-label="Contratación pública">📝 Contratación pública</option>
-            <option value="financiacion" data-label="Financiación">💳 Financiación</option>
+            <option value="laboral" data-label="Laboral y Seguridad Social">👷 Laboral y Seguridad Social</option>
             <option value="datos" data-label="Protección de datos">🔒 Protección de datos</option>
             <option value="igualdad" data-label="Igualdad">⚖️ Igualdad</option>
+            <option value="financiacion" data-label="Financiación">💳 Financiación</option>
+            <option value="contratacion" data-label="Contratación pública">📝 Contratación pública</option>
+            <option value="cese" data-label="Cese de empresas">🚪 Cese de empresas</option>
           </select>
           <p class="field-help" id="criterio-help">Área de la actividad empresarial.</p>
         </div>
@@ -301,6 +313,12 @@
             <p class="impact-question" id="impact-question" hidden>¿Cómo afecta a tu empresa?</p>
             <p id="feedback-impact">Elige primero un criterio y, después, una norma. Aquí verás una explicación clara de cómo afecta a tu empresa.</p>
           </div>
+          <p class="norma-link" id="norma-link" hidden>
+            <a id="norma-link-a" href="#" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>
+              <span id="norma-link-text">Consultar en el BOE</span>
+            </a>
+          </p>
         </div>
         <p class="feedback-note">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
@@ -324,178 +342,312 @@
     const normas = {
   "general": [
     [
-      "Real Decreto de 24 de julio de 1889, por el que se publica el Código Civil",
-      "Base general de obligaciones y contratos que rigen muchas relaciones jurídicas de la empresa (contratos con clientes, proveedores, etc.)."
-    ],
-    [
       "Ley 1/2000, de 7 de enero, de Enjuiciamiento Civil",
-      "Regula cómo se desarrollan los procedimientos judiciales civiles y mercantiles cuando la empresa tiene conflictos ante los tribunales."
+      "Regula cómo se desarrollan los procedimientos judiciales civiles y mercantiles cuando la empresa tiene conflictos ante los tribunales.",
+      "https://www.boe.es/eli/es/l/2000/01/07/1/con",
+      "Justicia y proceso"
     ],
     [
       "Ley Orgánica 6/1985, de 1 de julio, del Poder Judicial",
-      "Organiza los órganos judiciales con los que la empresa puede relacionarse en litigios, recursos y otros procedimientos."
+      "Organiza los órganos judiciales con los que la empresa puede relacionarse en litigios, recursos y otros procedimientos.",
+      "https://www.boe.es/eli/es/lo/1985/07/01/6/con",
+      "Justicia y proceso"
     ],
     [
       "Ley 2/2011, de 4 de marzo, de Economía Sostenible",
-      "Impulsa prácticas empresariales competitivas y sostenibles, influyendo en políticas de innovación, eficiencia y responsabilidad social."
+      "Impulsa prácticas empresariales competitivas y sostenibles, influyendo en políticas de innovación, eficiencia y responsabilidad social.",
+      "https://www.boe.es/eli/es/l/2011/03/04/2/con",
+      "Política económica"
     ]
   ],
-  "contabilidad": [
+  "civil": [
     [
-      "Real Decreto 1514/2007, de 16 de noviembre, por el que se aprueba el Plan General de Contabilidad",
-      "Fija las normas de registro y valoración contable que la empresa debe seguir para elaborar sus cuentas anuales."
+      "Real Decreto de 24 de julio de 1889, por el que se publica el Código Civil",
+      "Base general de obligaciones y contratos que rigen muchas relaciones jurídicas de la empresa (contratos con clientes, proveedores, etc.).",
+      "https://www.boe.es/eli/es/rd/1889/07/24/(1)/con",
+      "Contratos y obligaciones"
     ],
     [
-      "Real Decreto 1/2021, de 12 de enero, por el que se modifica el Plan General de Contabilidad, el PGC de PYMES y otras normas contables",
-      "Actualiza criterios contables, especialmente para PYMES, afectando a cómo la empresa presenta su información financiera."
+      "Real Decreto Legislativo 1/1996, de 12 de abril, por el que se aprueba el texto refundido de la Ley de Propiedad Intelectual, regularizando, aclarando y armonizando las disposiciones legales vigentes sobre la materia",
+      "Regula los derechos de autor y los derechos afines sobre obras literarias, artísticas y científicas, incluidos los programas de ordenador y las bases de datos. Los derechos nacen con la creación, sin necesidad de registro, y duran toda la vida del autor y setenta años más. Afecta a la empresa que usa contenidos de terceros (fotos, textos, música, software), que encarga creaciones o que desarrolla software propio.",
+      "https://www.boe.es/eli/es/rdlg/1996/04/12/1/con",
+      "Propiedad intelectual (derechos de autor)"
+    ],
+    [
+      "Real Decreto 611/2023, de 11 de julio, por el que se aprueba el Reglamento del Registro de la Propiedad Intelectual",
+      "Regula el Registro de la Propiedad Intelectual, el registro oficial donde se inscriben los derechos sobre obras, actuaciones y producciones. La inscripción tiene carácter declarativo (los derechos existen desde la creación), pero facilita probar la autoría y la titularidad, por ejemplo de un software, una web o la imagen gráfica corporativa. Sustituye al reglamento de 2003.",
+      "https://www.boe.es/eli/es/rd/2023/07/11/611/con",
+      "Propiedad intelectual (derechos de autor)"
     ]
   ],
   "mercantil": [
     [
       "Real Decreto de 22 de agosto de 1885, por el que se publica el Código de Comercio",
-      "Regula los actos de comercio, la contabilidad mercantil y aspectos básicos del empresario."
-    ],
-    [
-      "Ley 34/2002, de 11 de julio, de servicios de la sociedad de la información y de comercio electrónico",
-      "Establece obligaciones para empresas que prestan servicios por Internet o realizan comercio electrónico (información web, comunicaciones comerciales, etc.)."
-    ],
-    [
-      "Ley 7/1996, de 15 de enero, de Ordenación del Comercio Minorista",
-      "Regula la actividad comercial al por menor, horarios, rebajas, ventas promocionales y relaciones con los consumidores."
-    ],
-    [
-      "Real Decreto Legislativo 1/2010, de 2 de julio, por el que se aprueba el texto refundido de la Ley de Sociedades de Capital",
-      "Regula constitución, funcionamiento, órganos sociales, responsabilidad y disolución de sociedades anónimas y limitadas."
-    ],
-    [
-      "Ley 27/1999, de 16 de julio, de Cooperativas",
-      "Establece el régimen jurídico de las cooperativas, su constitución, órganos y reparto de resultados."
+      "Regula los actos de comercio, la contabilidad mercantil y aspectos básicos del empresario.",
+      "https://www.boe.es/buscar/act.php?id=BOE-A-1885-6627",
+      "El empresario y el Registro Mercantil"
     ],
     [
       "Real Decreto 1784/1996, de 19 de julio, por el que se aprueba el Reglamento del Registro Mercantil",
-      "Regula inscripciones obligatorias (constitución, cargos, cuentas anuales) que dan publicidad legal a la vida de la empresa."
+      "Regula inscripciones obligatorias (constitución, cargos, cuentas anuales) que dan publicidad legal a la vida de la empresa.",
+      "https://www.boe.es/eli/es/rd/1996/07/19/1784/con",
+      "El empresario y el Registro Mercantil"
     ],
     [
       "Ley 18/2022, de 28 de septiembre, de creación y crecimiento de empresas",
-      "Facilita la constitución rápida y telemática, impulsa la factura electrónica y medidas para reducir la morosidad."
+      "Facilita la constitución rápida y telemática, impulsa la factura electrónica y medidas para reducir la morosidad.",
+      "https://www.boe.es/eli/es/l/2022/09/28/18/con",
+      "El empresario y el Registro Mercantil"
+    ],
+    [
+      "Real Decreto Legislativo 1/2010, de 2 de julio, por el que se aprueba el texto refundido de la Ley de Sociedades de Capital",
+      "Regula constitución, funcionamiento, órganos sociales, responsabilidad y disolución de sociedades anónimas y limitadas.",
+      "https://www.boe.es/eli/es/rdlg/2010/07/02/1/con",
+      "Formas societarias"
+    ],
+    [
+      "Ley 27/1999, de 16 de julio, de Cooperativas",
+      "Establece el régimen jurídico de las cooperativas, su constitución, órganos y reparto de resultados.",
+      "https://www.boe.es/eli/es/l/1999/07/16/27/con",
+      "Formas societarias"
     ],
     [
       "Ley 44/2015, de 14 de octubre, de Sociedades Laborales y Participadas",
-      "Regula sociedades donde la mayoría del capital está en manos de las personas trabajadoras, afectando a su organización y beneficios específicos."
+      "Regula sociedades donde la mayoría del capital está en manos de las personas trabajadoras, afectando a su organización y beneficios específicos.",
+      "https://www.boe.es/eli/es/l/2015/10/14/44/con",
+      "Formas societarias"
+    ],
+    [
+      "Ley 34/2002, de 11 de julio, de servicios de la sociedad de la información y de comercio electrónico",
+      "Establece obligaciones para empresas que prestan servicios por Internet o realizan comercio electrónico (información web, comunicaciones comerciales, etc.).",
+      "https://www.boe.es/eli/es/l/2002/07/11/34/con",
+      "Comercio y venta"
+    ],
+    [
+      "Ley 7/1996, de 15 de enero, de Ordenación del Comercio Minorista",
+      "Regula la actividad comercial al por menor, horarios, rebajas, ventas promocionales y relaciones con los consumidores.",
+      "https://www.boe.es/eli/es/l/1996/01/15/7/con",
+      "Comercio y venta"
+    ],
+    [
+      "Ley 17/2001, de 7 de diciembre, de Marcas",
+      "Regula las marcas y los nombres comerciales: qué signos pueden registrarse, los motivos de denegación, el derecho exclusivo del titular y el Registro de Marcas de la OEPM. El registro dura 10 años renovables. Permite a la empresa proteger su nombre y logotipo frente a competidores y evitar infringir marcas ajenas.",
+      "https://www.boe.es/eli/es/l/2001/12/07/17/con",
+      "Propiedad industrial (OEPM)"
+    ],
+    [
+      "Real Decreto 687/2002, de 12 de julio, por el que se aprueba el Reglamento para la ejecución de la Ley 17/2001, de 7 de diciembre, de Marcas",
+      "Desarrolla el procedimiento de solicitud, examen, oposición de terceros, registro y renovación de marcas y nombres comerciales ante la OEPM. Es la referencia para tramitar y mantener el registro de la marca de la empresa.",
+      "https://www.boe.es/eli/es/rd/2002/07/12/687/con",
+      "Propiedad industrial (OEPM)"
+    ],
+    [
+      "Ley 24/2015, de 24 de julio, de Patentes",
+      "Regula la protección de las invenciones mediante patentes (20 años desde la solicitud) y modelos de utilidad (10 años), así como el Registro de Patentes de la OEPM. Si tu empresa desarrolla un producto o procedimiento técnico nuevo, esta ley determina cómo protegerlo, a quién pertenecen las invenciones de los empleados y cómo licenciar o ceder los derechos.",
+      "https://www.boe.es/eli/es/l/2015/07/24/24/con",
+      "Propiedad industrial (OEPM)"
+    ],
+    [
+      "Real Decreto 316/2017, de 31 de marzo, por el que se aprueba el Reglamento para la ejecución de la Ley 24/2015, de 24 de julio, de Patentes",
+      "Desarrolla los trámites ante la OEPM: requisitos formales de la solicitud, informe sobre el estado de la técnica, examen, oposición posterior a la concesión y procedimientos de revocación o limitación. Es la guía práctica para registrar y mantener una patente o un modelo de utilidad.",
+      "https://www.boe.es/eli/es/rd/2017/03/31/316/con",
+      "Propiedad industrial (OEPM)"
+    ],
+    [
+      "Ley 20/2003, de 7 de julio, de Protección Jurídica del Diseño Industrial",
+      "Protege el aspecto exterior de un producto (formas, líneas, colores, texturas) mediante el diseño registrado en el Registro de Diseños de la OEPM, por períodos de cinco años renovables hasta un máximo de veinticinco. Interesa a empresas que compiten por la apariencia de sus productos (mobiliario, moda, packaging, etc.).",
+      "https://www.boe.es/eli/es/l/2003/07/07/20/con",
+      "Propiedad industrial (OEPM)"
+    ],
+    [
+      "Real Decreto 1937/2004, de 27 de septiembre, por el que se aprueba el Reglamento de ejecución de la Ley 20/2003, de 7 de julio, de protección jurídica del diseño industrial",
+      "Desarrolla el procedimiento de registro de diseños: presentación de la solicitud, examen de forma, publicación (con posible aplazamiento), oposición posterior al registro y renovación. Es la guía práctica para registrar un diseño ante la OEPM.",
+      "https://www.boe.es/eli/es/rd/2004/09/27/1937/con",
+      "Propiedad industrial (OEPM)"
     ]
   ],
-  "laboral": [
+  "contabilidad": [
     [
-      "Real Decreto Legislativo 8/2015, de 30 de octubre, por el que se aprueba el texto refundido de la Ley General de la Seguridad Social",
-      "Fija la obligación de alta, cotización y protección social de las personas trabajadoras de la empresa."
+      "Real Decreto 1514/2007, de 16 de noviembre, por el que se aprueba el Plan General de Contabilidad",
+      "Fija las normas de registro y valoración contable que la empresa debe seguir para elaborar sus cuentas anuales.",
+      "https://www.boe.es/eli/es/rd/2007/11/16/1514/con",
+      "Planes Generales de Contabilidad"
     ],
     [
-      "Real Decreto Legislativo 3/2015, de 23 de octubre, por el que se aprueba el texto refundido de la Ley de Empleo",
-      "Regula políticas de empleo y programas que pueden influir en incentivos a la contratación."
+      "Real Decreto 1515/2007, de 16 de noviembre, por el que se aprueba el Plan General de Contabilidad de Pequeñas y Medianas Empresas y los criterios contables específicos para microempresas",
+      "Es el plan contable simplificado para las pequeñas y medianas empresas, con criterios de registro, valoración y cuentas anuales más sencillos que los del Plan General. También recoge criterios específicos para las microempresas. Puede aplicarlo la empresa que cumpla los límites de su artículo 2 (que se han ido actualizando), cualquiera que sea su forma jurídica; en la práctica es el plan que usa la mayoría de las empresas pequeñas.",
+      "https://www.boe.es/eli/es/rd/2007/11/16/1515/con",
+      "Planes Generales de Contabilidad"
     ],
     [
-      "Real Decreto Legislativo 2/2015, de 23 de octubre, por el que se aprueba el texto refundido de la Ley del Estatuto de los Trabajadores",
-      "Norma básica sobre contratos, jornada, salarios, despidos y derechos laborales en la empresa."
-    ],
-    [
-      "Ley 20/2007, de 11 de julio, del Estatuto del trabajo autónomo",
-      "Regula el régimen profesional de autónomos, incluidos los económicamente dependientes que colaboran con la empresa."
-    ],
-    [
-      "Ley 14/1994, de 1 de junio, por la que se regulan las empresas de trabajo temporal",
-      "Establece condiciones para contratar personal a través de ETT y la responsabilidad de la empresa usuaria."
-    ],
-    [
-      "Real Decreto 197/2009, de 23 de febrero, por el que se desarrolla el Estatuto del Trabajo Autónomo en materia de contrato del trabajador autónomo económicamente dependiente y su registro, y se crea el Registro Estatal de asociaciones profesionales de trabajadores autónomos",
-      "Regula forma y registro de los contratos con autónomos económicamente dependientes vinculados a la empresa."
-    ]
-  ],
-  "cese": [
-    [
-      "Real Decreto 867/2015, de 2 de octubre, por el que se regulan las especificaciones y condiciones para el empleo del Documento Único Electrónico para el cese de actividad y extinción de las sociedades de responsabilidad limitada y el cese de actividad de las empresas individuales",
-      "Simplifica y estandariza los trámites electrónicos para cerrar sociedades limitadas y empresas individuales."
+      "Real Decreto 1/2021, de 12 de enero, por el que se modifica el Plan General de Contabilidad, el PGC de PYMES y otras normas contables",
+      "Actualiza criterios contables, especialmente para PYMES, afectando a cómo la empresa presenta su información financiera.",
+      "https://www.boe.es/eli/es/rd/2021/01/12/1/con",
+      "Planes Generales de Contabilidad"
     ]
   ],
   "fiscal": [
     [
-      "Ley 27/2014, de 27 de noviembre, del Impuesto sobre Sociedades",
-      "Regula la tributación de los beneficios de las sociedades y otras entidades jurídicas."
+      "Ley 58/2003, de 17 de diciembre, General Tributaria",
+      "Marco general de los derechos, obligaciones y procedimientos tributarios de la empresa frente a la Administración.",
+      "https://www.boe.es/eli/es/l/2003/12/17/58/con",
+      "Normativa tributaria general"
     ],
     [
-      "Real Decreto 439/2007, de 30 de marzo, por el que se aprueba el Reglamento del Impuesto sobre la Renta de las Personas Físicas",
-      "Detalla la aplicación práctica del IRPF, relevante para socios, administradores y determinados pagos de la empresa."
+      "Ley 27/2014, de 27 de noviembre, del Impuesto sobre Sociedades",
+      "Regula la tributación de los beneficios de las sociedades y otras entidades jurídicas.",
+      "https://www.boe.es/eli/es/l/2014/11/27/27/con",
+      "Impuesto sobre Sociedades"
     ],
     [
       "Ley 35/2006, de 28 de noviembre, del Impuesto sobre la Renta de las Personas Físicas y de modificación parcial de las leyes de los Impuestos sobre Sociedades, sobre la Renta de no Residentes y sobre el Patrimonio",
-      "Establece la tributación de la renta de personas físicas, afectando a empresarios individuales y socios."
+      "Establece la tributación de la renta de personas físicas, afectando a empresarios individuales y socios.",
+      "https://www.boe.es/eli/es/l/2006/11/28/35/con",
+      "IRPF"
     ],
     [
-      "Real Decreto 1624/1992, de 29 de diciembre, por el que se aprueba el Reglamento del Impuesto sobre el Valor Añadido",
-      "Regula gestión, liquidación y obligaciones formales del IVA."
+      "Real Decreto 439/2007, de 30 de marzo, por el que se aprueba el Reglamento del Impuesto sobre la Renta de las Personas Físicas",
+      "Detalla la aplicación práctica del IRPF, relevante para socios, administradores y determinados pagos de la empresa.",
+      "https://www.boe.es/eli/es/rd/2007/03/30/439/con",
+      "IRPF"
     ],
     [
       "Ley 37/1992, de 28 de diciembre, del Impuesto sobre el Valor Añadido",
-      "Establece la obligación de repercutir, declarar y pagar el IVA en las operaciones de la empresa."
+      "Establece la obligación de repercutir, declarar y pagar el IVA en las operaciones de la empresa.",
+      "https://www.boe.es/eli/es/l/1992/12/28/37/con",
+      "IVA y facturación"
     ],
     [
-      "Real Decreto Legislativo 1175/1990, de 28 de septiembre, por el que se aprueban las tarifas y la instrucción del Impuesto sobre Actividades Económicas",
-      "Determina las tarifas y clasificación de actividades económicas a efectos del IAE."
-    ],
-    [
-      "Ley 58/2003, de 17 de diciembre, General Tributaria",
-      "Marco general de los derechos, obligaciones y procedimientos tributarios de la empresa frente a la Administración."
+      "Real Decreto 1624/1992, de 29 de diciembre, por el que se aprueba el Reglamento del Impuesto sobre el Valor Añadido",
+      "Regula gestión, liquidación y obligaciones formales del IVA.",
+      "https://www.boe.es/eli/es/rd/1992/12/29/1624/con",
+      "IVA y facturación"
     ],
     [
       "Real Decreto 1619/2012, de 30 de noviembre, por el que se aprueba el Reglamento por el que se regulan las obligaciones de facturación",
-      "Establece cómo deben emitirse, conservarse y rectificarse las facturas de la empresa."
+      "Establece cómo deben emitirse, conservarse y rectificarse las facturas de la empresa.",
+      "https://www.boe.es/eli/es/rd/2012/11/30/1619/con",
+      "IVA y facturación"
+    ],
+    [
+      "Real Decreto Legislativo 1175/1990, de 28 de septiembre, por el que se aprueban las tarifas y la instrucción del Impuesto sobre Actividades Económicas",
+      "Determina las tarifas y clasificación de actividades económicas a efectos del IAE.",
+      "https://www.boe.es/eli/es/rdlg/1990/09/28/1175/con",
+      "Impuesto sobre Actividades Económicas"
     ]
   ],
-  "contratacion": [
+  "laboral": [
     [
-      "Ley 9/2017, de 8 de noviembre, de Contratos del Sector Público, por la que se transponen al ordenamiento jurídico español las Directivas 2014/23/UE y 2014/24/UE del Parlamento Europeo y del Consejo, de 26 de febrero de 2014",
-      "Regula cómo puede la empresa contratar con administraciones públicas, licitar y ejecutar contratos públicos."
-    ]
-  ],
-  "financiacion": [
-    [
-      "Ley 5/2015, de 27 de abril, de fomento de la financiación empresarial",
-      "Fomenta vías alternativas de financiación (p. ej. capital riesgo, titulizaciones), mejorando el acceso al crédito."
+      "Real Decreto Legislativo 2/2015, de 23 de octubre, por el que se aprueba el texto refundido de la Ley del Estatuto de los Trabajadores",
+      "Norma básica sobre contratos, jornada, salarios, despidos y derechos laborales en la empresa.",
+      "https://www.boe.es/eli/es/rdlg/2015/10/23/2/con",
+      "Contrato de trabajo"
     ],
     [
-      "Ley 14/2013, de 27 de septiembre, de apoyo a los emprendedores y su internacionalización",
-      "Introduce medidas fiscales, mercantiles y de simplificación para la creación y expansión internacional de empresas."
+      "Ley 14/1994, de 1 de junio, por la que se regulan las empresas de trabajo temporal",
+      "Establece condiciones para contratar personal a través de ETT y la responsabilidad de la empresa usuaria.",
+      "https://www.boe.es/eli/es/l/1994/06/01/14/con",
+      "Contrato de trabajo"
     ],
     [
-      "Ley 28/2022, de 21 de diciembre, de fomento del ecosistema de las empresas emergentes",
-      "Regula el régimen especial para startups, con incentivos fiscales y facilidades administrativas."
+      "Real Decreto Legislativo 8/2015, de 30 de octubre, por el que se aprueba el texto refundido de la Ley General de la Seguridad Social",
+      "Fija la obligación de alta, cotización y protección social de las personas trabajadoras de la empresa.",
+      "https://www.boe.es/eli/es/rdlg/2015/10/30/8/con",
+      "Seguridad Social y empleo"
     ],
     [
-      "Ley 18/2022, de 28 de septiembre, de creación y crecimiento de empresas",
-      "Refuerza la constitución ágil y digital y medidas contra la morosidad comercial, favoreciendo el crecimiento empresarial."
+      "Real Decreto Legislativo 3/2015, de 23 de octubre, por el que se aprueba el texto refundido de la Ley de Empleo",
+      "Regula políticas de empleo y programas que pueden influir en incentivos a la contratación.",
+      "https://www.boe.es/eli/es/rdlg/2015/10/23/3/con",
+      "Seguridad Social y empleo"
+    ],
+    [
+      "Ley 20/2007, de 11 de julio, del Estatuto del trabajo autónomo",
+      "Regula el régimen profesional de autónomos, incluidos los económicamente dependientes que colaboran con la empresa.",
+      "https://www.boe.es/eli/es/l/2007/07/11/20/con",
+      "Trabajo autónomo"
+    ],
+    [
+      "Real Decreto 197/2009, de 23 de febrero, por el que se desarrolla el Estatuto del Trabajo Autónomo en materia de contrato del trabajador autónomo económicamente dependiente y su registro, y se crea el Registro Estatal de asociaciones profesionales de trabajadores autónomos",
+      "Regula forma y registro de los contratos con autónomos económicamente dependientes vinculados a la empresa.",
+      "https://www.boe.es/eli/es/rd/2009/02/23/197/con",
+      "Trabajo autónomo"
     ]
   ],
   "datos": [
     [
       "Reglamento (UE) 2016/679, de 27 de abril de 2016, relativo a la protección de las personas físicas en lo que respecta al tratamiento de datos personales y a la libre circulación de estos datos (Reglamento General de Protección de Datos)",
-      "Obliga a la empresa a tratar datos personales de clientes, empleados y terceros con garantías de seguridad, transparencia y derechos."
+      "Obliga a la empresa a tratar datos personales de clientes, empleados y terceros con garantías de seguridad, transparencia y derechos.",
+      "https://eur-lex.europa.eu/eli/reg/2016/679/oj/spa",
+      "Protección de datos"
     ],
     [
       "Ley Orgánica 3/2018, de 5 de diciembre, de Protección de Datos Personales y garantía de los derechos digitales",
-      "Adapta el RGPD al ordenamiento español y añade obligaciones y derechos específicos en el entorno digital."
+      "Adapta el RGPD al ordenamiento español y añade obligaciones y derechos específicos en el entorno digital.",
+      "https://www.boe.es/eli/es/lo/2018/12/05/3/con",
+      "Protección de datos"
     ]
   ],
   "igualdad": [
     [
       "Ley 15/2022, de 12 de julio, integral para la igualdad de trato y la no discriminación",
-      "Prohíbe la discriminación en el ámbito empresarial y exige medidas para garantizar igualdad de trato."
-    ],
-    [
-      "Real Decreto 902/2020, de 13 de octubre, de igualdad retributiva entre mujeres y hombres",
-      "Establece obligaciones de transparencia retributiva y herramientas (registros, auditorías) para evitar brecha salarial."
+      "Prohíbe la discriminación en el ámbito empresarial y exige medidas para garantizar igualdad de trato.",
+      "https://www.boe.es/eli/es/l/2022/07/12/15/con",
+      "Igualdad y no discriminación"
     ],
     [
       "Real Decreto 901/2020, de 13 de octubre, por el que se regulan los planes de igualdad y su registro",
-      "Obliga a determinadas empresas a negociar, implantar y registrar planes de igualdad."
+      "Obliga a determinadas empresas a negociar, implantar y registrar planes de igualdad.",
+      "https://www.boe.es/eli/es/rd/2020/10/13/901/con",
+      "Igualdad y no discriminación"
+    ],
+    [
+      "Real Decreto 902/2020, de 13 de octubre, de igualdad retributiva entre mujeres y hombres",
+      "Establece obligaciones de transparencia retributiva y herramientas (registros, auditorías) para evitar brecha salarial.",
+      "https://www.boe.es/eli/es/rd/2020/10/13/902/con",
+      "Igualdad y no discriminación"
+    ]
+  ],
+  "financiacion": [
+    [
+      "Ley 14/2013, de 27 de septiembre, de apoyo a los emprendedores y su internacionalización",
+      "Introduce medidas fiscales, mercantiles y de simplificación para la creación y expansión internacional de empresas.",
+      "https://www.boe.es/eli/es/l/2013/09/27/14/con",
+      "Apoyo al emprendimiento"
+    ],
+    [
+      "Ley 28/2022, de 21 de diciembre, de fomento del ecosistema de las empresas emergentes",
+      "Regula el régimen especial para startups, con incentivos fiscales y facilidades administrativas.",
+      "https://www.boe.es/eli/es/l/2022/12/21/28/con",
+      "Apoyo al emprendimiento"
+    ],
+    [
+      "Ley 18/2022, de 28 de septiembre, de creación y crecimiento de empresas",
+      "Facilita la constitución rápida y telemática, impulsa la factura electrónica y medidas para reducir la morosidad.",
+      "https://www.boe.es/eli/es/l/2022/09/28/18/con",
+      "Apoyo al emprendimiento"
+    ],
+    [
+      "Ley 5/2015, de 27 de abril, de fomento de la financiación empresarial",
+      "Fomenta vías alternativas de financiación (p. ej. capital riesgo, titulizaciones), mejorando el acceso al crédito.",
+      "https://www.boe.es/eli/es/l/2015/04/27/5/con",
+      "Financiación"
+    ]
+  ],
+  "contratacion": [
+    [
+      "Ley 9/2017, de 8 de noviembre, de Contratos del Sector Público, por la que se transponen al ordenamiento jurídico español las Directivas 2014/23/UE y 2014/24/UE del Parlamento Europeo y del Consejo, de 26 de febrero de 2014",
+      "Regula cómo puede la empresa contratar con administraciones públicas, licitar y ejecutar contratos públicos.",
+      "https://www.boe.es/eli/es/l/2017/11/08/9/con",
+      "Contratos con el sector público"
+    ]
+  ],
+  "cese": [
+    [
+      "Real Decreto 867/2015, de 2 de octubre, por el que se regulan las especificaciones y condiciones para el empleo del Documento Único Electrónico para el cese de actividad y extinción de las sociedades de responsabilidad limitada y el cese de actividad de las empresas individuales",
+      "Simplifica y estandariza los trámites electrónicos para cerrar sociedades limitadas y empresas individuales.",
+      "https://www.boe.es/eli/es/rd/2015/10/02/867/con",
+      "Cierre de la empresa"
     ]
   ]
 };
@@ -564,6 +716,14 @@
   }
 };
 
+    criterioImagenes.civil = {
+      url: criterioImagenes.general.url,
+      titulo: "Derecho Civil y Propiedad Intelectual",
+      descripcion: "Normas civiles que afectan a la empresa, en particular la propiedad intelectual: derechos de autor, software, contenidos de terceros y su registro oficial.",
+      creditos: criterioImagenes.general.creditos
+    };
+    criterioImagenes.mercantil.descripcion = "Legislación que regula la actividad comercial, las sociedades mercantiles, el comercio electrónico, las relaciones entre empresarios y con consumidores, y la propiedad industrial (patentes, marcas y diseños).";
+
     const criterioSelect = document.getElementById('criterio');
     const normaSelect = document.getElementById('norma');
     const resultado = document.getElementById('resultado');
@@ -575,6 +735,9 @@
     const impactQuestion = document.getElementById('impact-question');
     const normaHelp = document.getElementById('norma-help');
     const clearButton = document.getElementById('limpiar');
+    const linkWrap = document.getElementById('norma-link');
+    const linkAnchor = document.getElementById('norma-link-a');
+    const linkText = document.getElementById('norma-link-text');
     const imageElement = document.getElementById('criteria-image');
     const titleElement = document.getElementById('image-title');
     const descriptionElement = document.getElementById('image-description');
@@ -604,6 +767,8 @@
       feedbackHeading.textContent = 'Selecciona una norma para ver su impacto';
       feedbackImpact.textContent = 'Elige primero un criterio y, después, una norma. Aquí verás una explicación clara de cómo afecta a tu empresa.';
       feedbackStatus.textContent = 'Sin selección';
+      linkWrap.hidden = true;
+      linkAnchor.removeAttribute('href');
     }
 
     function actualizarNormas() {
@@ -612,11 +777,18 @@
       clearButton.disabled = !criterio;
 
       if (criterio && normas[criterio]) {
-        normas[criterio].forEach(([titulo], indice) => {
+        let grupoActual = null, optgroup = null;
+        normas[criterio].forEach(([titulo, , , grupo], indice) => {
+          if (grupo && grupo !== grupoActual) {
+            optgroup = document.createElement('optgroup');
+            optgroup.label = grupo;
+            normaSelect.appendChild(optgroup);
+            grupoActual = grupo;
+          }
           const option = document.createElement('option');
           option.value = String(indice);
           option.textContent = titulo;
-          normaSelect.appendChild(option);
+          (optgroup || normaSelect).appendChild(option);
         });
         normaSelect.disabled = false;
         const total = normas[criterio].length;
@@ -639,16 +811,23 @@
         restablecerFeedback();
         return;
       }
-      const [titulo, impacto] = normas[criterio][indice];
+      const [titulo, impacto, enlace, grupo] = normas[criterio][indice];
       resultado.classList.remove('is-empty');
       resultado.classList.add('has-selection');
       emptyIcon.hidden = true;
       feedbackCategory.hidden = false;
       impactQuestion.hidden = false;
-      feedbackCategory.textContent = criterioSelect.selectedOptions[0].dataset.label || criterio;
+      feedbackCategory.textContent = (criterioSelect.selectedOptions[0].dataset.label || criterio) + (grupo ? ' · ' + grupo : '');
       feedbackHeading.textContent = titulo;
       feedbackImpact.textContent = impacto;
       feedbackStatus.textContent = `Norma ${indice + 1} de ${normas[criterio].length}`;
+      if (typeof enlace === 'string' && enlace.startsWith('https://')) {
+        linkAnchor.href = enlace;
+        linkText.textContent = enlace.includes('eur-lex.europa.eu') ? 'Consultar en EUR-Lex (DOUE)' : 'Consultar en el BOE';
+        linkWrap.hidden = false;
+      } else {
+        linkWrap.hidden = true;
+      }
     }
 
     function limpiarSeleccion() {
